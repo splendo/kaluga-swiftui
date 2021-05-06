@@ -1,0 +1,13 @@
+project:
+  file: $PATH_TO_IOS_FOLDER/XCODE_PROJ_NAME.xcodeproj
+  target: $TARGET_NAME
+templates:
+  - $PATH_TO_SUBMODULE/stencils/
+output:
+  path: $PATH_TO_IOS_FOLDER/KalugaSwiftUI
+  link:
+      project: $PATH_TO_IOS_FOLDER/XCODE_PROJ_NAME.xcodeproj
+      target: $TARGET_NAME
+      group: KalugaSwiftUI
+args:
+  sharedFrameworkName: $NAME_OF_SHARED_PROJECT

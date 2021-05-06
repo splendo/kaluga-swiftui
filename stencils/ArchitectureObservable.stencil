@@ -1,0 +1,6 @@
+// swiftlint:disable all
+
+import {{ argument.sharedFrameworkName }}
+
+typealias ArchitectureObservable<T: AnyObject> = Observable<T>
+typealias ArchitectureSubject<T: AnyObject> = Subject<T>

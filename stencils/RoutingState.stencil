@@ -1,0 +1,15 @@
+// swiftlint:disable all
+
+import SwiftUI
+
+class RoutingState: ObservableObject {
+    @Published var isPresented: Bool = false
+}
+
+class ObjectRoutingState<T>: RoutingState {
+    @Published var object: T? = nil {
+        didSet {
+            isPresented = object != nil
+        }
+    }
+}

@@ -1,0 +1,83 @@
+// swiftlint:disable all
+
+import SwiftUI
+
+enum NavigationType {
+    case push
+    case fullScreen
+    case sheet
+    case partialSheet(style: PartialSheetStyle)
+    case replace
+}
+
+struct Navigation<NavigationContent>: ViewModifier where NavigationContent: View {
+    
+    @ObservedObject var state: RoutingState
+    private let type: NavigationType
+    private let navigationContent: () -> NavigationContent
+    
+    func body(content: Content) -> some View {
+        switch type {
+        case .push:
+            return AnyView(
+                VStack {
+                    NavigationLink(
+                        destination: LazyView(navigationContent()),
+                        isActive: $state.isPresented
+                    ) {
+                        EmptyView()
+                    }
+                    content
+                }
+            )
+        case .fullScreen:
+            return AnyView(
+                VStack {
+                    // Only show content when not being presented. This will make onAppear/onDisappear trigger
+                    if !state.isPresented {
+                        content
+                    }
+                    EmptyView().fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+                }
+            )
+        case .sheet:
+            return AnyView(
+                VStack {
+                    content
+                    EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+                }
+            )
+        case .partialSheet(let style):
+            return AnyView(
+                content
+                    .addPartialSheet(style: style)
+                    .partialSheet(isPresented: $state.isPresented) {
+                        LazyView(navigationContent())
+                    }
+            )
+        case .replace:
+            return state.isPresented ? AnyView(navigationContent()) : AnyView(content)
+        }
+    }
+    
+    init(state: RoutingState, type: NavigationType, @ViewBuilder navigationContent: @escaping () -> NavigationContent) {
+        self.state = state
+        self.navigationContent = navigationContent
+        self.type = type
+    }
+}
+
+extension View {
+    func navigation<NavigationContent: View>(state: RoutingState,
+                                             type: NavigationType,
+                                             @ViewBuilder content: @escaping () -> NavigationContent) -> some View {
+        ModifiedContent(
+            content: self,
+            modifier: Navigation(
+                state: state,
+                type: type,
+                navigationContent: content
+            )
+        )
+    }
+}
