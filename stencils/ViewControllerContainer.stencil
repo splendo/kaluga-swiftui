@@ -1,0 +1,31 @@
+// swiftlint:disable all
+
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+class ViewWrapper<VM: BaseViewModel> {
+    let container: ViewControllerContainer?
+    let viewModel: VM
+    
+    init(container: ViewControllerContainer? = nil, viewModel: VM) {
+        self.container = container
+        self.viewModel = viewModel
+    }
+    
+    deinit {
+        viewModel.clear()
+    }
+    
+    func body<V: View>(view: (VM) -> V) -> some View {
+        ZStack {
+            container
+            view(viewModel)
+                .onAppear {
+                    self.viewModel.didResume()
+                }
+                .onDisappear {
+                    self.viewModel.didPause()
+                }
+        }
+    }
+}

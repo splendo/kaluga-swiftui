@@ -10,4 +10,7 @@ output:
       target: $TARGET_NAME
       group: KalugaSwiftUI
 args:
-  sharedFrameworkName: $NAME_OF_SHARED_PROJECT
+  sharedFrameworkName: $NAME_OF_SHARED_FRAMEWORK
+  includeAlerts: $TRUE_IF_ALERTS_EXPORTED
+  includeHud: $TRUE_IF_HUD_EXPORTED
+  includeDatePicker: $TRUE_IF_DATE_PICKER_EXPORTED

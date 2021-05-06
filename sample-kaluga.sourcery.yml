@@ -1,13 +1,16 @@
 project:
-  file: $PATH_TO_IOS_FOLDER/XCODE_PROJ_NAME.xcodeproj
-  target: $TARGET_NAME
+  file: ./input.xcodeproj
+  target: Input
 templates:
-  - $PATH_TO_SUBMODULE/stencils/
+  - ./stencils/
 output:
-  path: $PATH_TO_IOS_FOLDER/KalugaSwiftUI
+  path: ./output
   link:
-      project: $PATH_TO_IOS_FOLDER/XCODE_PROJ_NAME.xcodeproj
-      target: $TARGET_NAME
+      project: ./input.xcodeproj
+      target: Input
       group: KalugaSwiftUI
 args:
-  sharedFrameworkName: $NAME_OF_SHARED_PROJECT
+  sharedFrameworkName: Shared
+  includeAlerts: false
+  includeHud: false
+  includeDatePicker: false

@@ -19,4 +19,5 @@ Make sure Sourcery is installed on your machine.
 -- $TARGET_NAME to the name of the target in your project
 -- $PATH_TO_SUBMODULE to the path of the submodule
 -- $NAME_OF_SHARED_FRAMEWORK to the name of the Shared Framework
+-- Replace $TRUE_IF_ALERTS_EXPORTED, $TRUE_IF_HUD_EXPORTED, and $TRUE_IF_DATE_PICKER_EXPORTED depending on whether the shared library exports kaluga alerts, hud, and date-picker respectively
 - run `sourcery --config kaluga.sourcery.yml`
