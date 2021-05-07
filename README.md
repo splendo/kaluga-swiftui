@@ -15,11 +15,11 @@ Make sure Sourcery is installed on your machine.
 - Checkout this project as a submodule to your project
 - Copy `template-kaluga.sourcery.yml` into the iOS folder of your shared code project and rename it to `kaluga.sourcery.yml`
 - Open `kaluga.sourcery.yml` and change:
-.- $XCODE_PROJ_NAME to the name of your xcodeproj file
-.- $TARGET_NAME to the name of the target in your project
-.- $PATH_TO_SUBMODULE to the path of the submodule
-.- $NAME_OF_SHARED_FRAMEWORK to the name of the Shared Framework
-.- Configure features (see below)
+    - $XCODE_PROJ_NAME to the name of your xcodeproj file
+    - $TARGET_NAME to the name of the target in your project
+    - $PATH_TO_SUBMODULE to the path of the submodule
+    - $NAME_OF_SHARED_FRAMEWORK to the name of the Shared Framework
+    - Configure features (see below)
 - run `sourcery --config kaluga.sourcery.yml`
 - If the partial sheet feature was enabled, add `https://github.com/AndreaMiotto/PartialSheet.git` as a Swift Package Dependency to your project.
 - Import the files in `./KalugaSwiftUI` into your Xcode project.
