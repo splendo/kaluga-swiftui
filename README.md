@@ -40,16 +40,16 @@ Use the wrappers body method to then display the viewModel in a lifecycle aware 
 
 ```swift
 struct SomeView : View {
-	let wrapper: ViewModelWrapperView<SomeViewModel>
+    let wrapper: ViewModelWrapperView<SomeViewModel>
 
-	init(viewModel: SomeViewModel) {
-		wrapper = ViewModelWrapperView(viewModel: viewModel)
-	}
+    init(viewModel: SomeViewModel) {
+        wrapper = ViewModelWrapperView(viewModel: viewModel)
+    }
 
     var body: some View {
-    	wrapper.body { viewModel in 
-    		// Render View
-    	}
+        wrapper.body { viewModel in 
+            // Render View
+        }
     }
 
 }
@@ -79,14 +79,14 @@ To use the value of an observable
 ```swift
 struct SomeView : View {
 	
-	@ObservedObject private var someString: StringCombineObservable
+    @ObservedObject private var someString: StringCombineObservable
 
-	init(viewModel: SomeViewModel) {
-		someString = StringCombineObservable(viewModel.someStringObservable)
-	}
+    init(viewModel: SomeViewModel) {
+        someString = StringCombineObservable(viewModel.someStringObservable)
+    }
 
     var body: some View {
-    	Text(someString.value)
+        Text(someString.value)
     }
 
 }
