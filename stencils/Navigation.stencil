@@ -1,12 +1,13 @@
 // swiftlint:disable all
 
 import SwiftUI
+{% if argument.includePartialSheet %}import PartialSheet{% endif %}
 
 enum NavigationType {
     case push
     case fullScreen
     case sheet
-    case partialSheet(style: PartialSheetStyle)
+{% if argument.includePartialSheet %}    case partialSheet(style: PartialSheetStyle){% endif %}
     case replace
 }
 
@@ -47,14 +48,14 @@ struct Navigation<NavigationContent>: ViewModifier where NavigationContent: View
                     EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
                 }
             )
-        case .partialSheet(let style):
+{% if argument.includePartialSheet %}        case .partialSheet(let style):
             return AnyView(
                 content
                     .addPartialSheet(style: style)
                     .partialSheet(isPresented: $state.isPresented) {
                         LazyView(navigationContent())
                     }
-            )
+            ){% endif %}
         case .replace:
             return state.isPresented ? AnyView(navigationContent()) : AnyView(content)
         }

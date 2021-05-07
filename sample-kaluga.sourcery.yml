@@ -5,12 +5,8 @@ templates:
   - ./stencils/
 output:
   path: ./output
-  link:
-      project: ./input.xcodeproj
-      target: Input
-      group: KalugaSwiftUI
 args:
   sharedFrameworkName: Shared
-  includeAlerts: false
-  includeHud: false
-  includeDatePicker: false
+  includeAlerts: true
+  includeHud: true
+  includeDatePicker: true

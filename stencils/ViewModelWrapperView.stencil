@@ -3,7 +3,7 @@
 import SwiftUI
 import {{ argument.sharedFrameworkName }}
 
-class ViewWrapper<VM: BaseViewModel> {
+class ViewModelWrapperView<VM: BaseViewModel> {
     let container: ViewControllerContainer?
     let viewModel: VM
     
@@ -18,7 +18,7 @@ class ViewWrapper<VM: BaseViewModel> {
     
     func body<V: View>(view: (VM) -> V) -> some View {
         ZStack {
-            container
+            container.frame(width: 0, height: 0)
             view(viewModel)
                 .onAppear {
                     self.viewModel.didResume()
