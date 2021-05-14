@@ -1,16 +1,14 @@
-// swiftlint:disable all
-
 import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
 class ListCombineSubject<Input: Equatable, Output: Equatable>: ObservableObject {
-    
+
     @Published private(set) var value: [Output]
     private var input: NSArray?
     private let disposeBag = DisposeBag()
     var subscription: AnyCancellable!
-    
+
     init(
         _ architectureSubject: ArchitectureSubject<NSArray>,
         defaultValue: [Output] = [],

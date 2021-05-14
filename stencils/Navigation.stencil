@@ -1,22 +1,24 @@
-// swiftlint:disable all
-
 import SwiftUI
 {% if argument.includePartialSheet %}import PartialSheet{% endif %}
 
-enum NavigationType {
-    case push
-    case fullScreen
-    case sheet
-{% if argument.includePartialSheet %}    case partialSheet(style: PartialSheetStyle){% endif %}
-    case replace
-}
+struct Navigation<NavigationContent: View>: ViewModifier {
 
-struct Navigation<NavigationContent>: ViewModifier where NavigationContent: View {
-    
+    enum NavigationType {
+        case fullscreen
+        case push
+        case replace
+        case sheet
+        case cover
+{% if argument.includePartialSheet %}
+        case partialSheet(style: PartialSheetStyle)
+{% endif %}
+    }
+
     @ObservedObject var state: RoutingState
+
     private let type: NavigationType
     private let navigationContent: () -> NavigationContent
-    
+
     func body(content: Content) -> some View {
         switch type {
         case .push:
@@ -31,13 +33,10 @@ struct Navigation<NavigationContent>: ViewModifier where NavigationContent: View
                     content
                 }
             )
-        case .fullScreen:
+        case .fullscreen:
             return AnyView(
                 VStack {
-                    // Only show content when not being presented. This will make onAppear/onDisappear trigger
-                    if !state.isPresented {
-                        content
-                    }
+                    content
                     EmptyView().fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
                 }
             )
@@ -48,30 +47,43 @@ struct Navigation<NavigationContent>: ViewModifier where NavigationContent: View
                     EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
                 }
             )
-{% if argument.includePartialSheet %}        case .partialSheet(let style):
+        case .replace:
+            return state.isPresented ? AnyView(navigationContent()) : AnyView(content)
+        case .cover:
+            return AnyView(
+                Group {
+                    content
+                    if state.isPresented {
+                        navigationContent()
+                    }
+                }
+            )
+        {% if argument.includePartialSheet %}
+        case .partialSheet(let style):
             return AnyView(
                 content
                     .addPartialSheet(style: style)
                     .partialSheet(isPresented: $state.isPresented) {
                         LazyView(navigationContent())
                     }
-            ){% endif %}
-        case .replace:
-            return state.isPresented ? AnyView(navigationContent()) : AnyView(content)
+            )
+        {% endif %}
         }
     }
-    
+
     init(state: RoutingState, type: NavigationType, @ViewBuilder navigationContent: @escaping () -> NavigationContent) {
         self.state = state
-        self.navigationContent = navigationContent
         self.type = type
+        self.navigationContent = navigationContent
     }
 }
 
 extension View {
-    func navigation<NavigationContent: View>(state: RoutingState,
-                                             type: NavigationType,
-                                             @ViewBuilder content: @escaping () -> NavigationContent) -> some View {
+    func navigation<NavigationContent: View>(
+        state: RoutingState,
+        type: Navigation<NavigationContent>.NavigationType,
+        @ViewBuilder content: @escaping () -> NavigationContent
+    ) -> some View {
         ModifiedContent(
             content: self,
             modifier: Navigation(

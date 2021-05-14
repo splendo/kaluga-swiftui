@@ -1,0 +1,84 @@
+import SwiftUI
+import Combine
+import {{ argument.sharedFrameworkName }}
+
+typealias StringUninitializedSubject = MappedUninitializedSubject<NSString, String?, OptionalStringMapper>
+typealias BoolUninitializedSubject = MappedUninitializedSubject<KotlinBoolean, Bool, BoolMapper>
+typealias IntUninitializedSubject = MappedUninitializedSubject<KotlinInt, Int, IntMapper>
+typealias FloatUninitializedSubject = MappedUninitializedSubject<KotlinFloat, Float, FloatMapper>
+typealias DoubleUninitializedSubject = MappedUninitializedSubject<KotlinDouble, Double, DoubleMapper>
+
+class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableObject {
+
+    @Published var value: Output?
+
+    private var input: Input?
+    private let disposeBag = DisposeBag(allowFreezing: false)
+    private let cancellable: AnyCancellable
+
+    init(_ subject: BaseUninitializedSubject<Input>,
+         animated: Bool = false,
+         toMapper: @escaping (Input) -> Output,
+         fromMapper: @escaping (Output) -> Input
+    ) {
+        input = subject.currentOrNull
+        if input != nil {
+            value = toMapper(input!)
+        }
+        cancellable = _value.projectedValue.sink { newValue in
+            if let current = subject.currentOrNull, newValue == toMapper(current) {
+                return
+            }
+            if let newValue = newValue {
+                subject.post(newValue: fromMapper(newValue))
+            } else {
+                subject.post(newValue: nil)
+            }
+        }
+        subject
+            .observe { [weak self] newValue in
+                guard let self = self else {
+                    return
+                }
+                defer {
+                    self.input = newValue
+                }
+                guard self.input != newValue else {
+                    return
+                }
+                let mapped: Output?
+                if let newValue = newValue {
+                    mapped = toMapper(newValue)
+                } else {
+                    mapped = nil
+                }
+                if animated {
+                    withAnimation {
+                        self.value = mapped
+                    }
+                } else {
+                    self.value = mapped
+                }
+            }
+            .addTo(disposeBag: disposeBag)
+    }
+
+    deinit {
+        disposeBag.dispose()
+    }
+}
+
+class MappedUninitializedSubject<
+    Input: KotlinObject,
+    Output: Equatable,
+    Mapper: PlatformValueMapper
+>: UninitializedSubject<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
+    init(_ subject: BaseUninitializedSubject<Input>, animated: Bool = false) {
+        super.init(
+            subject,
+            animated: animated,
+            toMapper: Mapper.to,
+            fromMapper: Mapper.from
+        )
+    }
+}

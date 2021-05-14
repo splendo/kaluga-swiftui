@@ -1,0 +1,69 @@
+import SwiftUI
+import Combine
+import {{ argument.sharedFrameworkName }}
+
+typealias KotlinObjectDefaults = KotlinObject & HasDefaultValue
+typealias ObjectUninitializedObservable<T: KotlinObjectDefaults> = MappedUninitializedObservable<T, T, EmptyMapper<T>>
+typealias StringUninitializedObservable = MappedUninitializedObservable<NSString, String, StringMapper>
+typealias BoolUninitializedObservable = MappedUninitializedObservable<KotlinBoolean, Bool, BoolMapper>
+typealias IntUninitializedObservable = MappedUninitializedObservable<KotlinInt, Int, IntMapper>
+typealias FloatUninitializedObservable = MappedUninitializedObservable<KotlinFloat, Float, FloatMapper>
+typealias DoubleUninitializedObservable = MappedUninitializedObservable<KotlinDouble, Double, DoubleMapper>
+typealias ColorUninitializedObservable = MappedUninitializedObservable<ResourcesColor, UIColor, ColorMapper>
+
+class UninitializedObservable<Input: KotlinObject, Output: Equatable>: ObservableObject {
+
+    @Published private(set) var value: Output
+
+    private var input: Input?
+    private let disposeBag = DisposeBag(allowFreezing: false)
+
+    init(
+        _ observable: BaseUninitializedObservable<Input>,
+        defaultValue: Output,
+        animated: Bool = false,
+        mapper: @escaping (Input) -> Output
+    ) {
+        input = observable.currentOrNull
+        if input != nil {
+            value = mapper(input!)
+        } else {
+            value = defaultValue
+        }
+        observable
+            .observe { [weak self] newValue in
+                guard let self = self else {
+                    return
+                }
+                defer {
+                    self.input = newValue
+                }
+                guard newValue != nil, self.input != newValue else {
+                    return
+                }
+                let mapped = mapper(newValue!)
+                if animated {
+                    withAnimation {
+                        self.value = mapped
+                    }
+                } else {
+                    self.value = mapped
+                }
+            }
+            .addTo(disposeBag: disposeBag)
+    }
+
+    deinit {
+        disposeBag.dispose()
+    }
+}
+
+class MappedUninitializedObservable<
+    Input: KotlinObject,
+    Output: Equatable & HasDefaultValue,
+    Mapper: PlatformValueMapper
+>: UninitializedObservable<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
+    init(_ observable: BaseUninitializedObservable<Input>, defaultValue: Output = .default(), animated: Bool = false) {
+        super.init(observable, defaultValue: defaultValue, animated: animated, mapper: Mapper.to)
+    }
+}

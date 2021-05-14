@@ -1,0 +1,70 @@
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+// Because of possible SwiftUI bug
+// we have to remove all values from array first
+// and then append new changed values back
+class ListObservable<Output: Equatable>: ObservableObject {
+
+    @Published private(set) var value: [Output]
+
+    private var input: NSArray?
+    private let disposeBag = DisposeBag(allowFreezing: false)
+
+    init(
+        _ observable: FlowInitializedObservable<NSArray>,
+        defaultValue: [Output] = .default(),
+        animated: Bool = false,
+        mapper: @escaping (NSArray) -> [Output] = ListMapper.to
+    ) {
+        input = observable.currentOrNull
+        if input != nil {
+            value = mapper(input!)
+        } else {
+            value = defaultValue
+        }
+        observable
+            .observe { [weak self] newValue in
+                guard let self = self else {
+                    return
+                }
+                defer {
+                    self.input = newValue
+                }
+                guard newValue != nil, self.input != newValue else {
+                    return
+                }
+                let mapped = mapper(newValue!)
+                self.value.removeAll()
+                if animated {
+                    withAnimation {
+                        self.value.append(contentsOf: mapped)
+                    }
+                } else {
+                    self.value.append(contentsOf: mapped)
+                }
+            }
+            .addTo(disposeBag: disposeBag)
+    }
+
+    deinit {
+        disposeBag.dispose()
+    }
+}
+
+class CustomListObservable<Input: AnyObject & Equatable, Output: Equatable>: ListObservable<Output> {
+
+    init(
+        _ observable: FlowInitializedObservable<NSArray>,
+        defaultValue: [Output] = .default(),
+        animated: Bool = false,
+        mapper: @escaping (Input) -> Output
+    ) {
+        super.init(observable, defaultValue: defaultValue, animated: animated) { array in
+            guard let array = array as? [Input] else {
+                return defaultValue
+            }
+            return array.map(mapper)
+        }
+    }
+}

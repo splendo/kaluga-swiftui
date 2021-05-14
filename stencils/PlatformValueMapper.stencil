@@ -1,0 +1,7 @@
+protocol PlatformValueMapper {
+    associatedtype Input
+    associatedtype Output
+
+    static func to(_ value: Input) -> Output
+    static func from(_ value: Output) -> Input
+}

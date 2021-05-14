@@ -1,0 +1,79 @@
+import SwiftUI
+import Combine
+import {{ argument.sharedFrameworkName }}
+
+typealias StringSubject = MappedSubject<NSString, String, StringMapper>
+typealias BoolSubject = MappedSubject<KotlinBoolean, Bool, BoolMapper>
+typealias IntSubject = MappedSubject<KotlinInt, Int, IntMapper>
+typealias FloatSubject = MappedSubject<KotlinFloat, Float, FloatMapper>
+typealias DoubleSubject = MappedSubject<KotlinDouble, Double, DoubleMapper>
+
+class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
+
+    @Published var value: Output
+
+    private var input: Input?
+    private let disposeBag = DisposeBag(allowFreezing: false)
+    private let cancellable: AnyCancellable
+
+    init(_ subject: BaseInitializedSubject<Input>,
+         defaultValue: Output,
+         animated: Bool = false,
+         toMapper: @escaping (Input) -> Output,
+         fromMapper: @escaping (Output) -> Input
+    ) {
+        input = subject.currentOrNull
+        if input != nil {
+            value = toMapper(input!)
+        } else {
+            value = defaultValue
+        }
+        cancellable = _value.projectedValue.sink { newValue in
+            if let current = subject.currentOrNull, newValue == toMapper(current) {
+                return
+            }
+            subject.post(newValue: fromMapper(newValue))
+        }
+        subject
+            .observe { [weak self] newValue in
+                guard let self = self else {
+                    return
+                }
+                defer {
+                    self.input = newValue
+                }
+                guard newValue != nil, self.input != newValue else {
+                    return
+                }
+                let mapped = toMapper(newValue!)
+                if animated {
+                    withAnimation {
+                        self.value = mapped
+                    }
+                } else {
+                    self.value = mapped
+                }
+            }
+            .addTo(disposeBag: disposeBag)
+    }
+
+    deinit {
+        disposeBag.dispose()
+    }
+}
+
+class MappedSubject<
+    Input: KotlinObject,
+    Output: Equatable & HasDefaultValue,
+    Mapper: PlatformValueMapper
+>: Subject<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
+    init(_ subject: BaseInitializedSubject<Input>, defaultValue: Output = .default(), animated: Bool = false) {
+        super.init(
+            subject,
+            defaultValue: defaultValue,
+            animated: animated,
+            toMapper: Mapper.to,
+            fromMapper: Mapper.from
+        )
+    }
+}

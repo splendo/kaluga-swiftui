@@ -1,0 +1,54 @@
+import UIKit
+import Foundation
+import {{ argument.sharedFrameworkName }}
+
+enum StringMapper: PlatformValueMapper {
+    static func to(_ value: NSString) -> String { String(value) }
+    static func from(_ value: String) -> NSString { value as NSString }
+}
+
+enum OptionalStringMapper: PlatformValueMapper {
+    static func to(_ value: NSString) -> String? { String(value) }
+    static func from(_ value: String?) -> NSString {
+        if let value = value {
+            return value as NSString
+        } else {
+            return NSString()
+        }
+    }
+}
+
+enum BoolMapper: PlatformValueMapper {
+    static func to(_ value: KotlinBoolean) -> Bool { value.boolValue }
+    static func from(_ value: Bool) -> KotlinBoolean { KotlinBoolean(bool: value) }
+}
+
+enum IntMapper: PlatformValueMapper {
+    static func to(_ value: KotlinInt) -> Int { value.intValue }
+    static func from(_ value: Int) -> KotlinInt { KotlinInt(integerLiteral: value) }
+}
+
+enum FloatMapper: PlatformValueMapper {
+    static func to(_ value: KotlinFloat) -> Float { value.floatValue }
+    static func from(_ value: Float) -> KotlinFloat { KotlinFloat(float: value) }
+}
+
+enum DoubleMapper: PlatformValueMapper {
+    static func to(_ value: KotlinDouble) -> Double { value.doubleValue }
+    static func from(_ value: Double) -> KotlinDouble { KotlinDouble(value: value) }
+}
+
+enum ColorMapper: PlatformValueMapper {
+    static func to(_ value: ResourcesColor) -> UIColor { value.uiColor }
+    static func from(_ value: UIColor) -> ResourcesColor { ResourcesColor(uiColor: value) }
+}
+
+enum EmptyMapper<T>: PlatformValueMapper {
+    static func to(_ value: T) -> T { value }
+    static func from(_ value: T) -> T { value }
+}
+
+enum ListMapper<T>: PlatformValueMapper {
+    static func to(_ value: NSArray) -> [T] { value as? [T] ?? [] }
+    static func from(_ value: [T]) -> NSArray { value as NSArray }
+}

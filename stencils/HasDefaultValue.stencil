@@ -1,0 +1,3 @@
+protocol HasDefaultValue {
+    static func `default`() -> Self
+}

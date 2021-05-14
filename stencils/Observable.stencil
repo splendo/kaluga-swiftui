@@ -1,0 +1,78 @@
+//
+//  Observable.swift
+//  Xbike
+//
+//  Created by Grigory Avdyushin on 27/01/2021.
+//  Copyright © 2021 X-Bike B.V. All rights reserved.
+//
+
+import SwiftUI
+import Combine
+import {{ argument.sharedFrameworkName }}
+
+typealias KotlinObject = AnyObject & Equatable
+
+typealias ObjectObservable<T: KotlinObject & HasDefaultValue> = MappedObservable<T, T, EmptyMapper<T>>
+typealias StringObservable = MappedObservable<NSString, String, StringMapper>
+typealias BoolObservable = MappedObservable<KotlinBoolean, Bool, BoolMapper>
+typealias IntObservable = MappedObservable<KotlinInt, Int, IntMapper>
+typealias FloatObservable = MappedObservable<KotlinFloat, Float, FloatMapper>
+typealias DoubleObservable = MappedObservable<KotlinDouble, Double, DoubleMapper>
+typealias ColorObservable = MappedObservable<ResourcesColor, UIColor, ColorMapper>
+
+class Observable<Input: AnyObject & Equatable, Output: Equatable>: ObservableObject {
+
+    @Published private(set) var value: Output
+
+    private var input: Input?
+    private let disposeBag = DisposeBag(allowFreezing: false)
+
+    init(
+        _ observable: BaseInitializedObservable<Input>,
+        defaultValue: Output,
+        animated: Bool = false,
+        mapper: @escaping (Input) -> Output
+    ) {
+        input = observable.currentOrNull
+        if input != nil {
+            value = mapper(input!)
+        } else {
+            value = defaultValue
+        }
+        observable
+            .observe { [weak self] newValue in
+                guard let self = self else {
+                    return
+                }
+                defer {
+                    self.input = newValue
+                }
+                guard newValue != nil, self.input != newValue else {
+                    return
+                }
+                let mapped = mapper(newValue!)
+                if animated {
+                    withAnimation {
+                        self.value = mapped
+                    }
+                } else {
+                    self.value = mapped
+                }
+            }
+            .addTo(disposeBag: disposeBag)
+    }
+
+    deinit {
+        disposeBag.dispose()
+    }
+}
+
+class MappedObservable<
+    Input: AnyObject & Equatable,
+    Output: Equatable & HasDefaultValue,
+    Mapper: PlatformValueMapper
+>: Observable<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
+    init(_ observable: BaseInitializedObservable<Input>, defaultValue: Output = .default(), animated: Bool = false) {
+        super.init(observable, defaultValue: defaultValue, animated: animated, mapper: Mapper.to)
+    }
+}

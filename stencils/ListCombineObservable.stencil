@@ -1,15 +1,14 @@
-// swiftlint:disable all
-
 import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
+@available(*, deprecated, renamed: "CustomListObservable")
 class ListCombineObservable<Output: Equatable, Input: AnyObject & Equatable>: ObservableObject {
-    
+
     @Published private(set) var value: [Output]
     private var input: NSArray?
     private let disposeBag = DisposeBag()
-    
+
     init(
         _ architectureObservable: ArchitectureObservable<NSArray>,
         defaultValue: [Output] = [],
@@ -50,6 +49,7 @@ class ListCombineObservable<Output: Equatable, Input: AnyObject & Equatable>: Ob
     }
 }
 
+@available(*, deprecated, renamed: "ListObservable")
 class SimpleListCombineObservable<T: AnyObject & Equatable>: ListCombineObservable<T, T> {
     init(
         _ architectureObservable: ArchitectureObservable<NSArray>,

@@ -1,15 +1,16 @@
-// swiftlint:disable all
-
 import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
+typealias KalugaDate = {{ argument.sharedFrameworkName }}.Date
+
+@available(*, deprecated, renamed: "Subject")
 class CombineSubject<Output: Equatable, Input: AnyObject & Equatable>: ObservableObject {
     @Published var value: Output
     private var input: Input?
     private let disposeBag = DisposeBag()
     var subscription: AnyCancellable!
-    
+
     init(
         _ architectureSubject: ArchitectureSubject<Input>,
         defaultValue: Output,
@@ -55,7 +56,7 @@ class CombineSubject<Output: Equatable, Input: AnyObject & Equatable>: Observabl
                 architectureSubject.post(newValue: fromMapper(value))
             }
     }
-    
+
     deinit {
         disposeBag.dispose()
     }
@@ -75,6 +76,7 @@ class SimpleCombineSubject<T: AnyObject & Equatable>: CombineSubject<T, T> {
     }
 }
 
+@available(*, deprecated, renamed: "StringSubject")
 class StringCombineSubject: CombineSubject<String, NSString> {
     init(
         _ architectureSubject: ArchitectureSubject<NSString>,
@@ -89,6 +91,7 @@ class StringCombineSubject: CombineSubject<String, NSString> {
     }
 }
 
+@available(*, deprecated, renamed: "IntSubject")
 class IntCombineSubject: CombineSubject<Int, KotlinInt> {
     init(
         _ architectureSubject: ArchitectureSubject<KotlinInt>,
@@ -105,6 +108,7 @@ class IntCombineSubject: CombineSubject<Int, KotlinInt> {
     }
 }
 
+@available(*, deprecated, renamed: "FloatSubject")
 class FloatCombineSubject: CombineSubject<Float, KotlinFloat> {
     init(
         _ architectureSubject: ArchitectureSubject<KotlinFloat>,
@@ -119,6 +123,7 @@ class FloatCombineSubject: CombineSubject<Float, KotlinFloat> {
     }
 }
 
+@available(*, deprecated, renamed: "DoubleSubject")
 class DoubleCombineSubject: CombineSubject<Double, KotlinDouble> {
     init(
         _ architectureSubject: ArchitectureSubject<KotlinDouble>,
@@ -133,6 +138,7 @@ class DoubleCombineSubject: CombineSubject<Double, KotlinDouble> {
     }
 }
 
+@available(*, deprecated, renamed: "BoolSubject")
 class BoolCombineSubject: CombineSubject<Bool, KotlinBoolean> {
     init(
         _ architectureSubject: ArchitectureSubject<KotlinBoolean>,
@@ -147,16 +153,17 @@ class BoolCombineSubject: CombineSubject<Bool, KotlinBoolean> {
     }
 }
 
-class DateCombineSubject: CombineSubject<Foundation.Date, SplendoFitFramework.Date> {
-    init(
-        _ architectureSubject: ArchitectureSubject<SplendoFitFramework.Date>,
-        defaultValue: Foundation.Date = .init()
-    ) {
-        super.init(
-            architectureSubject,
-            defaultValue: defaultValue,
-            toMapper: { $0.toSwiftDate() },
-            fromMapper: { $0.toKalugaDate() }
-        )
-    }
-}
+// @available(*, deprecated, renamed: "DateSubject")
+// class DateCombineSubject: CombineSubject<Foundation.Date, KalugaDate> {
+//     init(
+//         _ architectureSubject: ArchitectureSubject<KalugaDate>,
+//         defaultValue: Foundation.Date = .init()
+//     ) {
+//         super.init(
+//             architectureSubject,
+//             defaultValue: defaultValue,
+//             toMapper: { $0.toSwiftDate() },
+//             fromMapper: { $0.toKalugaDate() }
+//         )
+//     }
+// }

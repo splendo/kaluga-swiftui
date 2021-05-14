@@ -1,0 +1,34 @@
+import UIKit
+import Foundation
+
+extension Array: HasDefaultValue {
+    static func `default`() -> Self { [] }
+}
+
+extension String: HasDefaultValue {
+    static func `default`() -> String { String() }
+}
+
+extension Bool: HasDefaultValue {
+    static func `default`() -> Bool { false }
+}
+
+extension Int: HasDefaultValue {
+    static func `default`() -> Int { .zero }
+}
+
+extension Float: HasDefaultValue {
+    static func `default`() -> Float { .zero }
+}
+
+extension Double: HasDefaultValue {
+    static func `default`() -> Double { .zero }
+}
+
+extension UIColor: HasDefaultValue {
+    static func `default`() -> Self { UIColor.clear as! Self }
+}
+
+extension Optional: HasDefaultValue {
+    static func `default`() -> Wrapped? { nil }
+}

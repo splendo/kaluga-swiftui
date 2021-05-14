@@ -1,12 +1,18 @@
 project:
-  file: ./XCODE_PROJ_NAME.xcodeproj
+  file: ./$XCODE_PROJECT_NAME.xcodeproj
   target: $TARGET_NAME
 templates:
   - $PATH_TO_SUBMODULE/stencils/
 output:
-  path: ./KalugaSwiftUI
+  path: ./ProjectRoot/Generated/KalugaSwiftUI
+  # Uncomment to link files to Xcode project automatically
+  #  link: 
+  #    project: ./$XCODE_PROJECT_NAME.xcodeproj
+  #    targets: [$TARGET_A, $TARGET_B]
+  #    group: ProjectRoot/Generated/KalugaSwiftUI
 args:
-  sharedFrameworkName: $NAME_OF_SHARED_FRAMEWORK
+  sharedFrameworkName: $SHARED_FRAMEWORK_NAME
   includeAlerts: $TRUE_IF_ALERTS_EXPORTED
   includeHud: $TRUE_IF_HUD_EXPORTED
   includeDatePicker: $TRUE_IF_DATE_PICKER_EXPORTED
+  includePartialSheet: false
