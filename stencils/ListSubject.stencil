@@ -1,29 +1,36 @@
 import SwiftUI
+import Combine
 import {{ argument.sharedFrameworkName }}
 
 // Because of possible SwiftUI bug
 // we have to remove all values from array first
 // and then append new changed values back
-class ListObservable<Output: Equatable>: ObservableObject {
+class ListSubject<Output: Equatable>: ObservableObject {
 
-    @Published private(set) var value: [Output]
+    @Published var value: [Output]
 
     private var input: NSArray?
     private let disposeBag = DisposeBag(allowFreezing: false)
+    private let cancellable: AnyCancellable
 
-    init(
-        _ observable: BaseInitializedObservable<NSArray>,
-        defaultValue: [Output] = .default(),
-        animated: Bool = false,
-        mapper: @escaping (NSArray) -> [Output] = ListMapper.to
+    init(_ subject: BaseInitializedSubject<NSArray>,
+         defaultValue: [Output] = .default(),
+         animated: Bool = false,
+         mapper: @escaping (NSArray) -> [Output] = ListMapper.to
     ) {
-        input = observable.currentOrNull
+        input = subject.currentOrNull
         if input != nil {
             value = mapper(input!)
         } else {
             value = defaultValue
         }
-        observable
+        cancellable = _value.projectedValue.sink { newValue in
+            if let current = subject.currentOrNull, newValue == mapper(current) {
+                return
+            }
+            subject.post(newValue: newValue)
+        }
+        subject
             .observe { [weak self] newValue in
                 guard let self = self else {
                     return
@@ -35,13 +42,12 @@ class ListObservable<Output: Equatable>: ObservableObject {
                     return
                 }
                 let mapped = mapper(newValue!)
-                self.value.removeAll()
                 if animated {
                     withAnimation {
-                        self.value.append(contentsOf: mapped)
+                        self.value = mapped
                     }
                 } else {
-                    self.value.append(contentsOf: mapped)
+                    self.value = mapped
                 }
             }
             .addTo(disposeBag: disposeBag)
@@ -52,15 +58,15 @@ class ListObservable<Output: Equatable>: ObservableObject {
     }
 }
 
-class CustomListObservable<Input: AnyObject & Equatable, Output: Equatable>: ListObservable<Output> {
+class CustomListSubject<Input: AnyObject & Equatable, Output: Equatable>: ListSubject<Output> {
 
     init(
-        _ observable: BaseInitializedObservable<NSArray>,
+        _ subject: BaseInitializedSubject<NSArray>,
         defaultValue: [Output] = .default(),
         animated: Bool = false,
         mapper: @escaping (Input) -> Output
     ) {
-        super.init(observable, defaultValue: defaultValue, animated: animated) { array in
+        super.init(subject, defaultValue: defaultValue, animated: animated) { array in
             guard let array = array as? [Input] else {
                 return defaultValue
             }
