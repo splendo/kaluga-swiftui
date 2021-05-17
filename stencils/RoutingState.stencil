@@ -3,7 +3,7 @@ import Combine
 
 class RoutingState: ObservableObject {
 
-    @Published var isPresented: Bool = false
+    @Published var isPresented = false
 
     func show(animated: Bool = false, force: Bool = false) {
         setPresented(true, animated: animated, force: force)

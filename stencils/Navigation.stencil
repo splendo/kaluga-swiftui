@@ -5,6 +5,7 @@ struct Navigation<NavigationContent: View>: ViewModifier {
 
     enum NavigationType {
         case fullscreen
+        case hud
         case push
         case replace
         case sheet
@@ -33,6 +34,18 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                     content
                 }
             )
+        case .hud:
+             return AnyView(
+                 Group {
+                     content
+                         .blur(radius: state.isPresented ? 3 : 0)
+                         .opacity(state.isPresented ? 0.5 : 1.0)
+                         .disabled(state.isPresented)
+                     if state.isPresented {
+                         navigationContent()
+                     }
+                 }
+             )
         case .fullscreen:
             return AnyView(
                 VStack {
