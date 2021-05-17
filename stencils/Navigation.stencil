@@ -20,6 +20,12 @@ struct Navigation<NavigationContent: View>: ViewModifier {
     private let type: NavigationType
     private let navigationContent: () -> NavigationContent
 
+    init(state: RoutingState, type: NavigationType, @ViewBuilder navigationContent: @escaping () -> NavigationContent) {
+        self.state = state
+        self.type = type
+        self.navigationContent = navigationContent
+    }
+
     func body(content: Content) -> some View {
         switch type {
         case .push:
@@ -42,7 +48,7 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                          .opacity(state.isPresented ? 0.5 : 1.0)
                          .disabled(state.isPresented)
                      if state.isPresented {
-                         navigationContent()
+                         LazyView(navigationContent())
                      }
                  }
              )
@@ -61,13 +67,13 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                 }
             )
         case .replace:
-            return state.isPresented ? AnyView(navigationContent()) : AnyView(content)
+            return state.isPresented ? AnyView(LazyView(navigationContent())) : AnyView(content)
         case .cover:
             return AnyView(
                 Group {
                     content
                     if state.isPresented {
-                        navigationContent()
+                        LazyView(navigationContent())
                     }
                 }
             )
@@ -82,12 +88,6 @@ struct Navigation<NavigationContent: View>: ViewModifier {
             )
         {% endif %}
         }
-    }
-
-    init(state: RoutingState, type: NavigationType, @ViewBuilder navigationContent: @escaping () -> NavigationContent) {
-        self.state = state
-        self.type = type
-        self.navigationContent = navigationContent
     }
 }
 
