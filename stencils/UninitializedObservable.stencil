@@ -10,6 +10,7 @@ typealias IntUninitializedObservable = MappedUninitializedObservable<KotlinInt, 
 typealias FloatUninitializedObservable = MappedUninitializedObservable<KotlinFloat, Float, FloatMapper>
 typealias DoubleUninitializedObservable = MappedUninitializedObservable<KotlinDouble, Double, DoubleMapper>
 typealias ColorUninitializedObservable = MappedUninitializedObservable<ResourcesColor, UIColor, ColorMapper>
+typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateMapper>
 
 class UninitializedObservable<Input: KotlinObject, Output: Equatable>: ObservableObject {
 

@@ -2,8 +2,6 @@ import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
-typealias KalugaDate = {{ argument.sharedFrameworkName }}.Date
-
 @available(*, deprecated, renamed: "Subject")
 class CombineSubject<Output: Equatable, Input: AnyObject & Equatable>: ObservableObject {
     @Published var value: Output
@@ -153,17 +151,17 @@ class BoolCombineSubject: CombineSubject<Bool, KotlinBoolean> {
     }
 }
 
-// @available(*, deprecated, renamed: "DateSubject")
-// class DateCombineSubject: CombineSubject<Foundation.Date, KalugaDate> {
-//     init(
-//         _ architectureSubject: ArchitectureSubject<KalugaDate>,
-//         defaultValue: Foundation.Date = .init()
-//     ) {
-//         super.init(
-//             architectureSubject,
-//             defaultValue: defaultValue,
-//             toMapper: { $0.toSwiftDate() },
-//             fromMapper: { $0.toKalugaDate() }
-//         )
-//     }
-// }
+@available(*, deprecated, renamed: "DateSubject")
+class DateCombineSubject: CombineSubject<Foundation.Date, KalugaDate> {
+    init(
+        _ architectureSubject: ArchitectureSubject<KalugaDate>,
+        defaultValue: Foundation.Date = .init()
+    ) {
+        super.init(
+            architectureSubject,
+            defaultValue: defaultValue,
+            toMapper: { $0.toSwiftDate() },
+            fromMapper: { $0.toKalugaDate() }
+        )
+    }
+}

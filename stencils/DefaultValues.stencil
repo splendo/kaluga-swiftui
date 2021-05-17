@@ -29,6 +29,10 @@ extension UIColor: HasDefaultValue {
     static func `default`() -> Self { UIColor.clear as! Self }
 }
 
+extension Date: HasDefaultValue {
+    static func `default`() -> Date { Date() }
+}
+
 extension Optional: HasDefaultValue {
     static func `default`() -> Wrapped? { nil }
 }

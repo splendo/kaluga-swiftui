@@ -7,6 +7,7 @@ typealias BoolSubject = MappedSubject<KotlinBoolean, Bool, BoolMapper>
 typealias IntSubject = MappedSubject<KotlinInt, Int, IntMapper>
 typealias FloatSubject = MappedSubject<KotlinFloat, Float, FloatMapper>
 typealias DoubleSubject = MappedSubject<KotlinDouble, Double, DoubleMapper>
+typealias DateSubject = MappedSubject<KalugaDate, Foundation.Date, DateMapper>
 
 class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
 

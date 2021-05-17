@@ -38,6 +38,11 @@ enum DoubleMapper: PlatformValueMapper {
     static func from(_ value: Double) -> KotlinDouble { KotlinDouble(value: value) }
 }
 
+enum DateMapper: PlatformValueMapper {
+    static func to(_ value: KalugaDate) -> Foundation.Date { value.toSwiftDate() }
+    static func from(_ value: Foundation.Date) -> KalugaDate { value.toKalugaDate() }
+}
+
 enum ColorMapper: PlatformValueMapper {
     static func to(_ value: ResourcesColor) -> UIColor { value.uiColor }
     static func from(_ value: UIColor) -> ResourcesColor { ResourcesColor(uiColor: value) }

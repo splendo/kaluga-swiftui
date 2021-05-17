@@ -11,6 +11,7 @@ typealias IntObservable = MappedObservable<KotlinInt, Int, IntMapper>
 typealias FloatObservable = MappedObservable<KotlinFloat, Float, FloatMapper>
 typealias DoubleObservable = MappedObservable<KotlinDouble, Double, DoubleMapper>
 typealias ColorObservable = MappedObservable<ResourcesColor, UIColor, ColorMapper>
+typealias DateObservable = MappedObservable<KalugaDate, Foundation.Date, DateMapper>
 
 class Observable<Input: AnyObject & Equatable, Output: Equatable>: ObservableObject {
 
