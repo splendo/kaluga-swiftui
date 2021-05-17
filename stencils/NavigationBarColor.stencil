@@ -1,0 +1,34 @@
+import SwiftUI
+
+struct NavigationBarColor: ViewModifier {
+
+    init(backgroundColor: Color, tintColor: Color, shadowColor: Color) {
+        let coloredAppearance = UINavigationBarAppearance()
+        coloredAppearance.configureWithOpaqueBackground()
+        coloredAppearance.backgroundColor = UIColor(backgroundColor)
+        coloredAppearance.shadowColor = UIColor(shadowColor)
+        coloredAppearance.titleTextAttributes = [.foregroundColor: UIColor(tintColor)]
+        coloredAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor(tintColor)]
+
+        UINavigationBar.appearance().standardAppearance = coloredAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
+        UINavigationBar.appearance().compactAppearance = coloredAppearance
+        UINavigationBar.appearance().tintColor = UIColor(tintColor)
+    }
+
+    func body(content: Content) -> some View {
+        content
+    }
+}
+
+extension View {
+    func navigationBarColor(backgroundColor: Color, tintColor: Color, shadowColor: Color) -> some View {
+        self.modifier(
+            NavigationBarColor(
+                backgroundColor: backgroundColor,
+                tintColor: tintColor,
+                shadowColor: shadowColor
+            )
+        )
+    }
+}
