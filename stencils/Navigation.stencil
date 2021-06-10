@@ -26,66 +26,59 @@ struct Navigation<NavigationContent: View>: ViewModifier {
         self.navigationContent = navigationContent
     }
 
+    @ViewBuilder
     func body(content: Content) -> some View {
         switch type {
         case .push:
-            return AnyView(
-                VStack {
-                    NavigationLink(
-                        destination: LazyView(navigationContent()),
-                        isActive: $state.isPresented
-                    ) {
-                        EmptyView()
-                    }
-                    content
+            VStack {
+                NavigationLink(
+                    destination: LazyView(navigationContent()),
+                    isActive: $state.isPresented
+                ) {
+                    EmptyView()
                 }
-            )
+                content
+            }
         case .hud:
-             return AnyView(
-                 Group {
-                     content
-                         .blur(radius: state.isPresented ? 3 : 0)
-                         .opacity(state.isPresented ? 0.5 : 1.0)
-                         .disabled(state.isPresented)
-                     if state.isPresented {
-                         LazyView(navigationContent())
-                     }
+             Group {
+                 content
+                     .blur(radius: state.isPresented ? 3 : 0)
+                     .opacity(state.isPresented ? 0.5 : 1.0)
+                     .disabled(state.isPresented)
+                 if state.isPresented {
+                     LazyView(navigationContent())
                  }
-             )
+             }
         case .fullscreen:
-            return AnyView(
-                VStack {
-                    content
-                    EmptyView().fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
-                }
-            )
+            VStack {
+                content
+                EmptyView().fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+            }
         case .sheet:
-            return AnyView(
-                VStack {
-                    content
-                    EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
-                }
-            )
+            VStack {
+                content
+                EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+            }
         case .replace:
-            return state.isPresented ? AnyView(LazyView(navigationContent())) : AnyView(content)
+            if state.isPresented {
+                LazyView(navigationContent())
+            } else {
+                content
+            }
         case .cover:
-            return AnyView(
-                Group {
-                    content
-                    if state.isPresented {
-                        LazyView(navigationContent())
-                    }
+            Group {
+                content
+                if state.isPresented {
+                    LazyView(navigationContent())
                 }
-            )
+            }
         {% if argument.includePartialSheet %}
         case .partialSheet(let style):
-            return AnyView(
-                content
-                    .addPartialSheet(style: style)
-                    .partialSheet(isPresented: $state.isPresented) {
-                        LazyView(navigationContent())
-                    }
-            )
+            content
+                .addPartialSheet(style: style)
+                .partialSheet(isPresented: $state.isPresented) {
+                    LazyView(navigationContent())
+                }
         {% endif %}
         }
     }
