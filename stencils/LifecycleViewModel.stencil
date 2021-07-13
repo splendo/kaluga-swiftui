@@ -1,5 +1,5 @@
 import SwiftUI
-import XbikeShared
+import {{ argument.sharedFrameworkName }}
 
 final class LifecycleViewModel<VM: BaseViewModel> {
 
