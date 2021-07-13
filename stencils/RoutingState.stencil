@@ -62,6 +62,6 @@ class ObjectRoutingState<T: Equatable>: RoutingState {
 
     override func close(animated: Bool = false, force: Bool = false) {
         object = nil
-        super.close(animated: animated)
+        super.close(animated: animated, force: force)
     }
 }
