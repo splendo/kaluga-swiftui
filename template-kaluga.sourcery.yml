@@ -1,6 +1,7 @@
 project:
   file: ./$XCODE_PROJECT_NAME.xcodeproj
-  target: $TARGET_NAME
+  target:
+    name: $TARGET_NAME
 templates:
   - $PATH_TO_SUBMODULE/stencils/
 output:
