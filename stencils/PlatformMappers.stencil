@@ -7,13 +7,19 @@ enum StringMapper: PlatformValueMapper {
     static func from(_ value: String) -> NSString { value as NSString }
 }
 
-enum OptionalStringMapper: PlatformValueMapper {
-    static func to(_ value: NSString) -> String? { String(value) }
-    static func from(_ value: String?) -> NSString {
+enum StringOptionalMapper: PlatformOptionalValueMapper {
+    static func to(_ value: NSString?) -> String? {
+        if let value = value {
+            return String(value)
+        } else {
+            return nil
+        }
+    }
+    static func from(_ value: String?) -> NSString? {
         if let value = value {
             return value as NSString
         } else {
-            return NSString()
+            return nil
         }
     }
 }
@@ -23,9 +29,31 @@ enum BoolMapper: PlatformValueMapper {
     static func from(_ value: Bool) -> KotlinBoolean { KotlinBoolean(bool: value) }
 }
 
+enum BoolOptionalMapper: PlatformOptionalValueMapper {
+    static func to(_ value: KotlinBoolean?) -> Bool? { value?.boolValue }
+    static func from(_ value: Bool?) -> KotlinBoolean? {
+        if let value = value {
+            return KotlinBoolean(bool: value)
+        } else {
+            return nil
+        }
+    }
+}
+
 enum IntMapper: PlatformValueMapper {
     static func to(_ value: KotlinInt) -> Int { value.intValue }
     static func from(_ value: Int) -> KotlinInt { KotlinInt(integerLiteral: value) }
+}
+
+enum IntOptionalMapper: PlatformOptionalValueMapper {
+    static func to(_ value: KotlinInt?) -> Int? { value?.intValue }
+    static func from(_ value: Int?) -> KotlinInt? {
+        if let value = value {
+            return KotlinInt(integerLiteral: value)
+        } else {
+            return nil
+        }
+    }
 }
 
 enum FloatMapper: PlatformValueMapper {
@@ -33,9 +61,31 @@ enum FloatMapper: PlatformValueMapper {
     static func from(_ value: Float) -> KotlinFloat { KotlinFloat(float: value) }
 }
 
+enum FloatOptionalMapper: PlatformOptionalValueMapper {
+    static func to(_ value: KotlinFloat?) -> Float? { value?.floatValue }
+    static func from(_ value: Float?) -> KotlinFloat? {
+        if let value = value {
+            return KotlinFloat(float: value)
+        } else {
+            return nil
+        }
+    }
+}
+
 enum DoubleMapper: PlatformValueMapper {
     static func to(_ value: KotlinDouble) -> Double { value.doubleValue }
     static func from(_ value: Double) -> KotlinDouble { KotlinDouble(value: value) }
+}
+
+enum DoubleOptionalMapper: PlatformOptionalValueMapper {
+    static func to(_ value: KotlinDouble?) -> Double? { value?.doubleValue }
+    static func from(_ value: Double?) -> KotlinDouble? {
+        if let value = value {
+            return KotlinDouble(value: value)
+        } else {
+            return nil
+        }
+    }
 }
 
 enum DateMapper: PlatformValueMapper {
@@ -43,14 +93,35 @@ enum DateMapper: PlatformValueMapper {
     static func from(_ value: Foundation.Date) -> KalugaDate { value.toKalugaDate() }
 }
 
+enum DateOptionalMapper: PlatformOptionalValueMapper {
+    static func to(_ value: KalugaDate?) -> Foundation.Date? { value?.toSwiftDate() }
+    static func from(_ value: Foundation.Date?) -> KalugaDate? { value?.toKalugaDate() }
+}
+
 enum ColorMapper: PlatformValueMapper {
     static func to(_ value: ResourcesColor) -> UIColor { value.uiColor }
     static func from(_ value: UIColor) -> ResourcesColor { ResourcesColor(uiColor: value) }
 }
 
+enum ColorOptionalMapper: PlatformOptionalValueMapper {
+    static func to(_ value: ResourcesColor?) -> UIColor? { value?.uiColor }
+    static func from(_ value: UIColor?) -> ResourcesColor? {
+        if let value = value {
+            return ResourcesColor(uiColor: value)
+        } else {
+            return nil
+        }
+    }
+}
+
 enum EmptyMapper<T>: PlatformValueMapper {
     static func to(_ value: T) -> T { value }
     static func from(_ value: T) -> T { value }
+}
+
+enum EmptyOptionalMapper<T>: PlatformOptionalValueMapper {
+    static func to(_ value: T?) -> T? { value }
+    static func from(_ value: T?) -> T? { value }
 }
 
 enum ListMapper<T>: PlatformValueMapper {

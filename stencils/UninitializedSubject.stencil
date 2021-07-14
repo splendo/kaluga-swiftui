@@ -2,12 +2,12 @@ import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
-typealias StringUninitializedSubject = MappedUninitializedSubject<NSString, String?, OptionalStringMapper>
-typealias BoolUninitializedSubject = MappedUninitializedSubject<KotlinBoolean, Bool, BoolMapper>
-typealias IntUninitializedSubject = MappedUninitializedSubject<KotlinInt, Int, IntMapper>
-typealias FloatUninitializedSubject = MappedUninitializedSubject<KotlinFloat, Float, FloatMapper>
-typealias DoubleUninitializedSubject = MappedUninitializedSubject<KotlinDouble, Double, DoubleMapper>
-typealias DateUninitializedSubject = MappedUninitializedSubject<KalugaDate, Foundation.Date, DateMapper>
+typealias StringUninitializedSubject = MappedUninitializedSubject<NSString, String, StringOptionalMapper>
+typealias BoolUninitializedSubject = MappedUninitializedSubject<KotlinBoolean, Bool, BoolOptionalMapper>
+typealias IntUninitializedSubject = MappedUninitializedSubject<KotlinInt, Int, IntOptionalMapper>
+typealias FloatUninitializedSubject = MappedUninitializedSubject<KotlinFloat, Float, FloatOptionalMapper>
+typealias DoubleUninitializedSubject = MappedUninitializedSubject<KotlinDouble, Double, DoubleOptionalMapper>
+typealias DateUninitializedSubject = MappedUninitializedSubject<KalugaDate, Foundation.Date, DateOptionalMapper>
 
 class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableObject {
 
@@ -19,8 +19,8 @@ class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableOb
 
     init(_ subject: BaseUninitializedSubject<Input>,
          animated: Bool = false,
-         toMapper: @escaping (Input) -> Output,
-         fromMapper: @escaping (Output) -> Input
+         toMapper: @escaping (Input?) -> Output?,
+         fromMapper: @escaping (Output?) -> Input?
     ) {
         input = subject.currentOrNull
         if input != nil {
@@ -72,7 +72,7 @@ class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableOb
 class MappedUninitializedSubject<
     Input: KotlinObject,
     Output: Equatable,
-    Mapper: PlatformValueMapper
+    Mapper: PlatformOptionalValueMapper
 >: UninitializedSubject<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
     init(_ subject: BaseUninitializedSubject<Input>, animated: Bool = false) {
         super.init(

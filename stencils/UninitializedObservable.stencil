@@ -2,34 +2,30 @@ import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
-typealias KotlinObjectDefaults = KotlinObject & HasDefaultValue
-typealias ObjectUninitializedObservable<T: KotlinObjectDefaults> = MappedUninitializedObservable<T, T, EmptyMapper<T>>
-typealias StringUninitializedObservable = MappedUninitializedObservable<NSString, String, StringMapper>
-typealias BoolUninitializedObservable = MappedUninitializedObservable<KotlinBoolean, Bool, BoolMapper>
-typealias IntUninitializedObservable = MappedUninitializedObservable<KotlinInt, Int, IntMapper>
-typealias FloatUninitializedObservable = MappedUninitializedObservable<KotlinFloat, Float, FloatMapper>
-typealias DoubleUninitializedObservable = MappedUninitializedObservable<KotlinDouble, Double, DoubleMapper>
-typealias ColorUninitializedObservable = MappedUninitializedObservable<ResourcesColor, UIColor, ColorMapper>
-typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateMapper>
+typealias ObjectUninitializedObservable<T: KotlinObject> = MappedUninitializedObservable<T, T, EmptyOptionalMapper<T>>
+typealias StringUninitializedObservable = MappedUninitializedObservable<NSString, String, StringOptionalMapper>
+typealias BoolUninitializedObservable = MappedUninitializedObservable<KotlinBoolean, Bool, BoolOptionalMapper>
+typealias IntUninitializedObservable = MappedUninitializedObservable<KotlinInt, Int, IntOptionalMapper>
+typealias FloatUninitializedObservable = MappedUninitializedObservable<KotlinFloat, Float, FloatOptionalMapper>
+typealias DoubleUninitializedObservable = MappedUninitializedObservable<KotlinDouble, Double, DoubleOptionalMapper>
+typealias ColorUninitializedObservable = MappedUninitializedObservable<ResourcesColor, UIColor, ColorOptionalMapper>
+typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateOptionalMapper>
 
 class UninitializedObservable<Input: KotlinObject, Output: Equatable>: ObservableObject {
 
-    @Published private(set) var value: Output
+    @Published private(set) var value: Output?
 
     private var input: Input?
     private let disposeBag = DisposeBag(allowFreezing: false)
 
     init(
         _ observable: BaseUninitializedObservable<Input>,
-        defaultValue: Output,
         animated: Bool = false,
-        mapper: @escaping (Input) -> Output
+        mapper: @escaping (Input?) -> Output?
     ) {
         input = observable.currentOrNull
         if input != nil {
             value = mapper(input!)
-        } else {
-            value = defaultValue
         }
         observable
             .observe { [weak self] newValue in
@@ -39,10 +35,10 @@ class UninitializedObservable<Input: KotlinObject, Output: Equatable>: Observabl
                 defer {
                     self.input = newValue
                 }
-                guard newValue != nil, self.input != newValue else {
+                guard self.input != newValue else {
                     return
                 }
-                let mapped = mapper(newValue!)
+                let mapped = mapper(newValue)
                 if animated {
                     withAnimation {
                         self.value = mapped
@@ -61,10 +57,10 @@ class UninitializedObservable<Input: KotlinObject, Output: Equatable>: Observabl
 
 class MappedUninitializedObservable<
     Input: KotlinObject,
-    Output: Equatable & HasDefaultValue,
-    Mapper: PlatformValueMapper
+    Output: Equatable,
+    Mapper: PlatformOptionalValueMapper
 >: UninitializedObservable<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
-    init(_ observable: BaseUninitializedObservable<Input>, defaultValue: Output = .default(), animated: Bool = false) {
-        super.init(observable, defaultValue: defaultValue, animated: animated, mapper: Mapper.to)
+    init(_ observable: BaseUninitializedObservable<Input>, animated: Bool = false) {
+        super.init(observable, animated: animated, mapper: Mapper.to)
     }
 }
