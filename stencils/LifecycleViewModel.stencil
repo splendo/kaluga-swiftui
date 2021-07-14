@@ -1,7 +1,7 @@
 import SwiftUI
 import {{ argument.sharedFrameworkName }}
 
-final class LifecycleViewModel<VM: BaseViewModel> {
+class LifecycleViewModel<VM: BaseViewModel> {
 
     let viewModel: VM
     let containerView: ContainerView?
