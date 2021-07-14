@@ -58,7 +58,7 @@ class ListSubject<Output: Equatable>: ObservableObject {
     }
 }
 
-class CustomListSubject<Input: AnyObject & Equatable, Output: Equatable>: ListSubject<Output> {
+class CustomListSubject<Input: KotlinObject, Output: Equatable>: ListSubject<Output> {
 
     init(
         _ subject: BaseInitializedSubject<NSArray>,

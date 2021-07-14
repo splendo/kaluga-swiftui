@@ -52,7 +52,7 @@ class ListObservable<Output: Equatable>: ObservableObject {
     }
 }
 
-class CustomListObservable<Input: AnyObject & Equatable, Output: Equatable>: ListObservable<Output> {
+class CustomListObservable<Input: KotlinObject, Output: Equatable>: ListObservable<Output> {
 
     init(
         _ observable: BaseInitializedObservable<NSArray>,

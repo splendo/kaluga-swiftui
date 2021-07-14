@@ -13,7 +13,7 @@ typealias DoubleObservable = MappedObservable<KotlinDouble, Double, DoubleMapper
 typealias ColorObservable = MappedObservable<ResourcesColor, UIColor, ColorMapper>
 typealias DateObservable = MappedObservable<KalugaDate, Foundation.Date, DateMapper>
 
-class Observable<Input: AnyObject & Equatable, Output: Equatable>: ObservableObject {
+class Observable<Input: KotlinObject, Output: Equatable>: ObservableObject {
 
     @Published private(set) var value: Output
 
@@ -61,7 +61,7 @@ class Observable<Input: AnyObject & Equatable, Output: Equatable>: ObservableObj
 }
 
 class MappedObservable<
-    Input: AnyObject & Equatable,
+    Input: KotlinObject,
     Output: Equatable & HasDefaultValue,
     Mapper: PlatformValueMapper
 >: Observable<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
