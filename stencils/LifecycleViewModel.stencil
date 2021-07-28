@@ -17,7 +17,7 @@ class LifecycleViewModel<VM: BaseViewModel> {
 
     func lifecycleView<V: View>(view: (VM) -> V) -> some View {
         ZStack {
-            containerView
+            containerView.frame(width: 0, height: 0)
             view(viewModel)
                 .onAppear(perform: viewModel.didResume)
                 .onDisappear(perform: viewModel.didPause)
