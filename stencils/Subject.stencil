@@ -2,6 +2,8 @@ import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
+
+typealias ObjectSubject<T: KotlinObject & HasDefaultValue> = MappedWithDefaultSubject<T, T, EmptyMapper<T>>
 typealias StringSubject = MappedSubject<NSString, String, StringMapper>
 typealias BoolSubject = MappedSubject<KotlinBoolean, Bool, BoolMapper>
 typealias IntSubject = MappedSubject<KotlinInt, Int, IntMapper>
@@ -76,5 +78,19 @@ class MappedSubject<
             toMapper: Mapper.to,
             fromMapper: Mapper.from
         )
+    }
+}
+
+class MappedWithDefaultSubject<
+    Input: KotlinObject,
+    Output: Equatable & HasDefaultValue,
+    Mapper: PlatformValueMapper
+>: MappedSubject<Input, Output, Mapper> where Mapper.Input == Input, Mapper.Output == Output {
+    override init(
+        _ observable: BaseInitializedSubject<Input>,
+        defaultValue: Output = .default(),
+        animated: Bool = false
+    ) {
+        super.init(observable, defaultValue: defaultValue, animated: animated)
     }
 }
