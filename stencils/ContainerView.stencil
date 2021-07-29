@@ -1,0 +1,48 @@
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+struct ContainerView: UIViewControllerRepresentable {
+
+    enum Builder {
+        {% if argument.includeAlerts %}
+        case alert
+        {% endif %}
+        {% if argument.includeHud %}
+        case hud
+        {% endif %}
+        {% if argument.includeDatePicker %}
+        case datePicker
+        {% endif %}
+    }
+
+    private let viewController = UIViewController()
+
+    {% if argument.includeAlerts %}
+    private(set) var alertBuilder: AlertPresenter.Builder!
+    {% endif %}
+    {% if argument.includeHud %}
+    private(set) var hudBuilder: HUD.Builder!
+    {% endif %}
+    {% if argument.includeDatePicker %}
+    private(set) var datePickerBuilder: DateTimePickerPresenter.Builder!
+    {% endif %}
+
+    init(_ types: Builder...) {
+        types.forEach {
+            switch $0 {
+            {% if argument.includeAlerts %}
+            case .alert: alertBuilder = AlertPresenter.Builder(viewController: viewController)
+            {% endif %}
+            {% if argument.includeHud %}
+            case .hud: hudBuilder = HUD.Builder(viewController: viewController)
+            {% endif %}
+            {% if argument.includeDatePicker %}
+            case .datePicker: datePickerBuilder = DateTimePickerPresenter.Builder(viewController: viewController)
+            {% endif %}
+            }
+        }
+    }
+
+    func makeUIViewController(context: Context) -> UIViewController { viewController }
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) { }
+}

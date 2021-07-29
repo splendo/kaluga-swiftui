@@ -1,6 +1,7 @@
 project:
   file: ./input.xcodeproj
-  target: Input
+  target:
+    name: Input
 templates:
   - ./stencils/
 output:

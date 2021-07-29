@@ -1,0 +1,29 @@
+import Foundation
+import {{ argument.sharedFrameworkName }}
+
+typealias KalugaDate = {{ argument.sharedFrameworkName }}.Date
+
+extension Foundation.Date {
+
+    func toKalugaDate() -> KalugaDate {
+        KalugaDate.Companion().epoch(
+            offsetInMilliseconds: Int64(self.timeIntervalSince1970 * 1_000),
+            timeZone: TimeZone.Companion().current(),
+            locale: Locale.Companion().defaultLocale
+        )
+    }
+}
+
+extension KalugaDate {
+
+    func toSwiftDate() -> Foundation.Date {
+        Foundation.Date(timeIntervalSince1970: TimeInterval(millisecondSinceEpoch / 1_000))
+    }
+
+    static var today: KalugaDate {
+        KalugaDate.Companion().today(
+            timeZone: TimeZone.Companion().current(),
+            locale: Locale.Companion().defaultLocale
+        )
+    }
+}

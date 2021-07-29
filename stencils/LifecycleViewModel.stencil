@@ -1,0 +1,26 @@
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+class LifecycleViewModel<VM: BaseViewModel> {
+
+    let viewModel: VM
+    let containerView: ContainerView?
+
+    init(_ viewModel: VM, containerView: ContainerView? = nil) {
+        self.viewModel = viewModel
+        self.containerView = containerView
+    }
+
+    deinit {
+        viewModel.clear()
+    }
+
+    func lifecycleView<V: View>(view: (VM) -> V) -> some View {
+        ZStack {
+            containerView.frame(width: 0, height: 0)
+            view(viewModel)
+                .onAppear(perform: viewModel.didResume)
+                .onDisappear(perform: viewModel.didPause)
+        }
+    }
+}

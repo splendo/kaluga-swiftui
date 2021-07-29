@@ -10,19 +10,30 @@ This library aims to resolve this issue by providing coding templates that gener
 These classes are generated using [Sourcery](https://github.com/krzysztofzablocki/Sourcery).
 
 ## Installation
-Make sure Sourcery is installed on your machine.
+Make sure latest version of Sourcery is [installed](https://github.com/krzysztofzablocki/Sourcery#installation) on your machine.
 
 - Checkout this project as a submodule to your project
 - Copy `template-kaluga.sourcery.yml` into the iOS folder of your shared code project and rename it to `kaluga.sourcery.yml`
 - Open `kaluga.sourcery.yml` and change:
-    - $XCODE_PROJ_NAME to the name of your xcodeproj file
+    - $XCODE_PROJECT_NAME to the name of your xcodeproj file
     - $TARGET_NAME to the name of the target in your project
     - $PATH_TO_SUBMODULE to the path of the submodule
-    - $NAME_OF_SHARED_FRAMEWORK to the name of the Shared Framework
+    - $SHARED_FRAMEWORK_NAME to the name of the Kaluga-based Shared Framework
     - Configure features (see below)
-- run `sourcery --config kaluga.sourcery.yml`
+
+### Manually
+
+- Run `sourcery --config kaluga.sourcery.yml`
 - If the partial sheet feature was enabled, add `https://github.com/AndreaMiotto/PartialSheet.git` as a Swift Package Dependency to your project.
 - Import the files in `./KalugaSwiftUI` into your Xcode project.
+
+### Automatic
+
+- Add Sourcery as pods into your project (Optional)
+- Add new Run Build Phase: `$PODS_ROOT/Sourcery/bin/sourcery --config kaluga.sourcery.yml`
+- Uncomment `link` section inside `kaluga.sourcery.yml`
+
+> Note code generation should go after multiplatform framework dependency
 
 ### Features
 To enable or disable certain Kaluga features, update their corresponding settings in the `kaluga.sourcery.yml` file.
@@ -35,62 +46,151 @@ All features are enabled by default.
 
 ## Usage
 ### ViewModels
-Kaluga ViewModels require a lifecycle to be maintained. This can be automated by wrapping the `ViewModel` in a `ViewModelWrapperView`.
+Kaluga ViewModels require a lifecycle to be maintained. This can be automated by wrapping the `ViewModel` in a `LifecycleViewModel`.
 Use the wrappers body method to then display the viewModel in a lifecycle aware state.
 
 ```swift
-struct SomeView : View {
-    let wrapper: ViewModelWrapperView<SomeViewModel>
+struct SomeView: View {
 
-    init(viewModel: SomeViewModel) {
-        wrapper = ViewModelWrapperView(viewModel: viewModel)
+    private let viewModel: LifecycleViewModel<SomeViewModel>
+
+    init(_ someViewModel: SomeViewModel) {
+        viewModel = LifecycleViewModel(viewModel: someViewModel)
     }
 
     var body: some View {
-        wrapper.body { viewModel in 
+        viewModel.lifecycleView { viewModel in
             // Render View
+            Text(viewModel.title)
         }
     }
-
 }
 ```
 
 ### Alerts, HUD and DatePicker.
-If `Kaluga.alerts`, `Kaluga.hud`, and `Kaluga.date-picker` have been enabled, provide a `ViewControllerContainer` to the `ViewModelWrapperView` to automatically add support for displaying alerts, huds, and date-pickers to the View.
+If `Kaluga.alerts`, `Kaluga.hud`, and `Kaluga.date-picker` have been enabled,
+provide a `ContainerView` to the `LifecycleViewModel`
+to automatically add support for displaying alerts, huds, and date-pickers to the View.
 
 The types of builders to support in a container can be provided on initialization.
 
 ```swift
-let container = ViewControllerContainer(types: [.alertBuilder, .hudBuilder, .datePickerBuilder])
-let alertBuilder = container.alertBuilder!
-let hudBuilder = container.hudBuilder!
-let datePickerBuilder = container.datePickerBuilder!
+let container = ContainerView(.alertBuilder, .hudBuilder, .datePickerBuilder)
+let alertBuilder = container.alertBuilder
+let hudBuilder = container.hudBuilder
+let datePickerBuilder = container.datePickerBuilder
 let wrapper = ViewModelWrapperView(container: container, viewModel: viewModel)
 ```
 
-
 ### Observables and Subjects
 This library provides functionality for using Kaluga `Observables` and `Subjects` in SwiftUI views.
-Observables can be mapped to a `CombineObservable` and Subjects to `CombineSubject` classes.
-These classes require a mapping, though convenience default implementations are included in this library.
+Observables can be mapped to a `Observable` or `UninitializedObservable`
+and Subjects to `Subject` or `UninitializedSubject` classes.
+These classes require a mapping, though convenience default mappings and typealiases are included in this library.
 
-To use the value of an observable
+To use the value of an observable:
 
 ```swift
-struct SomeView : View {
-	
-    @ObservedObject private var someString: StringCombineObservable
+struct SomeView: View {
 
-    init(viewModel: SomeViewModel) {
-        someString = StringCombineObservable(viewModel.someStringObservable)
+    @ObservedObject private var someString: StringObservable
+
+    init(_ viewModel: SomeViewModel) {
+        someString = StringObservable(
+            viewModel.someStringObservable,
+            defaultValue: "DefaultValueString",
+            animated: true // Animate value changes
+        )
     }
 
     var body: some View {
         Text(someString.value)
     }
-
 }
 ```
 
+Default `Observables`:
+
+- ListObservable
+- Object(Uninitialized)Observable
+- Color(Uninitialized)Observable
+- String(Uninitialized)Observable
+- Bool(Uninitialized)Observable
+- Int(Uninitialized)Observable
+- Float(Uninitialized)Observable
+- Double(Uninitialized)Observable
+
+Default `Subjects`:
+
+- String(Uninitialized)Subject
+- Bool(Uninitialized)Subject
+- Int(Uninitialized)Subject
+- Float(Uninitialized)Subject
+- Double(Uninitialized)Subject
+
 ### Navigation
-TODO
+#### State-driven navigation
+
+Suppose you have navigation state (simplified) in shared code:
+
+```Kotlin
+class HomeRoutingNavigator {
+
+    sealed class RoutingState(open val route: String) {
+        object Root : RoutingState("Root")
+        object LogIn : RoutingState("LogIn")
+        object Profile : RoutingState("Profile")
+    }
+
+    val routingState = MutableStateFlow<RoutingState>(RoutingState.Root)
+}
+```
+
+And view model holding this state:
+
+```Kotlin
+class SomeViewModel : BaseViewModel() {
+
+    private val navigator = HomeRoutingNavigator()
+
+    val isLogInScreenVisible = navigator.routingState
+        .mapLatest { it is HomeRoutingNavigator.RoutingState.LogIn }
+        .toInitializedObservable(false, coroutineScope)
+}
+```
+
+To show LogInView in SwiftUI using navigation state:
+
+```Swift
+struct HomeView: View {
+
+    private let viewModel: LifecycleViewModel<HomeViewModel>
+    @ObservedObject private var isLogInScreenVisible: BoolObservable
+
+    init(_ homeViewModel: HomeViewModel) {
+        viewModel = LifecycleViewModel(viewModel: homeViewModel)
+        isLogInScreenVisible = BoolObservable(homeViewModel.isLogInScreenVisible, animated: true)
+    }
+
+    var body: some View {
+        viewModel.lifecycleView { viewModel in
+            Group {
+                // Home View Layout
+                Text(viewModel.staticTitle)
+            }
+            .navigation(state: ObservableRoutingState(isLogInScreenVisible), type: .fullscreen) {
+                LogInView()
+            }
+        }
+    }
+}
+```
+
+View display types:
+
+- Fullscreen (using `fullScreenCover`)
+- Replace (fully replaced view)
+- Cover (partly covered view)
+- Sheet (using `sheet`)
+- Push (using `NavigationView`)
+
