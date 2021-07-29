@@ -2,6 +2,8 @@ import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
+
+typealias ObjectSubject<T: KotlinObject & HasDefaultValue> = MappedSubject <T, T, EmptyMapper<T>>
 typealias StringSubject = MappedSubject<NSString, String, StringMapper>
 typealias BoolSubject = MappedSubject<KotlinBoolean, Bool, BoolMapper>
 typealias IntSubject = MappedSubject<KotlinInt, Int, IntMapper>
@@ -78,3 +80,4 @@ class MappedSubject<
         )
     }
 }
+

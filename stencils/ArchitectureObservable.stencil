@@ -1,6 +1,0 @@
-import {{ argument.sharedFrameworkName }}
-
-@available(*, deprecated, message: "See Observable")
-typealias ArchitectureObservable<T: AnyObject> = BaseInitializedObservable<T>
-@available(*, deprecated, message: "See Subject")
-typealias ArchitectureSubject<T: AnyObject> = BaseInitializedSubject<T>
