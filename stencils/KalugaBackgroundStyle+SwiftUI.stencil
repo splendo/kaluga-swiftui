@@ -220,7 +220,6 @@ private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
         }
     }
     */
-    
 }
 
 // MARK: - RoundedShape
