@@ -1,0 +1,67 @@
+{% if argument.includeResources %}
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+// MARK: - KalugaLabel
+
+extension KalugaLabel {
+    
+    func toText() -> some View {
+        switch self {
+            case let label as KalugaLabel.Plain:
+                return makePlainLabel(label: label)
+            case let label as KalugaLabel.Styled:
+                return makeStyledLabel(label: label)
+            default:
+                preconditionFailure("Unknown kaluga button type!")
+        }
+    }
+}
+
+// MARK: - Private methods
+
+private extension KalugaLabel {
+    
+    private func makePlainLabel(label: KalugaLabel.Plain) -> AnyView {
+        // create the font
+        let font = Font(
+            style.font
+                .withSize(CGFloat(style.size))
+        )
+        
+        // create the text alignment
+        let textAlignment: Alignment = {
+            switch style.alignment {
+                case TextAlignment.left:
+                    return .leading
+                case TextAlignment.right:
+                    return .trailing
+                case TextAlignment.opposite:
+                    return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
+                        .trailing :
+                        .leading
+                case TextAlignment.normal:
+                    return .leading
+                case TextAlignment.center:
+                    return .center
+                default:
+                    preconditionFailure("Unknown text alignment type!")
+            }
+        }()
+        
+        // assemble the button
+        return AnyView(
+            Text(label.text)
+                .font(font)
+                .foregroundColor(Color(style.color.uiColor))
+                .frame(alignment: textAlignment)
+        )
+    }
+    
+    private func makeStyledLabel(label: KalugaLabel.Styled) -> AnyView {
+        return AnyView(
+            label.text.toText()
+        )
+    }
+}
+{% endif %}

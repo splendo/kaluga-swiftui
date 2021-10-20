@@ -1,0 +1,112 @@
+{% if argument.includeResources %}
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+// MARK: - KalugaButton
+
+extension KalugaButton {
+    
+    func toButton() -> some View {
+        let buttonView: AnyView
+        
+        switch self {
+            case let button as KalugaButton.Plain:
+                buttonView = makePlainButton(button: button)
+            case let button as KalugaButton.Styled:
+                buttonView = makeStyledButton(button: button)
+            default:
+                preconditionFailure("Unknown kaluga button type!")
+        }
+        
+        return Button(action: {
+            self.action()
+        }) {
+            buttonView
+        }
+        .buttonStyle(CustomButtonStyle(kalugaButton: self))
+    }
+}
+
+// MARK: - Private methods
+
+private extension KalugaButton {
+
+    private func makePlainButton(button: KalugaButton.Plain) -> AnyView {
+        // create the font
+        let font = Font(
+            style.font
+                .withSize(CGFloat(style.textSize))
+        )
+        
+        // create the text alignment
+        let textAlignment: Alignment = {
+            switch style.textAlignment {
+                case TextAlignment.left:
+                    return .leading
+                case TextAlignment.right:
+                    return .trailing
+                case TextAlignment.opposite:
+                    return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
+                        .trailing :
+                        .leading
+                case TextAlignment.normal:
+                    return .leading
+                case TextAlignment.center:
+                    return .center
+                default:
+                    preconditionFailure("Unknown text alignment type!")
+            }
+        }()
+        
+        // assemble the button
+        return AnyView(
+            Text(button.text)
+                    .font(font)
+                    .frame(alignment: textAlignment)
+        )
+    }
+    
+    private func makeStyledButton(button: KalugaButton.Styled) -> AnyView {
+        return AnyView(
+            button.text.toText()
+        )
+    }
+}
+
+// MARK: - KalugaButton.CustomButtonStyle
+
+private extension KalugaButton {
+    
+    struct CustomButtonStyle: SwiftUI.ButtonStyle {
+        
+        private let kalugaButton: KalugaButton
+        
+        init(kalugaButton: KalugaButton) {
+            self.kalugaButton = kalugaButton
+        }
+        
+        func makeBody(configuration: Self.Configuration) -> some View {
+            let foregroundColor = makeForegroundColor(isPressed: configuration.isPressed)
+            let shape = makeShape(isPressed: configuration.isPressed)
+            
+            return configuration.label
+                .padding()
+                .foregroundColor(foregroundColor)
+                .background(shape)
+        }
+        
+        private func makeForegroundColor(isPressed: Bool) -> SwiftUI.Color {
+            if isPressed { return Color(kalugaButton.style.pressedStyle.textColor.uiColor) }
+            else { return Color(kalugaButton.style.defaultStyle.textColor.uiColor) }
+        }
+        
+        private func makeShape(isPressed: Bool) -> some View {
+            let buttonStateStyle: ButtonStateStyle
+            if isPressed { buttonStateStyle = kalugaButton.style.pressedStyle }
+            else { buttonStateStyle = kalugaButton.style.defaultStyle}
+            
+            return buttonStateStyle.backgroundStyle.toView()
+        }
+    }
+}
+{% endif %}
