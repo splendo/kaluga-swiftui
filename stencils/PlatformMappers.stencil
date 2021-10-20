@@ -99,15 +99,15 @@ enum DateOptionalMapper: PlatformOptionalValueMapper {
 }
 
 enum ColorMapper: PlatformValueMapper {
-    static func to(_ value: ResourcesColor) -> UIColor { value.uiColor }
-    static func from(_ value: UIColor) -> ResourcesColor { ResourcesColor(uiColor: value) }
+    static func to(_ value: {{ argument.sharedFrameworkName }}.Color) -> UIColor { value.uiColor }
+    static func from(_ value: UIColor) -> {{ argument.sharedFrameworkName }}.Color { {{ argument.sharedFrameworkName }}.Color(uiColor: value) }
 }
 
 enum ColorOptionalMapper: PlatformOptionalValueMapper {
-    static func to(_ value: ResourcesColor?) -> UIColor? { value?.uiColor }
-    static func from(_ value: UIColor?) -> ResourcesColor? {
+    static func to(_ value: {{ argument.sharedFrameworkName }}.Color?) -> UIColor? { value?.uiColor }
+    static func from(_ value: UIColor?) -> {{ argument.sharedFrameworkName }}.Color? {
         if let value = value {
-            return ResourcesColor(uiColor: value)
+            return {{ argument.sharedFrameworkName }}.Color(uiColor: value)
         } else {
             return nil
         }
