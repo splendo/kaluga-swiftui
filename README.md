@@ -39,6 +39,7 @@ Make sure latest version of Sourcery is [installed](https://github.com/krzysztof
 To enable or disable certain Kaluga features, update their corresponding settings in the `kaluga.sourcery.yml` file.
 All features are enabled by default.
 
+- __includeResources__: Set to `true` when `Kaluga.resources` is exported.
 - __includeAlerts__: Set to `true` when `Kaluga.alerts` is exported.
 - __includeHud__: Set to `true` when `Kaluga.hud` is exported.
 - __includeDatePicker__: Set to `true` when `Kaluga.date-picker` is exported.

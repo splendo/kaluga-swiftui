@@ -8,6 +8,8 @@ output:
   path: ./output
 args:
   sharedFrameworkName: Shared
+  includeResources: true
   includeAlerts: true
   includeHud: true
   includeDatePicker: true
+  includePartialSheet: false

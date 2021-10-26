@@ -13,7 +13,8 @@ output:
   #    group: ProjectRoot/Generated/KalugaSwiftUI
 args:
   sharedFrameworkName: $SHARED_FRAMEWORK_NAME
-  includeAlerts: $TRUE_IF_ALERTS_EXPORTED
-  includeHud: $TRUE_IF_HUD_EXPORTED
-  includeDatePicker: $TRUE_IF_DATE_PICKER_EXPORTED
+  includeResources: $TRUE_IF_RESOURCES_ARE_EXPORTED
+  includeAlerts: $TRUE_IF_ALERTS_ARE_EXPORTED
+  includeHud: $TRUE_IF_HUD_IS_EXPORTED
+  includeDatePicker: $TRUE_IF_DATE_PICKER_IS_EXPORTED
   includePartialSheet: false
