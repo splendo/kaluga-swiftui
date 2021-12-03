@@ -114,8 +114,8 @@ enum ColorOptionalMapper: PlatformOptionalValueMapper {
         }
     }
 }
-{% endif %}
 
+{% endif %}
 enum EmptyMapper<T>: PlatformValueMapper {
     static func to(_ value: T) -> T { value }
     static func from(_ value: T) -> T { value }
