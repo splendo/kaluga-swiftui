@@ -98,6 +98,7 @@ enum DateOptionalMapper: PlatformOptionalValueMapper {
     static func from(_ value: Foundation.Date?) -> KalugaDate? { value?.toKalugaDate() }
 }
 
+{% if argument.includeResources %}
 enum ColorMapper: PlatformValueMapper {
     static func to(_ value: {{ argument.sharedFrameworkName }}.Color) -> UIColor { value.uiColor }
     static func from(_ value: UIColor) -> {{ argument.sharedFrameworkName }}.Color { {{ argument.sharedFrameworkName }}.Color(uiColor: value) }
@@ -113,6 +114,7 @@ enum ColorOptionalMapper: PlatformOptionalValueMapper {
         }
     }
 }
+{% endif %}
 
 enum EmptyMapper<T>: PlatformValueMapper {
     static func to(_ value: T) -> T { value }

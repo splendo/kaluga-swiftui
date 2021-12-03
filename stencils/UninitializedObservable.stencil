@@ -8,7 +8,9 @@ typealias BoolUninitializedObservable = MappedUninitializedObservable<KotlinBool
 typealias IntUninitializedObservable = MappedUninitializedObservable<KotlinInt, Int, IntOptionalMapper>
 typealias FloatUninitializedObservable = MappedUninitializedObservable<KotlinFloat, Float, FloatOptionalMapper>
 typealias DoubleUninitializedObservable = MappedUninitializedObservable<KotlinDouble, Double, DoubleOptionalMapper>
+{% if argument.includeResources %}
 typealias ColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.Color, UIColor, ColorOptionalMapper>
+{% endif %}
 typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateOptionalMapper>
 
 class UninitializedObservable<Input: KotlinObject, Output: Equatable>: ObservableObject {
