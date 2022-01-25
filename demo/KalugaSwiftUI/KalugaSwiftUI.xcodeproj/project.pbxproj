@@ -1,0 +1,612 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		956E7EDF27A070CF0089BEF1 /* KalugaSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E7EDE27A070CF0089BEF1 /* KalugaSwiftUIApp.swift */; };
+		956E7EE127A070CF0089BEF1 /* NavigationDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E7EE027A070CF0089BEF1 /* NavigationDemoView.swift */; };
+		956E7EE327A070D20089BEF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 956E7EE227A070D20089BEF1 /* Assets.xcassets */; };
+		956E7EE627A070D20089BEF1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 956E7EE527A070D20089BEF1 /* Preview Assets.xcassets */; };
+		956E7EF027A070D20089BEF1 /* KalugaSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E7EEF27A070D20089BEF1 /* KalugaSwiftUITests.swift */; };
+		956E7EFA27A070D30089BEF1 /* KalugaSwiftUIUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E7EF927A070D30089BEF1 /* KalugaSwiftUIUITests.swift */; };
+		956E7EFC27A070D30089BEF1 /* KalugaSwiftUIUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E7EFB27A070D30089BEF1 /* KalugaSwiftUIUITestsLaunchTests.swift */; };
+		956E7F2B27A073A80089BEF1 /* Navigation.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E7F1627A072CE0089BEF1 /* Navigation.generated.swift */; };
+		956E7F2D27A073EE0089BEF1 /* LazyView.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E7F0E27A072CE0089BEF1 /* LazyView.generated.swift */; };
+		956E7F2F27A074240089BEF1 /* RoutingState.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956E7F2E27A074240089BEF1 /* RoutingState.generated.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		956E7EEC27A070D20089BEF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 956E7ED327A070CF0089BEF1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 956E7EDA27A070CF0089BEF1;
+			remoteInfo = KalugaSwiftUI;
+		};
+		956E7EF627A070D30089BEF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 956E7ED327A070CF0089BEF1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 956E7EDA27A070CF0089BEF1;
+			remoteInfo = KalugaSwiftUI;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		956E7EDB27A070CF0089BEF1 /* KalugaSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KalugaSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		956E7EDE27A070CF0089BEF1 /* KalugaSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KalugaSwiftUIApp.swift; sourceTree = "<group>"; };
+		956E7EE027A070CF0089BEF1 /* NavigationDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDemoView.swift; sourceTree = "<group>"; };
+		956E7EE227A070D20089BEF1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		956E7EE527A070D20089BEF1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		956E7EEB27A070D20089BEF1 /* KalugaSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KalugaSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		956E7EEF27A070D20089BEF1 /* KalugaSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KalugaSwiftUITests.swift; sourceTree = "<group>"; };
+		956E7EF527A070D30089BEF1 /* KalugaSwiftUIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KalugaSwiftUIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		956E7EF927A070D30089BEF1 /* KalugaSwiftUIUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KalugaSwiftUIUITests.swift; sourceTree = "<group>"; };
+		956E7EFB27A070D30089BEF1 /* KalugaSwiftUIUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KalugaSwiftUIUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		956E7F0E27A072CE0089BEF1 /* LazyView.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazyView.generated.swift; sourceTree = "<group>"; };
+		956E7F1627A072CE0089BEF1 /* Navigation.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigation.generated.swift; sourceTree = "<group>"; };
+		956E7F2E27A074240089BEF1 /* RoutingState.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutingState.generated.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		956E7ED827A070CF0089BEF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956E7EE827A070D20089BEF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956E7EF227A070D30089BEF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		956E7ED227A070CF0089BEF1 = {
+			isa = PBXGroup;
+			children = (
+				956E7EDD27A070CF0089BEF1 /* KalugaSwiftUI */,
+				956E7EEE27A070D20089BEF1 /* KalugaSwiftUITests */,
+				956E7EF827A070D30089BEF1 /* KalugaSwiftUIUITests */,
+				956E7EDC27A070CF0089BEF1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		956E7EDC27A070CF0089BEF1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				956E7EDB27A070CF0089BEF1 /* KalugaSwiftUI.app */,
+				956E7EEB27A070D20089BEF1 /* KalugaSwiftUITests.xctest */,
+				956E7EF527A070D30089BEF1 /* KalugaSwiftUIUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		956E7EDD27A070CF0089BEF1 /* KalugaSwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				956E7EDE27A070CF0089BEF1 /* KalugaSwiftUIApp.swift */,
+				956E7EE027A070CF0089BEF1 /* NavigationDemoView.swift */,
+				956E7EE227A070D20089BEF1 /* Assets.xcassets */,
+				956E7F0827A071150089BEF1 /* Models */,
+				956E7EE427A070D20089BEF1 /* Preview Content */,
+			);
+			path = KalugaSwiftUI;
+			sourceTree = "<group>";
+		};
+		956E7EE427A070D20089BEF1 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				956E7EE527A070D20089BEF1 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		956E7EEE27A070D20089BEF1 /* KalugaSwiftUITests */ = {
+			isa = PBXGroup;
+			children = (
+				956E7EEF27A070D20089BEF1 /* KalugaSwiftUITests.swift */,
+			);
+			path = KalugaSwiftUITests;
+			sourceTree = "<group>";
+		};
+		956E7EF827A070D30089BEF1 /* KalugaSwiftUIUITests */ = {
+			isa = PBXGroup;
+			children = (
+				956E7EF927A070D30089BEF1 /* KalugaSwiftUIUITests.swift */,
+				956E7EFB27A070D30089BEF1 /* KalugaSwiftUIUITestsLaunchTests.swift */,
+			);
+			path = KalugaSwiftUIUITests;
+			sourceTree = "<group>";
+		};
+		956E7F0827A071150089BEF1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				956E7F0E27A072CE0089BEF1 /* LazyView.generated.swift */,
+				956E7F1627A072CE0089BEF1 /* Navigation.generated.swift */,
+				956E7F2E27A074240089BEF1 /* RoutingState.generated.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		956E7EDA27A070CF0089BEF1 /* KalugaSwiftUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 956E7EFF27A070D30089BEF1 /* Build configuration list for PBXNativeTarget "KalugaSwiftUI" */;
+			buildPhases = (
+				956E7ED727A070CF0089BEF1 /* Sources */,
+				956E7ED827A070CF0089BEF1 /* Frameworks */,
+				956E7ED927A070CF0089BEF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KalugaSwiftUI;
+			productName = KalugaSwiftUI;
+			productReference = 956E7EDB27A070CF0089BEF1 /* KalugaSwiftUI.app */;
+			productType = "com.apple.product-type.application";
+		};
+		956E7EEA27A070D20089BEF1 /* KalugaSwiftUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 956E7F0227A070D30089BEF1 /* Build configuration list for PBXNativeTarget "KalugaSwiftUITests" */;
+			buildPhases = (
+				956E7EE727A070D20089BEF1 /* Sources */,
+				956E7EE827A070D20089BEF1 /* Frameworks */,
+				956E7EE927A070D20089BEF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				956E7EED27A070D20089BEF1 /* PBXTargetDependency */,
+			);
+			name = KalugaSwiftUITests;
+			productName = KalugaSwiftUITests;
+			productReference = 956E7EEB27A070D20089BEF1 /* KalugaSwiftUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		956E7EF427A070D30089BEF1 /* KalugaSwiftUIUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 956E7F0527A070D30089BEF1 /* Build configuration list for PBXNativeTarget "KalugaSwiftUIUITests" */;
+			buildPhases = (
+				956E7EF127A070D30089BEF1 /* Sources */,
+				956E7EF227A070D30089BEF1 /* Frameworks */,
+				956E7EF327A070D30089BEF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				956E7EF727A070D30089BEF1 /* PBXTargetDependency */,
+			);
+			name = KalugaSwiftUIUITests;
+			productName = KalugaSwiftUIUITests;
+			productReference = 956E7EF527A070D30089BEF1 /* KalugaSwiftUIUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		956E7ED327A070CF0089BEF1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					956E7EDA27A070CF0089BEF1 = {
+						CreatedOnToolsVersion = 13.2;
+					};
+					956E7EEA27A070D20089BEF1 = {
+						CreatedOnToolsVersion = 13.2;
+						TestTargetID = 956E7EDA27A070CF0089BEF1;
+					};
+					956E7EF427A070D30089BEF1 = {
+						CreatedOnToolsVersion = 13.2;
+						TestTargetID = 956E7EDA27A070CF0089BEF1;
+					};
+				};
+			};
+			buildConfigurationList = 956E7ED627A070CF0089BEF1 /* Build configuration list for PBXProject "KalugaSwiftUI" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 956E7ED227A070CF0089BEF1;
+			productRefGroup = 956E7EDC27A070CF0089BEF1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				956E7EDA27A070CF0089BEF1 /* KalugaSwiftUI */,
+				956E7EEA27A070D20089BEF1 /* KalugaSwiftUITests */,
+				956E7EF427A070D30089BEF1 /* KalugaSwiftUIUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		956E7ED927A070CF0089BEF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				956E7EE627A070D20089BEF1 /* Preview Assets.xcassets in Resources */,
+				956E7EE327A070D20089BEF1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956E7EE927A070D20089BEF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956E7EF327A070D30089BEF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		956E7ED727A070CF0089BEF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				956E7EE127A070CF0089BEF1 /* NavigationDemoView.swift in Sources */,
+				956E7F2D27A073EE0089BEF1 /* LazyView.generated.swift in Sources */,
+				956E7F2F27A074240089BEF1 /* RoutingState.generated.swift in Sources */,
+				956E7F2B27A073A80089BEF1 /* Navigation.generated.swift in Sources */,
+				956E7EDF27A070CF0089BEF1 /* KalugaSwiftUIApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956E7EE727A070D20089BEF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				956E7EF027A070D20089BEF1 /* KalugaSwiftUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		956E7EF127A070D30089BEF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				956E7EFA27A070D30089BEF1 /* KalugaSwiftUIUITests.swift in Sources */,
+				956E7EFC27A070D30089BEF1 /* KalugaSwiftUIUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		956E7EED27A070D20089BEF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 956E7EDA27A070CF0089BEF1 /* KalugaSwiftUI */;
+			targetProxy = 956E7EEC27A070D20089BEF1 /* PBXContainerItemProxy */;
+		};
+		956E7EF727A070D30089BEF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 956E7EDA27A070CF0089BEF1 /* KalugaSwiftUI */;
+			targetProxy = 956E7EF627A070D30089BEF1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		956E7EFD27A070D30089BEF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		956E7EFE27A070D30089BEF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		956E7F0027A070D30089BEF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"KalugaSwiftUI/Preview Content\"";
+				DEVELOPMENT_TEAM = SFJ9XKKL47;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.splendo.KalugaSwiftUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		956E7F0127A070D30089BEF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"KalugaSwiftUI/Preview Content\"";
+				DEVELOPMENT_TEAM = SFJ9XKKL47;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.splendo.KalugaSwiftUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		956E7F0327A070D30089BEF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SFJ9XKKL47;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.splendo.KalugaSwiftUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KalugaSwiftUI.app/KalugaSwiftUI";
+			};
+			name = Debug;
+		};
+		956E7F0427A070D30089BEF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SFJ9XKKL47;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.splendo.KalugaSwiftUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KalugaSwiftUI.app/KalugaSwiftUI";
+			};
+			name = Release;
+		};
+		956E7F0627A070D30089BEF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SFJ9XKKL47;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.splendo.KalugaSwiftUIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = KalugaSwiftUI;
+			};
+			name = Debug;
+		};
+		956E7F0727A070D30089BEF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SFJ9XKKL47;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.splendo.KalugaSwiftUIUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = KalugaSwiftUI;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		956E7ED627A070CF0089BEF1 /* Build configuration list for PBXProject "KalugaSwiftUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				956E7EFD27A070D30089BEF1 /* Debug */,
+				956E7EFE27A070D30089BEF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		956E7EFF27A070D30089BEF1 /* Build configuration list for PBXNativeTarget "KalugaSwiftUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				956E7F0027A070D30089BEF1 /* Debug */,
+				956E7F0127A070D30089BEF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		956E7F0227A070D30089BEF1 /* Build configuration list for PBXNativeTarget "KalugaSwiftUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				956E7F0327A070D30089BEF1 /* Debug */,
+				956E7F0427A070D30089BEF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		956E7F0527A070D30089BEF1 /* Build configuration list for PBXNativeTarget "KalugaSwiftUIUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				956E7F0627A070D30089BEF1 /* Debug */,
+				956E7F0727A070D30089BEF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 956E7ED327A070CF0089BEF1 /* Project object */;
+}

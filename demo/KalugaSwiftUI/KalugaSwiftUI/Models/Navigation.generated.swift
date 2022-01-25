@@ -1,5 +1,6 @@
+// Generated using Sourcery 1.4.2 — https://github.com/krzysztofzablocki/Sourcery
+// DO NOT EDIT
 import SwiftUI
-{% if argument.includePartialSheet %}import PartialSheet{% endif %}
 
 struct Navigation<NavigationContent: View>: ViewModifier {
 
@@ -10,9 +11,6 @@ struct Navigation<NavigationContent: View>: ViewModifier {
         case replace
         case sheet
         case cover
-{% if argument.includePartialSheet %}
-        case partialSheet(style: PartialSheetStyle)
-{% endif %}
     }
 
     @ObservedObject var state: RoutingState
@@ -66,14 +64,6 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                     LazyView(navigationContent())
                 }
             }
-        {% if argument.includePartialSheet %}
-        case .partialSheet(let style):
-            content
-                .addPartialSheet(style: style)
-                .partialSheet(isPresented: $state.isPresented) {
-                    LazyView(navigationContent())
-                }
-        {% endif %}
         }
     }
 }
