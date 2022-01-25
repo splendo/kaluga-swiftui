@@ -13,6 +13,20 @@ struct NavigationDemoView: View {
     @ObservedObject var sheet = ObjectRoutingState<Bool>()
 
     var body: some View {
+        if #available(iOS 15.0, *) {
+            contentView
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.red)
+        } else {
+            Color.red
+                .ignoresSafeArea(.all)
+                .overlay(
+                    contentView
+                )
+        }
+    }
+    
+    private var contentView: some View {
         VStack(spacing: 32) {
             Button {
                 fullscreen.show(true)
@@ -30,8 +44,6 @@ struct NavigationDemoView: View {
                     .foregroundColor(.white)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.red)
         .navigation(state: fullscreen, type: .fullscreen) {
             Fullscreen().environmentObject(fullscreen)
         }
@@ -46,6 +58,20 @@ struct Fullscreen: View {
     @EnvironmentObject var fullscreen: ObjectRoutingState<Bool>
 
     var body: some View {
+        if #available(iOS 15.0, *) {
+            contentView
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.yellow)
+        } else {
+            Color.yellow
+                .ignoresSafeArea(.all)
+                .overlay(
+                    contentView
+                )
+        }
+    }
+    
+    private var contentView: some View {
         ZStack {
             Button {
                 fullscreen.close()
@@ -55,8 +81,6 @@ struct Fullscreen: View {
                     .foregroundColor(.green)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.yellow)
     }
 }
 
@@ -65,6 +89,20 @@ struct Sheet: View {
     @EnvironmentObject var sheet: ObjectRoutingState<Bool>
     
     var body: some View {
+        if #available(iOS 15.0, *) {
+            contentView
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.green)
+        } else {
+            Color.green
+                .ignoresSafeArea(.all)
+                .overlay(
+                    contentView
+                )
+        }
+    }
+    
+    private var contentView: some View {
         ZStack {
             Button {
                 sheet.close()
@@ -74,7 +112,5 @@ struct Sheet: View {
                     .foregroundColor(.red)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.green)
     }
 }
