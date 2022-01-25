@@ -50,15 +50,9 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                  }
              }
         case .fullscreen:
-            VStack {
-                content
-                EmptyView().fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
-            }
+            content.fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
         case .sheet:
-            VStack {
-                content
-                EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
-            }
+            content.sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
         case .replace:
             if state.isPresented {
                 LazyView(navigationContent())
