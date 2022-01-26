@@ -24,6 +24,7 @@ extension KalugaButton {
             buttonView
         }
         .buttonStyle(CustomButtonStyle(kalugaButton: self))
+        .disabled(!self.isEnabled)
     }
 }
 
@@ -45,11 +46,11 @@ private extension KalugaButton {
                     return .leading
                 case TextAlignment.right:
                     return .trailing
-                case TextAlignment.opposite:
+                case TextAlignment.end:
                     return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
                         .trailing :
                         .leading
-                case TextAlignment.normal:
+                case TextAlignment.start:
                     return .leading
                 case TextAlignment.center:
                     return .center
@@ -96,13 +97,15 @@ private extension KalugaButton {
         }
         
         private func makeForegroundColor(isPressed: Bool) -> SwiftUI.Color {
-            if isPressed { return Color(kalugaButton.style.pressedStyle.textColor.uiColor) }
+            if !kalugaButton.isEnabled { return Color(kalugaButton.style.disabledStyle.textColor.uiColor) }
+            else if isPressed { return Color(kalugaButton.style.pressedStyle.textColor.uiColor) }
             else { return Color(kalugaButton.style.defaultStyle.textColor.uiColor) }
         }
         
         private func makeShape(isPressed: Bool) -> some View {
             let buttonStateStyle: ButtonStateStyle
-            if isPressed { buttonStateStyle = kalugaButton.style.pressedStyle }
+            if !kalugaButton.isEnabled { buttonStateStyle = kalugaButton.style.disabledStyle  }
+            else if isPressed { buttonStateStyle = kalugaButton.style.pressedStyle }
             else { buttonStateStyle = kalugaButton.style.defaultStyle}
             
             return buttonStateStyle.backgroundStyle.toView()

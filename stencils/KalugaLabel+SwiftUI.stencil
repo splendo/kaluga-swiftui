@@ -36,11 +36,11 @@ private extension KalugaLabel {
                     return .leading
                 case TextAlignment.right:
                     return .trailing
-                case TextAlignment.opposite:
+                case TextAlignment.end:
                     return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
                         .trailing :
                         .leading
-                case TextAlignment.normal:
+                case TextAlignment.start:
                     return .leading
                 case TextAlignment.center:
                     return .center
