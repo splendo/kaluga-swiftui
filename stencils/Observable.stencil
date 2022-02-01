@@ -60,13 +60,9 @@ class Observable<Input: KotlinObject, Output: Equatable>: ObservableObject {
     }
 
     deinit {
-        if (Thread.current.isMainThread) {
-            disposeBag.dispose()
-        } else {
-            let bag = disposeBag
-            DispatchQueue.main.async {
-                bag.dispose()
-            }
+        let bag = disposeBag
+        DispatchQueue.main.async {
+            bag.dispose()
         }
     }
 }
