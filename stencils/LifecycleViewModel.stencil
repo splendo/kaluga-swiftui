@@ -16,8 +16,9 @@ class LifecycleViewModel<VM: BaseViewModel> {
         if Thread.current.isMainThread {
             viewModel.clear()
         } else {
-            DispatchQueue.main.sync {
-                viewModel.clear()
+            let vm = viewModel
+            DispatchQueue.main.async {
+                vm.clear()
             }
         }
     }

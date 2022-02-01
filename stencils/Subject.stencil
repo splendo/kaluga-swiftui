@@ -65,8 +65,9 @@ class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
         if (Thread.current.isMainThread) {
             disposeBag.dispose()
         } else {
-            DispatchQueue.main.sync {
-                disposeBag.dispose()
+            let bag = disposeBag
+            DispatchQueue.main.async {
+                bag.dispose()
             }
         }
     }
