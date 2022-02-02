@@ -22,6 +22,7 @@ class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableOb
          toMapper: @escaping (Input?) -> Output?,
          fromMapper: @escaping (Output?) -> Input?
     ) {
+        assert(Thread.isMainThread, "Constructor must be called on the main thread, but called on \(Thread.current)")
         input = subject.currentOrNull
         if input != nil {
             value = toMapper(input!)
@@ -65,7 +66,10 @@ class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableOb
     }
 
     deinit {
-        disposeBag.dispose()
+        let bag = disposeBag
+        DispatchQueue.main.async {
+            bag.dispose()
+        }
     }
 }
 

@@ -25,6 +25,7 @@ class UninitializedObservable<Input: KotlinObject, Output: Equatable>: Observabl
         animated: Bool = false,
         mapper: @escaping (Input?) -> Output?
     ) {
+        assert(Thread.isMainThread, "Constructor must be called on the main thread, but called on \(Thread.current)")
         input = observable.currentOrNull
         if input != nil {
             value = mapper(input!)
@@ -53,7 +54,10 @@ class UninitializedObservable<Input: KotlinObject, Output: Equatable>: Observabl
     }
 
     deinit {
-        disposeBag.dispose()
+        let bag = disposeBag
+        DispatchQueue.main.async {
+            bag.dispose()
+        }
     }
 }
 

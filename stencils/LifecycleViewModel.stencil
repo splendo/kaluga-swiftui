@@ -7,12 +7,16 @@ class LifecycleViewModel<VM: BaseViewModel> {
     let containerView: ContainerView?
 
     init(_ viewModel: VM, containerView: ContainerView? = nil) {
+        assert(Thread.isMainThread, "Constructor must be called on the main thread, but called on \(Thread.current)")
         self.viewModel = viewModel
         self.containerView = containerView
     }
 
     deinit {
-        viewModel.clear()
+        let vm = viewModel
+        DispatchQueue.main.async {
+            vm.clear()
+        }
     }
 
     func lifecycleView<V: View>(view: (VM) -> V) -> some View {
