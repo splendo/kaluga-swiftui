@@ -50,14 +50,30 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                  }
              }
         case .fullscreen:
-            if #available(iOS 14.0, *) {
+            // Before iOS 15 the .fullScreenCover modifier can't be more than one per view
+            // so we use the workaround found on this thread.
+            // https://stackoverflow.com/a/64403206/2242854
+            if #available(iOS 15, *) {
                 content.fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
             } else {
-                content.modifier(FullScreenCoverCompat(isPresented: $state.isPresented, content: { LazyView(navigationContent()) }))
+                Group {
+                    EmptyView().modifier(FullScreenModifier(isPresented: $state.isPresented, builder: { LazyView(navigationContent()) }))
+                    content
+                }
             }
         case .sheet:
-            content.sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
-        case .replace:
+            // Before iOS 15 the .sheet modifier can't be more than one per view
+            // so we use the workaround found on this thread.
+            // https://stackoverflow.com/a/64403206/2242854
+            if #available(iOS 15, *) {
+                content.sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+            } else {
+                Group {
+                    EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+                    content
+                }
+            }
+         case .replace:
             if state.isPresented {
                 LazyView(navigationContent())
             } else {
@@ -82,6 +98,21 @@ struct Navigation<NavigationContent: View>: ViewModifier {
     }
 }
 
+// Needed for simulating fullscreen in iOS 13
+struct FullScreenModifier<V: View>: ViewModifier {
+    let isPresented: Binding<Bool>
+    let builder: () -> V
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 14.0, *) {
+            content.fullScreenCover(isPresented: isPresented, content: builder)
+        } else {
+            content.sheet(isPresented: isPresented, content: builder)
+        }
+    }
+}
+
 extension View {
     func navigation<NavigationContent: View>(
         state: RoutingState,
@@ -97,30 +128,4 @@ extension View {
             )
         )
     }
-}
-
-struct FullScreenCoverCompat<CoverContent: View>: ViewModifier {
-  @Binding var isPresented: Bool
-  let content: () -> CoverContent
-
-  func body(content: Content) -> some View {
-    GeometryReader { geo in
-      ZStack {
-        // this color makes sure that its enclosing ZStack
-        // (and the GeometryReader) fill the entire screen,
-        // allowing to know its full height
-        Color.clear
-        content
-        ZStack {
-          // the color is here for the cover to fill
-          // the entire screen regardless of its content
-          Color.white
-          self.content()
-        }
-        .offset(y: isPresented ? 0 : geo.size.height)
-        // feel free to play around with the animation speeds!
-        .animation(.spring())
-      }
-    }
-  }
 }
