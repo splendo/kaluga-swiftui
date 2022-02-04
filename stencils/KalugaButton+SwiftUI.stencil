@@ -23,8 +23,16 @@ extension KalugaButton {
         }) {
             buttonView
         }
-        .buttonStyle(CustomButtonStyle(kalugaButton: self))
-        .disabled(!self.isEnabled)
+        .buttonStyle(self.style, isEnabled: self.isEnabled)
+    }
+}
+
+extension View {
+    public func buttonStyle(_ buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle, isEnabled: Bool = true) -> some View {
+        ModifiedContent(
+            content: self,
+            modifier: ButtonStyleModifier(buttonStyle: buttonStyle, isEnabled: isEnabled)
+        )
     }
 }
 
@@ -32,84 +40,56 @@ extension KalugaButton {
 
 private extension KalugaButton {
 
+    private var textStyle: TextStyle {
+        return TextStyle(font: style.font, color: style.defaultStyle.textColor, size: style.textSize, alignment: style.textAlignment)
+    }
+
     private func makePlainButton(button: KalugaButton.Plain) -> AnyView {
-        // create the font
-        let font = Font(
-            style.font
-                .withSize(CGFloat(style.textSize))
-        )
-        
-        // create the text alignment
-        let textAlignment: Alignment = {
-            switch style.textAlignment {
-                case TextAlignment.left:
-                    return .leading
-                case TextAlignment.right:
-                    return .trailing
-                case TextAlignment.end:
-                    return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
-                        .trailing :
-                        .leading
-                case TextAlignment.start:
-                    return .leading
-                case TextAlignment.center:
-                    return .center
-                default:
-                    preconditionFailure("Unknown text alignment type!")
-            }
-        }()
-        
         // assemble the button
         return AnyView(
             Text(button.text)
-                    .font(font)
-                    .frame(alignment: textAlignment)
+                    .textStyle(textStyle)
         )
     }
-    
     private func makeStyledButton(button: KalugaButton.Styled) -> AnyView {
         return AnyView(
-            button.text.toText()
+            KalugaLabel.Styled(text: button.text, style: textStyle).toAttributedText()
         )
     }
 }
 
-// MARK: - KalugaButton.CustomButtonStyle
+// MARK: - CustomButtonStyle
 
-private extension KalugaButton {
+fileprivate struct CustomButtonStyle: SwiftUI.ButtonStyle {
+    private let buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle
+    private let isEnabled: Bool
+    init(buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle, isEnabled: Bool = true) {
+        self.buttonStyle = buttonStyle
+        self.isEnabled = isEnabled
+    }
+    func makeBody(configuration: Self.Configuration) -> some View {
+        let stateStyle = stateStyle(isPressed: configuration.isPressed)
+        return configuration.label
+            .padding()
+            .foregroundColor(stateStyle.textColor.swiftUI)
+            .background(stateStyle.backgroundStyle)
+    }
+
+    private func stateStyle(isPressed: Bool) -> ButtonStateStyle {
+        if !isEnabled { return buttonStyle.disabledStyle }
+        else if isPressed { return buttonStyle.pressedStyle }
+        else { return buttonStyle.defaultStyle }
+    }
+}
+
+fileprivate struct ButtonStyleModifier: ViewModifier {
+    let buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle
+    let isEnabled: Bool
     
-    struct CustomButtonStyle: SwiftUI.ButtonStyle {
-        
-        private let kalugaButton: KalugaButton
-        
-        init(kalugaButton: KalugaButton) {
-            self.kalugaButton = kalugaButton
-        }
-        
-        func makeBody(configuration: Self.Configuration) -> some View {
-            let foregroundColor = makeForegroundColor(isPressed: configuration.isPressed)
-            let shape = makeShape(isPressed: configuration.isPressed)
-            
-            return configuration.label
-                .padding()
-                .foregroundColor(foregroundColor)
-                .background(shape)
-        }
-        
-        private func makeForegroundColor(isPressed: Bool) -> SwiftUI.Color {
-            if !kalugaButton.isEnabled { return Color(kalugaButton.style.disabledStyle.textColor.uiColor) }
-            else if isPressed { return Color(kalugaButton.style.pressedStyle.textColor.uiColor) }
-            else { return Color(kalugaButton.style.defaultStyle.textColor.uiColor) }
-        }
-        
-        private func makeShape(isPressed: Bool) -> some View {
-            let buttonStateStyle: ButtonStateStyle
-            if !kalugaButton.isEnabled { buttonStateStyle = kalugaButton.style.disabledStyle  }
-            else if isPressed { buttonStateStyle = kalugaButton.style.pressedStyle }
-            else { buttonStateStyle = kalugaButton.style.defaultStyle}
-            
-            return buttonStateStyle.backgroundStyle.toView()
-        }
+    func body(content: Content) -> some View {
+        content
+            .buttonStyle(CustomButtonStyle(buttonStyle: buttonStyle, isEnabled: isEnabled))
+            .disabled(!isEnabled)
     }
 }
 {% endif %}

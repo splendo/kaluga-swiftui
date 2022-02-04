@@ -83,6 +83,15 @@ extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
     }
 }
 
+extension View {
+    public func background(_ backgroundStyle: {{ argument.sharedFrameworkName }}.BackgroundStyle) -> some View {
+        ModifiedContent(
+            content: self,
+            modifier: BackgroundStyleModifier(backgroundStyle: backgroundStyle)
+        )
+    }
+}
+
 // MARK: - Private methods
 
 private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
@@ -220,6 +229,15 @@ private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
         }
     }
     */
+}
+
+fileprivate struct BackgroundStyleModifier: ViewModifier {
+    let backgroundStyle: {{ argument.sharedFrameworkName }}.BackgroundStyle
+    
+    func body(content: Content) -> some View {
+        content
+            .background(backgroundStyle.toView())
+    }
 }
 
 // MARK: - RoundedShape

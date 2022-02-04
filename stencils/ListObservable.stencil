@@ -32,7 +32,14 @@ class ListObservable<Output: Equatable>: ObservableObject {
                 defer {
                     self.input = newValue
                 }
-                guard newValue != nil, self.input != newValue else {
+                guard newValue != nil else {
+                    if self.input != nil {
+                        self.value.removeAll()
+                        self.value.append(contentsOf: defaultValue)
+                    }
+                    return
+                }
+                guard self.input != newValue else {
                     return
                 }
                 let mapped = mapper(newValue!)

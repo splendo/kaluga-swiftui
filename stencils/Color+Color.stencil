@@ -1,0 +1,14 @@
+{% if argument.includeResources %}
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+extension {{ argument.sharedFrameworkName }}.Color {
+    var swiftUI: SwiftUI.Color {
+        if #available(iOS 15.0, *) {
+            return SwiftUI.Color(uiColor: self.uiColor)
+        } else {
+            return SwiftUI.Color(red: self.red, green: self.green, blue: self.blue, opacity: self.alpha)
+        }
+    }
+}
+{% endif %}

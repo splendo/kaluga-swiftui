@@ -1,25 +1,27 @@
+{% if argument.includeResources %}
 import SwiftUI
+import {{ argument.sharedFrameworkName }}
 
 struct NavigationBarColor: ViewModifier {
 
-    init(backgroundColor: Color, tintColor: Color, shadowColor: Color, font: UIFont, largeFont: UIFont) {
+    init(backgroundColor: {{ argument.sharedFrameworkName }}.Color, tintColor: {{ argument.sharedFrameworkName }}.Color, shadowColor: {{ argument.sharedFrameworkName }}.Color, font: UIFont, largeFont: UIFont) {
         let coloredAppearance = UINavigationBarAppearance()
         coloredAppearance.configureWithOpaqueBackground()
-        coloredAppearance.backgroundColor = UIColor(backgroundColor)
-        coloredAppearance.shadowColor = UIColor(shadowColor)
+        coloredAppearance.backgroundColor = backgroundColor.uiColor
+        coloredAppearance.shadowColor = shadowColor.uiColor
         coloredAppearance.titleTextAttributes = [
-            .foregroundColor: UIColor(tintColor),
+            .foregroundColor: tintColor.uiColor,
             .font: font
         ]
         coloredAppearance.largeTitleTextAttributes = [
-            .foregroundColor: UIColor(tintColor),
+            .foregroundColor: tintColor.uiColor,
             .font: largeFont
         ]
 
         UINavigationBar.appearance().standardAppearance = coloredAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
         UINavigationBar.appearance().compactAppearance = coloredAppearance
-        UINavigationBar.appearance().tintColor = UIColor(tintColor)
+        UINavigationBar.appearance().tintColor = tintColor.uiColor
     }
 
     func body(content: Content) -> some View {
@@ -29,9 +31,9 @@ struct NavigationBarColor: ViewModifier {
 
 extension View {
     func navigationBarColor(
-        backgroundColor: Color,
-        tintColor: Color,
-        shadowColor: Color,
+        backgroundColor: {{ argument.sharedFrameworkName }}.Color,
+        tintColor: {{ argument.sharedFrameworkName }}.Color,
+        shadowColor: {{ argument.sharedFrameworkName }}.Color,
         font: UIFont = .systemFont(ofSize: 17, weight: .semibold),
         largeFont: UIFont = .boldSystemFont(ofSize: 34)
     ) -> some View {
@@ -46,3 +48,4 @@ extension View {
         )
     }
 }
+{% endif %}
