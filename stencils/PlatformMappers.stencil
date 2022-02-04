@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import Foundation
 import {{ argument.sharedFrameworkName }}
 
@@ -99,16 +100,38 @@ enum DateOptionalMapper: PlatformOptionalValueMapper {
 }
 
 {% if argument.includeResources %}
-enum ColorMapper: PlatformValueMapper {
+enum UIColorMapper: PlatformValueMapper {
     static func to(_ value: {{ argument.sharedFrameworkName }}.Color) -> UIColor { value.uiColor }
     static func from(_ value: UIColor) -> {{ argument.sharedFrameworkName }}.Color { {{ argument.sharedFrameworkName }}.Color(uiColor: value) }
 }
 
-enum ColorOptionalMapper: PlatformOptionalValueMapper {
+enum UIColorOptionalMapper: PlatformOptionalValueMapper {
     static func to(_ value: {{ argument.sharedFrameworkName }}.Color?) -> UIColor? { value?.uiColor }
     static func from(_ value: UIColor?) -> {{ argument.sharedFrameworkName }}.Color? {
         if let value = value {
             return {{ argument.sharedFrameworkName }}.Color(uiColor: value)
+        } else {
+            return nil
+        }
+    }
+}
+
+enum ColorMapper: PlatformValueToMapper {
+    static func to(_ value: {{ argument.sharedFrameworkName }}.Color) -> SwiftUI.Color { value.swiftUI }
+}
+
+enum ColorOptionalMapper: PlatformOptionalValueToMapper {
+    static func to(_ value: {{ argument.sharedFrameworkName }}.Color?) -> SwiftUI.Color? { value?.swiftUI }
+}
+
+enum ImageMapper: PlatformValueToMapper {
+    static func to(_ value: UIImage) -> Image { Image(uiImage: value) }
+}
+
+enum ImageOptionalMapper: PlatformOptionalValueToMapper {
+    static func to(_ value: UIImage?) -> Image? {
+        if let uiImage = value {
+            return Image(uiImage: uiImage)
         } else {
             return nil
         }

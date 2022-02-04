@@ -4,23 +4,19 @@ import {{ argument.sharedFrameworkName }}
 
 // MARK: - StyledString
 
-extension {{ argument.sharedFrameworkName }}.StyledString {
-    
-    func toText() -> some View {
-        AttributedText(attributeString)
+extension KalugaLabel.Styled {
+    func toAttributedText() -> some View {
+        AttributedText(self)
     }
 }
 
 // MARK: - AttributedText
 
 fileprivate struct AttributedText: UIViewRepresentable {
-    
-    private let attributedString: NSAttributedString
-    
-    init(_ attributedString: NSAttributedString) {
-        self.attributedString = attributedString
+    private let styledLabel: KalugaLabel.Styled
+    init(_ styledLabel: KalugaLabel.Styled) {
+        self.styledLabel = styledLabel
     }
-    
     func makeUIView(context: Context) -> UILabel {
         let label = UILabel()
         label.lineBreakMode = .byClipping
@@ -29,9 +25,8 @@ fileprivate struct AttributedText: UIViewRepresentable {
         label.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         return label
     }
-    
     func updateUIView(_ uiView: UILabel, context: Context) {
-        uiView.attributedText = attributedString
+        TextStyleKt.bindLabel(uiView, label: styledLabel)
     }
 }
 {% endif %}

@@ -9,7 +9,10 @@ typealias IntUninitializedObservable = MappedUninitializedObservable<KotlinInt, 
 typealias FloatUninitializedObservable = MappedUninitializedObservable<KotlinFloat, Float, FloatOptionalMapper>
 typealias DoubleUninitializedObservable = MappedUninitializedObservable<KotlinDouble, Double, DoubleOptionalMapper>
 {% if argument.includeResources %}
-typealias ColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.Color, UIColor, ColorOptionalMapper>
+typealias UIColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.Color, UIColor, UIColorOptionalMapper>
+typealias ColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.Color, SwiftUI.Color, ColorOptionalMapper>
+typealias UIImageUninitializedObservable = MappedUninitializedObservable<UIImage, UIImage, EmptyOptionalMapper<UIImage>>
+typealias ImageUninitializedObservable = MappedUninitializedObservable<UIImage, Image, ImageOptionalMapper>
 {% endif %}
 typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateOptionalMapper>
 
@@ -64,7 +67,7 @@ class UninitializedObservable<Input: KotlinObject, Output: Equatable>: Observabl
 class MappedUninitializedObservable<
     Input: KotlinObject,
     Output: Equatable,
-    Mapper: PlatformOptionalValueMapper
+    Mapper: PlatformOptionalValueToMapper
 >: UninitializedObservable<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
     init(_ observable: BaseUninitializedObservable<Input>, animated: Bool = false) {
         super.init(observable, animated: animated, mapper: Mapper.to)

@@ -1,15 +1,35 @@
-protocol PlatformValueMapper {
+protocol PlatformValueToMapper {
     associatedtype Input
     associatedtype Output
 
     static func to(_ value: Input) -> Output
+}
+
+protocol PlatformValueFromMapper {
+    associatedtype Input
+    associatedtype Output
+
     static func from(_ value: Output) -> Input
 }
 
-protocol PlatformOptionalValueMapper {
+protocol PlatformValueMapper : PlatformValueToMapper, PlatformValueFromMapper {
+    
+}
+
+protocol PlatformOptionalValueToMapper {
     associatedtype Input
     associatedtype Output
 
     static func to(_ value: Input?) -> Output?
+}
+
+protocol PlatformOptionalValueFromMapper {
+    associatedtype Input
+    associatedtype Output
+
     static func from(_ value: Output?) -> Input?
+}
+
+protocol PlatformOptionalValueMapper : PlatformOptionalValueToMapper, PlatformOptionalValueFromMapper {
+    
 }

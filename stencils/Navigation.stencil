@@ -50,7 +50,11 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                  }
              }
         case .fullscreen:
-            content.fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+            if #available(iOS 14.0, *) {
+                content.fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+            } else {
+                content.modifier(FullScreenCoverCompat(isPresented: $state.isPresented, content: { LazyView(navigationContent()) }))
+            }
         case .sheet:
             content.sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
         case .replace:
@@ -93,4 +97,30 @@ extension View {
             )
         )
     }
+}
+
+struct FullScreenCoverCompat<CoverContent: View>: ViewModifier {
+  @Binding var isPresented: Bool
+  let content: () -> CoverContent
+
+  func body(content: Content) -> some View {
+    GeometryReader { geo in
+      ZStack {
+        // this color makes sure that its enclosing ZStack
+        // (and the GeometryReader) fill the entire screen,
+        // allowing to know its full height
+        Color.clear
+        content
+        ZStack {
+          // the color is here for the cover to fill
+          // the entire screen regardless of its content
+          Color.white
+          self.content()
+        }
+        .offset(y: isPresented ? 0 : geo.size.height)
+        // feel free to play around with the animation speeds!
+        .animation(.spring())
+      }
+    }
+  }
 }
