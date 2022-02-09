@@ -57,9 +57,9 @@ class UninitializedObservable<Input: KotlinObject, Output: Equatable>: Observabl
     }
 
     deinit {
-        let bag = disposeBag
+        let disposeBag = self.disposeBag
         DispatchQueue.main.async {
-            bag.dispose()
+            disposeBag.dispose()
         }
     }
 }

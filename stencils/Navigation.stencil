@@ -73,12 +73,12 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                     content
                 }
             }
-         case .replace:
-            if state.isPresented {
-                LazyView(navigationContent())
-            } else {
-                content
-            }
+        case .replace:
+        if state.isPresented {
+            LazyView(navigationContent())
+        } else {
+            content
+        }
         case .cover:
             Group {
                 content
@@ -98,7 +98,7 @@ struct Navigation<NavigationContent: View>: ViewModifier {
     }
 }
 
-struct ItemNavigation<ID : Equatable, NavigationContent: View>: ViewModifier {
+struct ItemNavigation<ID: Equatable, NavigationContent: View>: ViewModifier {
 
     enum NavigationType {
         case fullscreen
@@ -111,9 +111,15 @@ struct ItemNavigation<ID : Equatable, NavigationContent: View>: ViewModifier {
     private let id: ID
     private let type: ItemNavigation.NavigationType
     private let navigationContent: () -> NavigationContent
-    private let didSelect: () -> ()
+    private let didSelect: () -> Void
 
-    init(state: IdentifiableRoutingState<ID>, id: ID, type: ItemNavigation.NavigationType, didSelect: @escaping () -> (), @ViewBuilder navigationContent: @escaping () -> NavigationContent) {
+    init(
+        state: IdentifiableRoutingState<ID>,
+        id: ID,
+        type: ItemNavigation.NavigationType,
+        didSelect: @escaping () -> Void,
+        @ViewBuilder navigationContent: @escaping () -> NavigationContent
+    ) {
         self.id = id
         self.state = state
         self.type = type
@@ -181,11 +187,11 @@ extension View {
         )
     }
 
-    func navigation<ID : Equatable, NavigationContent: View>(
+    func navigation<ID: Equatable, NavigationContent: View>(
         state: IdentifiableRoutingState<ID>,
         id: ID,
         type: ItemNavigation<ID, NavigationContent>.NavigationType,
-        didSelect: @escaping () -> (),
+        didSelect: @escaping () -> Void,
         @ViewBuilder content: @escaping () -> NavigationContent
     ) -> some View {
         ModifiedContent(

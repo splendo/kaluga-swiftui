@@ -66,7 +66,7 @@ class ObjectRoutingState<T: Equatable>: RoutingState {
     }
 }
 
-class IdentifiableRoutingState<ID : Equatable> : RoutingState {
+class IdentifiableRoutingState<ID: Equatable>: RoutingState {
     private(set) var id: ID?
     
     func show(_ id: ID, animated: Bool = false) {
@@ -86,13 +86,11 @@ class IdentifiableRoutingState<ID : Equatable> : RoutingState {
     }
 }
 
-class IdentifiableObjectRoutingState<T, ID>: IdentifiableRoutingState<ID> where T : Equatable, T : Identifiable, T.ID == ID {
+class IdentifiableObjectRoutingState<T, ID>: IdentifiableRoutingState<ID> where T: Equatable, T: Identifiable, T.ID == ID {
 
     private(set) var object: T?
     override var id: ID? {
-        get {
-            object?.id
-        }
+        return object?.id
     }
 
     func show(_ object: T, animated: Bool = false) {

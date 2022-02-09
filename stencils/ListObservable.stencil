@@ -56,9 +56,9 @@ class ListObservable<Output: Equatable>: ObservableObject {
     }
 
     deinit {
-        let bag = disposeBag
+        let disposeBag = self.disposeBag
         DispatchQueue.main.async {
-            bag.dispose()
+            disposeBag.dispose()
         }
     }
 }

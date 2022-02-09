@@ -4,7 +4,13 @@ import {{ argument.sharedFrameworkName }}
 
 struct NavigationBarColor: ViewModifier {
 
-    init(backgroundColor: {{ argument.sharedFrameworkName }}.Color, tintColor: {{ argument.sharedFrameworkName }}.Color, shadowColor: {{ argument.sharedFrameworkName }}.Color, font: UIFont, largeFont: UIFont) {
+    init(
+        backgroundColor: {{ argument.sharedFrameworkName }}.Color,
+        tintColor: {{ argument.sharedFrameworkName }}.Color,
+        shadowColor: {{ argument.sharedFrameworkName }}.Color,
+        font: UIFont,
+        largeFont: UIFont
+    ) {
         let coloredAppearance = UINavigationBarAppearance()
         coloredAppearance.configureWithOpaqueBackground()
         coloredAppearance.backgroundColor = backgroundColor.uiColor

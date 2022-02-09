@@ -12,7 +12,7 @@ protocol PlatformValueFromMapper {
     static func from(_ value: Output) -> Input
 }
 
-protocol PlatformValueMapper : PlatformValueToMapper, PlatformValueFromMapper {
+protocol PlatformValueMapper: PlatformValueToMapper, PlatformValueFromMapper {
     
 }
 
@@ -30,6 +30,6 @@ protocol PlatformOptionalValueFromMapper {
     static func from(_ value: Output?) -> Input?
 }
 
-protocol PlatformOptionalValueMapper : PlatformOptionalValueToMapper, PlatformOptionalValueFromMapper {
+protocol PlatformOptionalValueMapper: PlatformOptionalValueToMapper, PlatformOptionalValueFromMapper {
     
 }

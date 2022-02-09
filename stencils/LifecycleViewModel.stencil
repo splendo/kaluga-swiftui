@@ -13,9 +13,9 @@ class LifecycleViewModel<VM: BaseViewModel> {
     }
 
     deinit {
-        let vm = viewModel
+        let viewModel = self.viewModel
         DispatchQueue.main.async {
-            vm.clear()
+            viewModel.clear()
         }
     }
 

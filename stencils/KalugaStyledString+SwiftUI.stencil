@@ -12,8 +12,9 @@ extension KalugaLabel.Styled {
 
 // MARK: - AttributedText
 
-fileprivate struct AttributedText: UIViewRepresentable {
+private struct AttributedText: UIViewRepresentable {
     private let styledLabel: KalugaLabel.Styled
+    
     init(_ styledLabel: KalugaLabel.Styled) {
         self.styledLabel = styledLabel
     }
