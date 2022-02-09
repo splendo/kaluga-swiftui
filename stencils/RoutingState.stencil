@@ -65,3 +65,49 @@ class ObjectRoutingState<T: Equatable>: RoutingState {
         super.close(animated: animated, force: force)
     }
 }
+
+class IdentifiableRoutingState<ID : Equatable> : RoutingState {
+    private(set) var id: ID?
+    
+    func show(_ id: ID, animated: Bool = false) {
+        let force: Bool
+        if self.id != id {
+            self.id = id
+            force = true
+        } else {
+            force = false
+        }
+        super.show(animated: animated, force: force)
+    }
+
+    override func close(animated: Bool = false, force: Bool = false) {
+        id = nil
+        super.close(animated: animated, force: force)
+    }
+}
+
+class IdentifiableObjectRoutingState<T, ID>: IdentifiableRoutingState<ID> where T : Equatable, T : Identifiable, T.ID == ID {
+
+    private(set) var object: T?
+    override var id: ID? {
+        get {
+            object?.id
+        }
+    }
+
+    func show(_ object: T, animated: Bool = false) {
+        let force: Bool
+        if self.object != object {
+            self.object = object
+            force = true
+        } else {
+            force = false
+        }
+        super.show(animated: animated, force: force)
+    }
+
+    override func close(animated: Bool = false, force: Bool = false) {
+        object = nil
+        super.close(animated: animated, force: force)
+    }
+}
