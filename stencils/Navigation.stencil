@@ -98,6 +98,58 @@ struct Navigation<NavigationContent: View>: ViewModifier {
     }
 }
 
+struct ItemNavigation<ID : Equatable, NavigationContent: View>: ViewModifier {
+
+    enum NavigationType {
+        case fullscreen
+        case push
+        case sheet
+    }
+
+    @ObservedObject var state: IdentifiableRoutingState<ID>
+
+    private let id: ID
+    private let type: ItemNavigation.NavigationType
+    private let navigationContent: () -> NavigationContent
+    private let didSelect: () -> ()
+
+    init(state: IdentifiableRoutingState<ID>, id: ID, type: ItemNavigation.NavigationType, didSelect: @escaping () -> (), @ViewBuilder navigationContent: @escaping () -> NavigationContent) {
+        self.id = id
+        self.state = state
+        self.type = type
+        self.navigationContent = navigationContent
+        self.didSelect = didSelect
+    }
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        let isActive = Binding {
+            state.isPresented && state.id == self.id
+        } set: { isActive in
+            if isActive {
+                self.didSelect()
+            } else {
+                state.close()
+            }
+        }
+        switch type {
+        case .push:
+            VStack {
+                NavigationLink(
+                    destination: LazyView(navigationContent()),
+                    isActive: isActive
+                ) {
+                    content
+                }
+            }
+        case .fullscreen:
+            content.modifier(FullScreenModifier(isPresented: isActive, builder: { LazyView(navigationContent()) }))
+        case .sheet:
+            content.sheet(isPresented: isActive) { LazyView(navigationContent()) }
+        }
+    }
+}
+
 // Needed for simulating fullscreen in iOS 13
 struct FullScreenModifier<V: View>: ViewModifier {
     let isPresented: Binding<Bool>
@@ -124,6 +176,25 @@ extension View {
             modifier: Navigation(
                 state: state,
                 type: type,
+                navigationContent: content
+            )
+        )
+    }
+
+    func navigation<ID : Equatable, NavigationContent: View>(
+        state: IdentifiableRoutingState<ID>,
+        id: ID,
+        type: ItemNavigation<ID, NavigationContent>.NavigationType,
+        didSelect: @escaping () -> (),
+        @ViewBuilder content: @escaping () -> NavigationContent
+    ) -> some View {
+        ModifiedContent(
+            content: self,
+            modifier: ItemNavigation(
+                state: state,
+                id: id,
+                type: type,
+                didSelect: didSelect,
                 navigationContent: content
             )
         )
