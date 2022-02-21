@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import SwiftUI
 {% if argument.includePartialSheet %}import PartialSheet{% endif %}
 
@@ -73,7 +74,7 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                     content
                 }
             }
-         case .replace:
+        case .replace:
             if state.isPresented {
                 LazyView(navigationContent())
             } else {

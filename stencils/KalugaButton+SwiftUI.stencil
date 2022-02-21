@@ -10,19 +10,22 @@ extension KalugaButton {
         let buttonView: AnyView
         
         switch self {
-            case let button as KalugaButton.Plain:
-                buttonView = makePlainButton(button: button)
-            case let button as KalugaButton.Styled:
-                buttonView = makeStyledButton(button: button)
-            default:
-                preconditionFailure("Unknown kaluga button type!")
+        case let button as KalugaButton.Plain:
+            buttonView = makePlainButton(button: button)
+        case let button as KalugaButton.Styled:
+            buttonView = makeStyledButton(button: button)
+        default:
+            preconditionFailure("Unknown kaluga button type!")
         }
         
-        return Button(action: {
-            self.action()
-        }) {
-            buttonView
-        }
+        return Button(
+            action: {
+                self.action()
+            },
+            label: {
+                buttonView
+            }
+        )
         .buttonStyle(self.style, isEnabled: self.isEnabled)
     }
 }
@@ -41,7 +44,12 @@ extension View {
 private extension KalugaButton {
 
     private var textStyle: TextStyle {
-        return TextStyle(font: style.font, color: style.defaultStyle.textColor, size: style.textSize, alignment: style.textAlignment)
+        return TextStyle(
+            font: style.font,
+            color: style.defaultStyle.textColor,
+            size: style.textSize,
+            alignment: style.textAlignment
+        )
     }
 
     private func makePlainButton(button: KalugaButton.Plain) -> AnyView {
@@ -60,9 +68,10 @@ private extension KalugaButton {
 
 // MARK: - CustomButtonStyle
 
-fileprivate struct CustomButtonStyle: SwiftUI.ButtonStyle {
+private struct CustomButtonStyle: SwiftUI.ButtonStyle {
     private let buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle
     private let isEnabled: Bool
+
     init(buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle, isEnabled: Bool = true) {
         self.buttonStyle = buttonStyle
         self.isEnabled = isEnabled
@@ -76,16 +85,21 @@ fileprivate struct CustomButtonStyle: SwiftUI.ButtonStyle {
     }
 
     private func stateStyle(isPressed: Bool) -> ButtonStateStyle {
-        if !isEnabled { return buttonStyle.disabledStyle }
-        else if isPressed { return buttonStyle.pressedStyle }
-        else { return buttonStyle.defaultStyle }
+        if !isEnabled {
+            return buttonStyle.disabledStyle
+        } else if isPressed {
+            return buttonStyle.pressedStyle
+        } else {
+            return buttonStyle.defaultStyle
+        }
     }
 }
 
-fileprivate struct ButtonStyleModifier: ViewModifier {
+private struct ButtonStyleModifier: ViewModifier {
+
     let buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle
     let isEnabled: Bool
-    
+
     func body(content: Content) -> some View {
         content
             .buttonStyle(CustomButtonStyle(buttonStyle: buttonStyle, isEnabled: isEnabled))

@@ -2,7 +2,6 @@ import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
-
 typealias ObjectSubject<T: KotlinObject & HasDefaultValue> = MappedSubject <T, T, EmptyMapper<T>>
 typealias StringSubject = MappedSubject<NSString, String, StringMapper>
 typealias BoolSubject = MappedSubject<KotlinBoolean, Bool, BoolMapper>
@@ -47,7 +46,7 @@ class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
                     self.input = newValue
                 }
                 guard newValue != nil else {
-                    if (self.input != nil) {
+                    if self.input != nil {
                         self.value = defaultValue
                     }
                     return
@@ -68,9 +67,9 @@ class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
     }
 
     deinit {
-        let bag = disposeBag
+        let disposeBag = self.disposeBag
         DispatchQueue.main.async {
-            bag.dispose()
+            disposeBag.dispose()
         }
     }
 }
@@ -80,6 +79,7 @@ class MappedSubject<
     Output: Equatable & HasDefaultValue,
     Mapper: PlatformValueMapper
 >: Subject<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
+
     init(_ subject: BaseInitializedSubject<Input>, defaultValue: Output = .default(), animated: Bool = false) {
         super.init(
             subject,
@@ -90,4 +90,3 @@ class MappedSubject<
         )
     }
 }
-

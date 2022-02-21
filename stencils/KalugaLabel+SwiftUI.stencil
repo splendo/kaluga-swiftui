@@ -8,12 +8,12 @@ extension KalugaLabel {
     
     func toText() -> some View {
         switch self {
-            case let label as KalugaLabel.Plain:
-                return makePlainLabel(label: label)
-            case let label as KalugaLabel.Styled:
-                return makeStyledLabel(label: label)
-            default:
-                preconditionFailure("Unknown kaluga button type!")
+        case let label as KalugaLabel.Plain:
+            return makePlainLabel(label: label)
+        case let label as KalugaLabel.Styled:
+            return makeStyledLabel(label: label)
+        default:
+            preconditionFailure("Unknown kaluga button type!")
         }
     }
 }
@@ -31,20 +31,20 @@ extension {{ argument.sharedFrameworkName }}.TextAlignment {
     
     var textAlignment: SwiftUI.TextAlignment {
         switch self {
-            case TextAlignment.left:
-                return .leading
-            case TextAlignment.right:
-                return .trailing
-            case TextAlignment.end:
-                return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
-                    .trailing :
-                    .leading
-            case TextAlignment.start:
-                return .leading
-            case TextAlignment.center:
-                return .center
-            default:
-                preconditionFailure("Unknown text alignment type!")
+        case TextAlignment.left:
+            return .leading
+        case TextAlignment.right:
+            return .trailing
+        case TextAlignment.end:
+            return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
+                .trailing :
+                .leading
+        case TextAlignment.start:
+            return .leading
+        case TextAlignment.center:
+            return .center
+        default:
+            preconditionFailure("Unknown text alignment type!")
         }
     }
 }
@@ -67,9 +67,9 @@ private extension KalugaLabel {
     }
 }
 
-fileprivate struct TextStyleModifier: ViewModifier {
+private struct TextStyleModifier: ViewModifier {
     let textStyle: TextStyle
-    
+
     func body(content: Content) -> some View {
         content
             .font(Font(textStyle.font.withSize(CGFloat(textStyle.size))))
