@@ -232,9 +232,9 @@ private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
     */
 }
 
-fileprivate struct BackgroundStyleModifier: ViewModifier {
+private struct BackgroundStyleModifier: ViewModifier {
     let backgroundStyle: {{ argument.sharedFrameworkName }}.BackgroundStyle
-    
+
     func body(content: Content) -> some View {
         content
             .background(backgroundStyle.toView())
@@ -243,10 +243,10 @@ fileprivate struct BackgroundStyleModifier: ViewModifier {
 
 // MARK: - RoundedShape
 
-fileprivate struct RoundedShape: Shape {
+private struct RoundedShape: Shape {
     var cornerRadii: CGSize = .zero
     var corners: UIRectCorner = .allCorners
-    
+
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(
             roundedRect: rect,

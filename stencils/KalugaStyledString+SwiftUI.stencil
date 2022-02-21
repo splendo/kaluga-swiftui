@@ -13,11 +13,13 @@ extension KalugaLabel.Styled {
 // MARK: - AttributedText
 
 private struct AttributedText: UIViewRepresentable {
+
     private let styledLabel: KalugaLabel.Styled
-    
+
     init(_ styledLabel: KalugaLabel.Styled) {
         self.styledLabel = styledLabel
     }
+    
     func makeUIView(context: Context) -> UILabel {
         let label = UILabel()
         label.lineBreakMode = .byClipping
@@ -26,6 +28,7 @@ private struct AttributedText: UIViewRepresentable {
         label.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
         return label
     }
+
     func updateUIView(_ uiView: UILabel, context: Context) {
         TextStyleKt.bindLabel(uiView, label: styledLabel)
     }
