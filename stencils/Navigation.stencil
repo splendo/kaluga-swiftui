@@ -1,19 +1,19 @@
 import SwiftUI
 {% if argument.includePartialSheet %}import PartialSheet{% endif %}
 
-struct Navigation<NavigationContent: View>: ViewModifier {
-
-    enum NavigationType {
-        case fullscreen
-        case hud
-        case push
-        case replace
-        case sheet
-        case cover
+enum NavigationType {
+    case fullscreen
+    case hud(blurRadius: CGFloat = 3, opacity: Double = 0.5)
+    case push
+    case replace
+    case sheet
+    case cover
 {% if argument.includePartialSheet %}
-        case partialSheet(style: PartialSheetStyle)
+    case partialSheet(style: PartialSheetStyle)
 {% endif %}
-    }
+}
+
+struct Navigation<NavigationContent: View>: ViewModifier {
 
     @ObservedObject var state: RoutingState
 
@@ -39,11 +39,11 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                 }
                 content
             }
-        case .hud:
+        case let .hud(blurRadius, opacity):
              Group {
                  content
-                     .blur(radius: state.isPresented ? 3 : 0)
-                     .opacity(state.isPresented ? 0.5 : 1.0)
+                     .blur(radius: state.isPresented ? blurRadius : 0)
+                     .opacity(state.isPresented ? opacity : 1.0)
                      .disabled(state.isPresented)
                  if state.isPresented {
                      LazyView(navigationContent())
@@ -74,11 +74,11 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                 }
             }
         case .replace:
-        if state.isPresented {
-            LazyView(navigationContent())
-        } else {
-            content
-        }
+            if state.isPresented {
+                LazyView(navigationContent())
+            } else {
+                content
+            }
         case .cover:
             Group {
                 content
@@ -98,25 +98,19 @@ struct Navigation<NavigationContent: View>: ViewModifier {
     }
 }
 
-struct ItemNavigation<ID: Equatable, NavigationContent: View>: ViewModifier {
-
-    enum NavigationType {
-        case fullscreen
-        case push
-        case sheet
-    }
+struct ItemNavigation<ID: Identifiable, NavigationContent: View>: ViewModifier {
 
     @ObservedObject var state: IdentifiableRoutingState<ID>
 
-    private let id: ID
-    private let type: ItemNavigation.NavigationType
+    private let id: ID.ID
+    private let type: NavigationType
     private let navigationContent: () -> NavigationContent
     private let didSelect: () -> Void
 
     init(
         state: IdentifiableRoutingState<ID>,
-        id: ID,
-        type: ItemNavigation.NavigationType,
+        id: ID.ID,
+        type: NavigationType,
         didSelect: @escaping () -> Void,
         @ViewBuilder navigationContent: @escaping () -> NavigationContent
     ) {
@@ -148,10 +142,41 @@ struct ItemNavigation<ID: Equatable, NavigationContent: View>: ViewModifier {
                     content
                 }
             }
+        case let .hud(blurRadius, opacity):
+            Group {
+                content
+                    .blur(radius: isActive.wrappedValue ? blurRadius : 0)
+                    .opacity(isActive.wrappedValue ? opacity : 1.0)
+                    .disabled(isActive.wrappedValue)
+                if isActive.wrappedValue {
+                    LazyView(navigationContent())
+                }
+            }
         case .fullscreen:
             content.modifier(FullScreenModifier(isPresented: isActive, builder: { LazyView(navigationContent()) }))
         case .sheet:
             content.sheet(isPresented: isActive) { LazyView(navigationContent()) }
+        case .replace:
+            if isActive.wrappedValue {
+                LazyView(navigationContent())
+            } else {
+                content
+            }
+        case .cover:
+            Group {
+                content
+                if isActive.wrappedValue {
+                    LazyView(navigationContent())
+                }
+            }
+        {% if argument.includePartialSheet %}
+        case .partialSheet(let style):
+            content
+                .addPartialSheet(style: style)
+                .partialSheet(isPresented: isActive) {
+                    LazyView(navigationContent())
+                }
+        {% endif %}
         }
     }
 }
@@ -174,7 +199,7 @@ struct FullScreenModifier<V: View>: ViewModifier {
 extension View {
     func navigation<NavigationContent: View>(
         state: RoutingState,
-        type: Navigation<NavigationContent>.NavigationType,
+        type: NavigationType,
         @ViewBuilder content: @escaping () -> NavigationContent
     ) -> some View {
         ModifiedContent(
@@ -187,10 +212,10 @@ extension View {
         )
     }
 
-    func navigation<ID: Equatable, NavigationContent: View>(
+    func navigation<ID: Identifiable, NavigationContent: View>(
         state: IdentifiableRoutingState<ID>,
-        id: ID,
-        type: ItemNavigation<ID, NavigationContent>.NavigationType,
+        id: ID.ID,
+        type: NavigationType,
         didSelect: @escaping () -> Void,
         @ViewBuilder content: @escaping () -> NavigationContent
     ) -> some View {
