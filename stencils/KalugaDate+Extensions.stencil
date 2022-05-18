@@ -2,11 +2,12 @@ import Foundation
 import {{ argument.sharedFrameworkName }}
 
 typealias KalugaDate = {{ argument.sharedFrameworkName }}.Date
+typealias DefaultKalugaDate = {{ argument.sharedFrameworkName }}.DefaultKalugaDate
 
 extension Foundation.Date {
 
     func toKalugaDate() -> KalugaDate {
-        KalugaDate.Companion().epoch(
+        DefaultKalugaDate.Companion().epoch(
             offsetInMilliseconds: Int64(self.timeIntervalSince1970 * 1_000),
             timeZone: TimeZone.Companion().current(),
             locale: Locale.Companion().defaultLocale
@@ -21,7 +22,7 @@ extension KalugaDate {
     }
 
     static var today: KalugaDate {
-        KalugaDate.Companion().today(
+        DefaultKalugaDate.Companion().today(
             timeZone: TimeZone.Companion().current(),
             locale: Locale.Companion().defaultLocale
         )

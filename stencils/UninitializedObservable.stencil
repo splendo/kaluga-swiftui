@@ -9,12 +9,12 @@ typealias IntUninitializedObservable = MappedUninitializedObservable<KotlinInt, 
 typealias FloatUninitializedObservable = MappedUninitializedObservable<KotlinFloat, Float, FloatOptionalMapper>
 typealias DoubleUninitializedObservable = MappedUninitializedObservable<KotlinDouble, Double, DoubleOptionalMapper>
 {% if argument.includeResources %}
-typealias UIColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.Color, UIColor, UIColorOptionalMapper>
-typealias ColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.Color, SwiftUI.Color, ColorOptionalMapper>
+typealias UIColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.KalugaColor, UIColor, UIColorOptionalMapper>
+typealias ColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.KalugaColor, SwiftUI.Color, ColorOptionalMapper>
 typealias UIImageUninitializedObservable = MappedUninitializedObservable<UIImage, UIImage, EmptyOptionalMapper<UIImage>>
 typealias ImageUninitializedObservable = MappedUninitializedObservable<UIImage, Image, ImageOptionalMapper>
 {% endif %}
-typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateOptionalMapper>
+// typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateOptionalMapper>
 
 class UninitializedObservable<Input: KotlinObject, Output: Equatable>: ObservableObject {
 

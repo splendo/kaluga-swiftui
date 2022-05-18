@@ -5,9 +5,9 @@ import {{ argument.sharedFrameworkName }}
 struct NavigationBarColor: ViewModifier {
 
     init(
-        backgroundColor: {{ argument.sharedFrameworkName }}.Color,
-        tintColor: {{ argument.sharedFrameworkName }}.Color,
-        shadowColor: {{ argument.sharedFrameworkName }}.Color,
+        backgroundColor: {{ argument.sharedFrameworkName }}.KalugaColor,
+        tintColor: {{ argument.sharedFrameworkName }}.KalugaColor,
+        shadowColor: {{ argument.sharedFrameworkName }}.KalugaColor,
         font: UIFont,
         largeFont: UIFont
     ) {
@@ -37,9 +37,9 @@ struct NavigationBarColor: ViewModifier {
 
 extension View {
     func navigationBarColor(
-        backgroundColor: {{ argument.sharedFrameworkName }}.Color,
-        tintColor: {{ argument.sharedFrameworkName }}.Color,
-        shadowColor: {{ argument.sharedFrameworkName }}.Color,
+        backgroundColor: {{ argument.sharedFrameworkName }}.KalugaColor,
+        tintColor: {{ argument.sharedFrameworkName }}.KalugaColor,
+        shadowColor: {{ argument.sharedFrameworkName }}.KalugaColor,
         font: UIFont = .systemFont(ofSize: 17, weight: .semibold),
         largeFont: UIFont = .boldSystemFont(ofSize: 34)
     ) -> some View {

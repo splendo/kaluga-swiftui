@@ -70,7 +70,7 @@ extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
         case is {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleNone:
             finalStoke = {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleStroke(
                 width: 0.0,
-                color: Color(uiColor: .clear)
+                color: KalugaColor(uiColor: .clear)
             )
         default:
             preconditionFailure("Unknown stroke style type!")

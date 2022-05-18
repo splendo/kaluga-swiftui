@@ -11,12 +11,12 @@ typealias IntObservable = MappedWithDefaultObservable<KotlinInt, Int, IntMapper>
 typealias FloatObservable = MappedWithDefaultObservable<KotlinFloat, Float, FloatMapper>
 typealias DoubleObservable = MappedWithDefaultObservable<KotlinDouble, Double, DoubleMapper>
 {% if argument.includeResources %}
-typealias UIColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.Color, UIColor, UIColorMapper>
-typealias ColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.Color, SwiftUI.Color, ColorMapper>
+typealias UIColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.KalugaColor, UIColor, UIColorMapper>
+typealias ColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.KalugaColor, SwiftUI.Color, ColorMapper>
 typealias UIImageObservable = MappedWithDefaultObservable<UIImage, UIImage, EmptyMapper<UIImage>>
 typealias ImageObservable = MappedWithDefaultObservable<UIImage, Image, ImageMapper>
 {% endif %}
-typealias DateObservable = MappedWithDefaultObservable<KalugaDate, Foundation.Date, DateMapper>
+// typealias DateObservable = MappedWithDefaultObservable<KalugaDate, Foundation.Date, DateMapper>
 typealias ObjectSimpleObservable<T: KotlinObject> = MappedObservable<T, T, EmptyMapper<T>>
 
 class Observable<Input: KotlinObject, Output: Equatable>: ObservableObject {

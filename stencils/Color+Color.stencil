@@ -2,7 +2,7 @@
 import SwiftUI
 import {{ argument.sharedFrameworkName }}
 
-extension {{ argument.sharedFrameworkName }}.Color {
+extension {{ argument.sharedFrameworkName }}.KalugaColor {
     var swiftUI: SwiftUI.Color {
         if #available(iOS 15.0, *) {
             return SwiftUI.Color(uiColor: self.uiColor)
