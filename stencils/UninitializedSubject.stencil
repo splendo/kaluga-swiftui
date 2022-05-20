@@ -7,7 +7,7 @@ typealias BoolUninitializedSubject = MappedUninitializedSubject<KotlinBoolean, B
 typealias IntUninitializedSubject = MappedUninitializedSubject<KotlinInt, Int, IntOptionalMapper>
 typealias FloatUninitializedSubject = MappedUninitializedSubject<KotlinFloat, Float, FloatOptionalMapper>
 typealias DoubleUninitializedSubject = MappedUninitializedSubject<KotlinDouble, Double, DoubleOptionalMapper>
-// typealias DateUninitializedSubject = MappedUninitializedSubject<KalugaDate, Foundation.Date, DateOptionalMapper>
+typealias DateUninitializedSubject = MappedUninitializedSubject<KalugaDate, Foundation.Date, DateOptionalMapper>
 
 class UninitializedSubject<Input: KotlinObject, Output: Any>: ObservableObject {
 
