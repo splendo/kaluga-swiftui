@@ -28,14 +28,7 @@ class UninitializedSubject<Input: KotlinObject, Output: Any>: ObservableObject {
             value = toMapper(input!)
         }
         cancellable = _value.projectedValue.sink { newValue in
-            if let current = subject.currentOrNull, newValue == toMapper(current) {
-                return
-            }
-            if let newValue = newValue {
-                subject.post(newValue: fromMapper(newValue))
-            } else {
-                subject.post(newValue: nil)
-            }
+            subject.post(newValue: fromMapper(newValue))
         }
         subject
             .observe { [weak self] newValue in

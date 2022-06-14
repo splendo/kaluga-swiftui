@@ -1,7 +1,7 @@
 import Foundation
 import {{ argument.sharedFrameworkName }}
 
-typealias KalugaDate = {{ argument.sharedFrameworkName }}.Date
+typealias KalugaDate = {{ argument.sharedFrameworkName }}.KalugaDate
 typealias DefaultKalugaDate = {{ argument.sharedFrameworkName }}.DefaultKalugaDate
 
 extension Foundation.Date {
