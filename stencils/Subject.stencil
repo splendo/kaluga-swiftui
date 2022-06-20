@@ -10,7 +10,7 @@ typealias FloatSubject = MappedSubject<KotlinFloat, Float, FloatMapper>
 typealias DoubleSubject = MappedSubject<KotlinDouble, Double, DoubleMapper>
 typealias DateSubject = MappedSubject<KalugaDate, Foundation.Date, DateMapper>
 
-class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
+class Subject<Input: KotlinObject, Output: Any>: ObservableObject {
 
     @Published var value: Output
 
@@ -32,9 +32,6 @@ class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
             value = defaultValue
         }
         cancellable = _value.projectedValue.sink { newValue in
-            if let current = subject.currentOrNull, newValue == toMapper(current) {
-                return
-            }
             subject.post(newValue: fromMapper(newValue))
         }
         subject
@@ -49,9 +46,6 @@ class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
                     if self.input != nil {
                         self.value = defaultValue
                     }
-                    return
-                }
-                guard self.input != newValue else {
                     return
                 }
                 let mapped = toMapper(newValue!)
@@ -76,7 +70,7 @@ class Subject<Input: KotlinObject, Output: Equatable>: ObservableObject {
 
 class MappedSubject<
     Input: KotlinObject,
-    Output: Equatable & HasDefaultValue,
+    Output: Any & HasDefaultValue,
     Mapper: PlatformValueMapper
 >: Subject<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
 

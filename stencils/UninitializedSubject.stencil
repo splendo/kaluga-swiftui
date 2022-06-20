@@ -9,7 +9,7 @@ typealias FloatUninitializedSubject = MappedUninitializedSubject<KotlinFloat, Fl
 typealias DoubleUninitializedSubject = MappedUninitializedSubject<KotlinDouble, Double, DoubleOptionalMapper>
 typealias DateUninitializedSubject = MappedUninitializedSubject<KalugaDate, Foundation.Date, DateOptionalMapper>
 
-class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableObject {
+class UninitializedSubject<Input: KotlinObject, Output: Any>: ObservableObject {
 
     @Published var value: Output?
 
@@ -28,14 +28,7 @@ class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableOb
             value = toMapper(input!)
         }
         cancellable = _value.projectedValue.sink { newValue in
-            if let current = subject.currentOrNull, newValue == toMapper(current) {
-                return
-            }
-            if let newValue = newValue {
-                subject.post(newValue: fromMapper(newValue))
-            } else {
-                subject.post(newValue: nil)
-            }
+            subject.post(newValue: fromMapper(newValue))
         }
         subject
             .observe { [weak self] newValue in
@@ -44,9 +37,6 @@ class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableOb
                 }
                 defer {
                     self.input = newValue
-                }
-                guard self.input != newValue else {
-                    return
                 }
                 let mapped: Output?
                 if let newValue = newValue {
@@ -75,7 +65,7 @@ class UninitializedSubject<Input: KotlinObject, Output: Equatable>: ObservableOb
 
 class MappedUninitializedSubject<
     Input: KotlinObject,
-    Output: Equatable,
+    Output: Any,
     Mapper: PlatformOptionalValueMapper
 >: UninitializedSubject<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
     init(_ subject: BaseUninitializedSubject<Input>, animated: Bool = false) {

@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 import {{ argument.sharedFrameworkName }}
 
-typealias KotlinObject = AnyObject & Equatable
+typealias KotlinObject = AnyObject
 
 typealias ObjectObservable<T: KotlinObject & HasDefaultValue> = MappedWithDefaultObservable<T, T, EmptyMapper<T>>
 typealias StringObservable = MappedWithDefaultObservable<NSString, String, StringMapper>
@@ -11,15 +11,15 @@ typealias IntObservable = MappedWithDefaultObservable<KotlinInt, Int, IntMapper>
 typealias FloatObservable = MappedWithDefaultObservable<KotlinFloat, Float, FloatMapper>
 typealias DoubleObservable = MappedWithDefaultObservable<KotlinDouble, Double, DoubleMapper>
 {% if argument.includeResources %}
-typealias UIColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.Color, UIColor, UIColorMapper>
-typealias ColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.Color, SwiftUI.Color, ColorMapper>
+typealias UIColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.KalugaColor, UIColor, UIColorMapper>
+typealias ColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.KalugaColor, SwiftUI.Color, ColorMapper>
 typealias UIImageObservable = MappedWithDefaultObservable<UIImage, UIImage, EmptyMapper<UIImage>>
 typealias ImageObservable = MappedWithDefaultObservable<UIImage, Image, ImageMapper>
 {% endif %}
 typealias DateObservable = MappedWithDefaultObservable<KalugaDate, Foundation.Date, DateMapper>
 typealias ObjectSimpleObservable<T: KotlinObject> = MappedObservable<T, T, EmptyMapper<T>>
 
-class Observable<Input: KotlinObject, Output: Equatable>: ObservableObject {
+class Observable<Input: KotlinObject, Output: Any>: ObservableObject {
 
     @Published private(set) var value: Output
 
@@ -53,9 +53,6 @@ class Observable<Input: KotlinObject, Output: Equatable>: ObservableObject {
                     }
                     return
                 }
-                guard self.input != newValue else {
-                    return
-                }
                 let mapped = mapper(newValue!)
                 if animated {
                     withAnimation {
@@ -78,7 +75,7 @@ class Observable<Input: KotlinObject, Output: Equatable>: ObservableObject {
 
 class MappedObservable<
     Input: KotlinObject,
-    Output: Equatable,
+    Output: Any,
     Mapper: PlatformValueToMapper
 >: Observable<Input, Output> where Mapper.Input == Input, Mapper.Output == Output {
     init(_ observable: BaseInitializedObservable<Input>, defaultValue: Output, animated: Bool = false) {
@@ -88,7 +85,7 @@ class MappedObservable<
 
 class MappedWithDefaultObservable<
     Input: KotlinObject,
-    Output: Equatable & HasDefaultValue,
+    Output: Any & HasDefaultValue,
     Mapper: PlatformValueToMapper
 >: MappedObservable<Input, Output, Mapper> where Mapper.Input == Input, Mapper.Output == Output {
     override init(

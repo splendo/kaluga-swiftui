@@ -101,15 +101,15 @@ enum DateOptionalMapper: PlatformOptionalValueMapper {
 
 {% if argument.includeResources %}
 enum UIColorMapper: PlatformValueMapper {
-    static func to(_ value: {{ argument.sharedFrameworkName }}.Color) -> UIColor { value.uiColor }
-    static func from(_ value: UIColor) -> {{ argument.sharedFrameworkName }}.Color { {{ argument.sharedFrameworkName }}.Color(uiColor: value) }
+    static func to(_ value: {{ argument.sharedFrameworkName }}.KalugaColor) -> UIColor { value.uiColor }
+    static func from(_ value: UIColor) -> {{ argument.sharedFrameworkName }}.KalugaColor { {{ argument.sharedFrameworkName }}.KalugaColor(uiColor: value) }
 }
 
 enum UIColorOptionalMapper: PlatformOptionalValueMapper {
-    static func to(_ value: {{ argument.sharedFrameworkName }}.Color?) -> UIColor? { value?.uiColor }
-    static func from(_ value: UIColor?) -> {{ argument.sharedFrameworkName }}.Color? {
+    static func to(_ value: {{ argument.sharedFrameworkName }}.KalugaColor?) -> UIColor? { value?.uiColor }
+    static func from(_ value: UIColor?) -> {{ argument.sharedFrameworkName }}.KalugaColor? {
         if let value = value {
-            return {{ argument.sharedFrameworkName }}.Color(uiColor: value)
+            return {{ argument.sharedFrameworkName }}.KalugaColor(uiColor: value)
         } else {
             return nil
         }
@@ -117,11 +117,11 @@ enum UIColorOptionalMapper: PlatformOptionalValueMapper {
 }
 
 enum ColorMapper: PlatformValueToMapper {
-    static func to(_ value: {{ argument.sharedFrameworkName }}.Color) -> SwiftUI.Color { value.swiftUI }
+    static func to(_ value: {{ argument.sharedFrameworkName }}.KalugaColor) -> SwiftUI.Color { value.swiftUI }
 }
 
 enum ColorOptionalMapper: PlatformOptionalValueToMapper {
-    static func to(_ value: {{ argument.sharedFrameworkName }}.Color?) -> SwiftUI.Color? { value?.swiftUI }
+    static func to(_ value: {{ argument.sharedFrameworkName }}.KalugaColor?) -> SwiftUI.Color? { value?.swiftUI }
 }
 
 enum ImageMapper: PlatformValueToMapper {
