@@ -1,6 +1,7 @@
 {% if argument.includeResources %}
 import SwiftUI
-import {{ argument.sharedFrameworkName }}
+import class {{ argument.sharedFrameworkName }}.KalugaLabel
+import class {{ argument.sharedFrameworkName }}.TextStyleKt
 
 // MARK: - StyledString
 

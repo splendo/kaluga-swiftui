@@ -1,5 +1,7 @@
 import SwiftUI
-import {{ argument.sharedFrameworkName }}
+import class {{ argument.sharedFrameworkName }}.AlertPresenter
+import class {{ argument.sharedFrameworkName }}.HUD
+import class {{ argument.sharedFrameworkName }}.DateTimePickerPresenter
 
 struct ContainerView: UIViewControllerRepresentable {
 
