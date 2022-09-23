@@ -7,31 +7,44 @@ import class {{ argument.sharedFrameworkName }}.TextStyleKt
 
 extension KalugaLabel.Styled {
     func toAttributedText() -> some View {
-        AttributedText(self)
+        AttributedText(styledLabel: self)
     }
 }
 
 // MARK: - AttributedText
 
-private struct AttributedText: UIViewRepresentable {
+private struct AttributedText: View {
 
-    private let styledLabel: KalugaLabel.Styled
+    var styledLabel: KalugaLabel.Styled
 
-    init(_ styledLabel: KalugaLabel.Styled) {
-        self.styledLabel = styledLabel
-    }
-    
-    func makeUIView(context: Context) -> UILabel {
-        let label = UILabel()
-        label.lineBreakMode = .byClipping
-        label.numberOfLines = 0
-        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        label.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-        return label
+    @SwiftUI.State private var height: CGFloat = .zero
+
+    var body: some View {
+        InternalAttributedText(styledLabel: styledLabel, dynamicHeight: $height)
+            .frame(minHeight: height)
     }
 
-    func updateUIView(_ uiView: UILabel, context: Context) {
-        TextStyleKt.bindLabel(uiView, label: styledLabel)
+    struct InternalAttributedText: UIViewRepresentable {
+        var styledLabel: KalugaLabel.Styled
+        @Binding var dynamicHeight: CGFloat
+
+        func makeUIView(context: Context) -> UILabel {
+            let label = UILabel()
+            label.lineBreakMode = .byClipping
+            label.numberOfLines = 0
+            label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            label.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+            return label
+        }
+
+        func updateUIView(_ uiView: UILabel, context: Context) {
+            TextStyleKt.bindLabel(uiView, label: styledLabel)
+
+            DispatchQueue.main.async {
+                dynamicHeight = uiView.sizeThatFits(CGSize(width: uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude)).height
+            }
+        }
+
     }
 }
 {% endif %}
