@@ -1,7 +1,9 @@
 import SwiftUI
 import class {{ argument.sharedFrameworkName }}.AlertPresenter
 import class {{ argument.sharedFrameworkName }}.HUD
+{% if argument.includeDatePicker %}
 import class {{ argument.sharedFrameworkName }}.DateTimePickerPresenter
+{% endif %}
 
 struct ContainerView: UIViewControllerRepresentable {
 
