@@ -150,7 +150,7 @@ class HomeRoutingNavigator {
 And view model holding this state:
 
 ```Kotlin
-class SomeViewModel : BaseViewModel() {
+class SomeViewModel : BaseLifecycleViewModel() {
 
     private val navigator = HomeRoutingNavigator()
 
