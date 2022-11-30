@@ -21,7 +21,7 @@ class UninitializedObservable<Input: KotlinObject, Output: Any>: ObservableObjec
     @Published private(set) var value: Output?
 
     private var input: Input?
-    private let disposeBag = DisposeBag(allowFreezing: false)
+    private let disposeBag = DisposeBag()
 
     init(
         _ observable: BaseUninitializedObservable<Input>,

@@ -5,12 +5,12 @@ project:
 templates:
   - $PATH_TO_SUBMODULE/stencils/
 output:
-  path: ./ProjectRoot/Generated/KalugaSwiftUI
+  path: ./Generated/KalugaSwiftUI
   # Uncomment to link files to Xcode project automatically
   #  link: 
   #    project: ./$XCODE_PROJECT_NAME.xcodeproj
   #    targets: [$TARGET_A, $TARGET_B]
-  #    group: ProjectRoot/Generated/KalugaSwiftUI
+  #    group: Generated/KalugaSwiftUI
 args:
   sharedFrameworkName: $SHARED_FRAMEWORK_NAME
   includeResources: $TRUE_IF_RESOURCES_ARE_EXPORTED

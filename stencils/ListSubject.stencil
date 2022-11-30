@@ -10,7 +10,7 @@ class ListSubject<Output: Equatable>: ObservableObject {
     @Published var value: [Output]
 
     private var input: NSArray?
-    private let disposeBag = DisposeBag(allowFreezing: false)
+    private let disposeBag = DisposeBag()
     private let cancellable: AnyCancellable
 
     init(_ subject: BaseInitializedSubject<NSArray>,

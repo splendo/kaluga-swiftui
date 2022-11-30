@@ -10,7 +10,7 @@ enum NavigationType {
     case sheet
     case cover
 {% if argument.includePartialSheet %}
-    case partialSheet(style: PartialSheetStyle)
+    case partialSheet(style: PSIphoneStyle)
 {% endif %}
 }
 
@@ -90,8 +90,7 @@ struct Navigation<NavigationContent: View>: ViewModifier {
         {% if argument.includePartialSheet %}
         case .partialSheet(let style):
             content
-                .addPartialSheet(style: style)
-                .partialSheet(isPresented: $state.isPresented) {
+                .partialSheet(isPresented: $state.isPresented, iPhoneStyle: style) {
                     LazyView(navigationContent())
                 }
         {% endif %}
@@ -173,8 +172,7 @@ struct ItemNavigation<ID: Identifiable, NavigationContent: View>: ViewModifier {
         {% if argument.includePartialSheet %}
         case .partialSheet(let style):
             content
-                .addPartialSheet(style: style)
-                .partialSheet(isPresented: isActive) {
+                .partialSheet(isPresented: isActive, iPhoneStyle: style) {
                     LazyView(navigationContent())
                 }
         {% endif %}
