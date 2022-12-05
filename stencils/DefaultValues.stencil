@@ -2,6 +2,9 @@
 import UIKit
 import SwiftUI
 import Foundation
+{% if argument.includeResources %}
+import {{ argument.sharedFrameworkName }}
+{% endif %}
 
 extension Array: HasDefaultValue {
     static func `default`() -> Self { [] }
@@ -49,6 +52,78 @@ extension Image: HasDefaultValue {
         return Image(uiImage: UIImage.default())
     }
 }
+
+{% if argument.includeResources %}
+
+extension KalugaColor: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaColor(uiColor: UIColor.clear) as! Self
+    }
+}
+
+extension KalugaBackgroundStyle: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaBackgroundStyle(
+            fillStyle: FillStyleSolid(color: KalugaColor.default()),
+            strokeStyle: StrokeStyleNone.shared,
+            shape: ShapeRectangle(cornerRadius: 0.0, roundedCorners: [])
+        ) as! Self
+    }
+}
+
+extension TextStyle: HasDefaultValue {
+    static func `default`() -> Self {
+        return TextStyle(
+            font: UIFont.systemFont(ofSize: UIFont.systemFontSize),
+            color: KalugaColor(uiColor: UIColor.darkText),
+            size: Float(UIFont.systemFontSize),
+            alignment: KalugaTextAlignment.start
+        ) as! Self
+    }
+}
+
+extension KalugaLabel : HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaLabel.Plain(
+            text: "",
+            style: TextStyle.default()
+        ) as! Self
+    }
+}
+
+extension ButtonStateStyle: HasDefaultValue {
+    static func `default`() -> Self {
+        return ButtonStateStyle(
+            textColor: KalugaColor(uiColor: UIColor.darkText),
+            backgroundStyle:KalugaBackgroundStyle.default()
+        ) as! Self
+    }
+}
+
+extension KalugaButtonStyle: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaButtonStyle(
+            font: UIFont.systemFont(ofSize: UIFont.systemFontSize),
+            textSize: Float(UIFont.systemFontSize),
+            textAlignment: .center,
+            defaultStyle: ButtonStateStyle.default(),
+            pressedStyle: ButtonStateStyle.default(),
+            disabledStyle: ButtonStateStyle.default()
+        ) as! Self
+    }
+}
+
+extension KalugaButton : HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaButton.Plain(
+            text: "",
+            style: KalugaButtonStyle.default(),
+            isEnabled: true
+        ) {} as! Self
+    }
+}
+
+{% endif %}
 
 extension Date: HasDefaultValue {
     static func `default`() -> Date { Date() }
