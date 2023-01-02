@@ -1,0 +1,50 @@
+{% if argument.includeKeyboard %}
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+class SwiftUIKeyboardManagerBuilder<Value> : BaseKeyboardManagerBuilder, ObservableObject where Value : Hashable {
+
+    @Published var focusState: Value?
+
+    func create(coroutineScope: CoroutineScope) -> BaseKeyboardManager {
+        return ValueKeyboardManager<HashableClass<Value>> { [weak self] value in
+            self?.focusState = value?.value
+        }
+    }
+}
+
+func SwiftUIFocusHandler<Value>(value: Value) -> ValueFocusHandler<HashableClass<Value>> where Value : Hashable {
+    return ValueFocusHandler(value: HashableClass(value: value))
+}
+
+class HashableClass<Value> : Hashable where Value : Hashable {
+
+    static func == (lhs: HashableClass<Value>, rhs: HashableClass<Value>) -> Bool {
+        lhs.value == rhs.value
+    }
+
+    let value: Value
+    var hashValue: Int {
+        return value.hashValue
+    }
+
+    init(value: Value) {
+        self.value = value
+    }
+
+    func hash(into hasher: inout Hasher) {
+        value.hash(into: &hasher)
+    }
+}
+
+extension View {
+    func bindKeyboardManager<Value>(
+        keyboardManagerBuilder: SwiftUIKeyboardManagerBuilder<Value>,
+        focusState: FocusState<Value?>.Binding
+    ) -> some View where Value : Hashable, Value : Equatable {
+        onChange(of: keyboardManagerBuilder.focusState) { focusState.wrappedValue = $0 }
+            .onChange(of: focusState.wrappedValue) { keyboardManagerBuilder.focusState = $0 }
+    }
+}
+
+{% endif %}
