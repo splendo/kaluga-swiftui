@@ -7,7 +7,15 @@ import {{ argument.sharedFrameworkName }}
 enum ButtonFrame {
     case wrapped
     case absoluteFrame(width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment = .center)
-    case frame(minWidth: CGFloat? = nil, idealWidth: CGFloat? = nil, maxWidth: CGFloat? = nil, minHeight: CGFloat? = nil, idealHeight: CGFloat? = nil, maxHeight: CGFloat? = nil, alignment: Alignment = .center)
+    case frame(
+        minWidth: CGFloat? = nil,
+        idealWidth: CGFloat? = nil,
+        maxWidth: CGFloat? = nil,
+        minHeight: CGFloat? = nil,
+        idealHeight: CGFloat? = nil,
+        maxHeight: CGFloat? = nil,
+        alignment: Alignment = .center
+    )
 }
 
 extension KalugaButton {
@@ -30,7 +38,15 @@ extension KalugaButton {
                 case .wrapped: buttonView
                 case let .absoluteFrame(width, height, alignment): buttonView.frame(width: width, height: height, alignment: alignment)
                 case let .frame(minWidth, idealWidth, maxWidth, minHeight, idealHeight, maxHeight, alignment):
-                    buttonView.frame(minWidth: minWidth, idealWidth: idealWidth, maxWidth: maxWidth, minHeight: minHeight, idealHeight: idealHeight, maxHeight: maxHeight, alignment: alignment)
+                    buttonView.frame(
+                        minWidth: minWidth,
+                        idealWidth: idealWidth,
+                        maxWidth: maxWidth,
+                        minHeight: minHeight,
+                        idealHeight: idealHeight,
+                        maxHeight: maxHeight,
+                        alignment: alignment
+                    )
                 }
             }
         )

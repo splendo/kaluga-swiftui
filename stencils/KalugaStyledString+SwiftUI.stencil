@@ -44,7 +44,6 @@ private struct AttributedText: View {
                 dynamicHeight = uiView.sizeThatFits(CGSize(width: uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude)).height
             }
         }
-
     }
 }
 {% endif %}

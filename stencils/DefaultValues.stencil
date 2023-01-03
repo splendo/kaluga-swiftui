@@ -54,7 +54,6 @@ extension Image: HasDefaultValue {
 }
 
 {% if argument.includeResources %}
-
 extension KalugaColor: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaColor(uiColor: UIColor.clear) as! Self
@@ -82,7 +81,7 @@ extension TextStyle: HasDefaultValue {
     }
 }
 
-extension KalugaLabel : HasDefaultValue {
+extension KalugaLabel: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaLabel.Plain(
             text: "",
@@ -95,7 +94,7 @@ extension ButtonStateStyle: HasDefaultValue {
     static func `default`() -> Self {
         return ButtonStateStyle(
             textColor: KalugaColor(uiColor: UIColor.darkText),
-            backgroundStyle:KalugaBackgroundStyle.default()
+            backgroundStyle: KalugaBackgroundStyle.default()
         ) as! Self
     }
 }
@@ -113,7 +112,7 @@ extension KalugaButtonStyle: HasDefaultValue {
     }
 }
 
-extension KalugaButton : HasDefaultValue {
+extension KalugaButton: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaButton.Plain(
             text: "",
@@ -124,7 +123,6 @@ extension KalugaButton : HasDefaultValue {
 }
 
 {% endif %}
-
 extension Date: HasDefaultValue {
     static func `default`() -> Date { Date() }
 }
