@@ -27,21 +27,21 @@ extension View {
     }
 }
 
-extension {{ argument.sharedFrameworkName }}.TextAlignment {
+extension KalugaTextAlignment {
     
-    var textAlignment: SwiftUI.TextAlignment {
+    var textAlignment: TextAlignment {
         switch self {
-        case TextAlignment.left:
+        case KalugaTextAlignment.left:
             return .leading
-        case TextAlignment.right:
+        case KalugaTextAlignment.right:
             return .trailing
-        case TextAlignment.end:
+        case KalugaTextAlignment.end:
             return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
                 .trailing :
                 .leading
-        case TextAlignment.start:
+        case KalugaTextAlignment.start:
             return .leading
-        case TextAlignment.center:
+        case KalugaTextAlignment.center:
             return .center
         default:
             preconditionFailure("Unknown text alignment type!")

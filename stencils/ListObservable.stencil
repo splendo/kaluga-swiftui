@@ -9,7 +9,7 @@ class ListObservable<Output: Equatable>: ObservableObject {
     @Published private(set) var value: [Output]
 
     private var input: NSArray?
-    private let disposeBag = DisposeBag(allowFreezing: false)
+    private let disposeBag = DisposeBag()
 
     init(
         _ observable: BaseInitializedObservable<NSArray>,

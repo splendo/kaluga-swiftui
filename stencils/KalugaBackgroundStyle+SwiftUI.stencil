@@ -5,14 +5,14 @@ import {{ argument.sharedFrameworkName }}
 
 // MARK: - BackgroundStyle
 
-extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
+extension KalugaBackgroundStyle {
 
     func toView() -> some View {
         let shape: AnyShape
         
         // make the shape
         switch self.shape {
-        case let rectangle as {{ argument.sharedFrameworkName }}.BackgroundStyle.ShapeRectangle:
+        case let rectangle as KalugaBackgroundStyle.ShapeRectangle:
             shape = AnyShape(
                 RoundedShape(
                     cornerRadii: .init(
@@ -29,7 +29,7 @@ extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
                     }()
                 )
             )
-        case is {{ argument.sharedFrameworkName }}.BackgroundStyle.ShapeOval:
+        case is KalugaBackgroundStyle.ShapeOval:
             shape = AnyShape(
                 Capsule(style: .circular)
             )
@@ -46,7 +46,7 @@ extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
         // https://developer.apple.com/documentation/swiftui/shapestyle
         /*
         switch buttonStateStyle.backgroundStyle.strokeStyle {
-        case let stroke as {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleStroke:
+        case let stroke as KalugaBackgroundStyle.StrokeStyleStroke:
             anyView = AnyView(
                 shape
                     .style(
@@ -62,13 +62,13 @@ extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
         }
         */
         
-        let finalStoke: {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleStroke
+        let finalStoke: KalugaBackgroundStyle.StrokeStyleStroke
         
         switch strokeStyle {
-        case let stroke as {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleStroke:
+        case let stroke as KalugaBackgroundStyle.StrokeStyleStroke:
             finalStoke = stroke
-        case is {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleNone:
-            finalStoke = {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleStroke(
+        case is KalugaBackgroundStyle.StrokeStyleNone:
+            finalStoke = KalugaBackgroundStyle.StrokeStyleStroke(
                 width: 0.0,
                 color: KalugaColor(uiColor: .clear)
             )
@@ -85,7 +85,7 @@ extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
 }
 
 extension View {
-    public func background(_ backgroundStyle: {{ argument.sharedFrameworkName }}.BackgroundStyle) -> some View {
+    public func background(_ backgroundStyle: KalugaBackgroundStyle) -> some View {
         ModifiedContent(
             content: self,
             modifier: BackgroundStyleModifier(backgroundStyle: backgroundStyle)
@@ -95,14 +95,14 @@ extension View {
 
 // MARK: - Private methods
 
-private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
+private extension KalugaBackgroundStyle {
 
     func makeView(
         shape: AnyShape,
-        stroke: {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleStroke
+        stroke: KalugaBackgroundStyle.StrokeStyleStroke
     ) -> AnyView {
         switch fillStyle {
-        case let solid as {{ argument.sharedFrameworkName }}.BackgroundStyle.FillStyleSolid:
+        case let solid as KalugaBackgroundStyle.FillStyleSolid:
             return AnyView(
                 shape
                     .style(
@@ -111,7 +111,7 @@ private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
                         lineWidth: CGFloat(stroke.width)
                     )
             )
-        case let gradient as {{ argument.sharedFrameworkName }}.BackgroundStyle.FillStyleGradient:
+        case let gradient as KalugaBackgroundStyle.FillStyleGradient:
             return makeGradientView(shape: shape, stroke: stroke, gradient: gradient)
         default:
             preconditionFailure("Unknown fill style type!")
@@ -120,8 +120,8 @@ private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
     
     func makeGradientView(
         shape: AnyShape,
-        stroke: {{ argument.sharedFrameworkName }}.BackgroundStyle.StrokeStyleStroke,
-        gradient: {{ argument.sharedFrameworkName }}.BackgroundStyle.FillStyleGradient
+        stroke: KalugaBackgroundStyle.StrokeStyleStroke,
+        gradient: KalugaBackgroundStyle.FillStyleGradient
     ) -> AnyView {
         switch gradient.gradientStyle {
         case let linear as GradientStyle.Linear:
@@ -216,9 +216,9 @@ private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
     /*
     func shapeStyle(buttonStateStyle: ButtonStateStyle) -> some ShapeStyle {
         switch buttonStateStyle.backgroundStyle.fillStyle {
-        case let solid as {{ argument.sharedFrameworkName }}.BackgroundStyle.FillStyleSolid:
+        case let solid as KalugaBackgroundStyle.FillStyleSolid:
             return Color(solid.color.uiColor)
-        case let gradient as {{ argument.sharedFrameworkName }}.BackgroundStyle.FillStyleGradient:
+        case let gradient as KalugaBackgroundStyle.FillStyleGradient:
             //preconditionFailure("To do!")
             return LinearGradient(
                 gradient: Gradient(colors: [.blue, .black]),
@@ -233,7 +233,7 @@ private extension {{ argument.sharedFrameworkName }}.BackgroundStyle {
 }
 
 private struct BackgroundStyleModifier: ViewModifier {
-    let backgroundStyle: {{ argument.sharedFrameworkName }}.BackgroundStyle
+    let backgroundStyle: KalugaBackgroundStyle
 
     func body(content: Content) -> some View {
         content

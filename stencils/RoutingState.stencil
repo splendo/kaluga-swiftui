@@ -17,12 +17,17 @@ class RoutingState: ObservableObject {
             return
         }
 
-        if animated {
-            withAnimation {
-                isPresented = presented
-            }
-        } else {
+        // SwiftUI doesnt really support enabling/disabling animations out of the box
+        // Settings this global variable is the only thing that works
+        let navigationBarAnimationsEnabled = UINavigationBar.areAnimationsEnabled
+        UINavigationBar.setAnimationsEnabled(animated)
+        var transaction = Transaction()
+        transaction.disablesAnimations = !animated
+        withTransaction(transaction) {
             isPresented = presented
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                UINavigationBar.setAnimationsEnabled(navigationBarAnimationsEnabled)
+            }
         }
     }
 }

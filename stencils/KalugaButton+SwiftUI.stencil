@@ -4,11 +4,23 @@ import {{ argument.sharedFrameworkName }}
 
 // MARK: - KalugaButton
 
+enum ButtonFrame {
+    case wrapped
+    case absoluteFrame(width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment = .center)
+    case frame(
+        minWidth: CGFloat? = nil,
+        idealWidth: CGFloat? = nil,
+        maxWidth: CGFloat? = nil,
+        minHeight: CGFloat? = nil,
+        idealHeight: CGFloat? = nil,
+        maxHeight: CGFloat? = nil,
+        alignment: Alignment = .center
+    )
+}
+
 extension KalugaButton {
-    
-    func toButton() -> some View {
+    func toButton(buttonFrame: ButtonFrame = .wrapped) -> some View {
         let buttonView: AnyView
-        
         switch self {
         case let button as KalugaButton.Plain:
             buttonView = makePlainButton(button: button)
@@ -17,13 +29,25 @@ extension KalugaButton {
         default:
             preconditionFailure("Unknown kaluga button type!")
         }
-        
         return Button(
             action: {
                 self.action()
             },
             label: {
-                buttonView
+                switch buttonFrame {
+                case .wrapped: buttonView
+                case let .absoluteFrame(width, height, alignment): buttonView.frame(width: width, height: height, alignment: alignment)
+                case let .frame(minWidth, idealWidth, maxWidth, minHeight, idealHeight, maxHeight, alignment):
+                    buttonView.frame(
+                        minWidth: minWidth,
+                        idealWidth: idealWidth,
+                        maxWidth: maxWidth,
+                        minHeight: minHeight,
+                        idealHeight: idealHeight,
+                        maxHeight: maxHeight,
+                        alignment: alignment
+                    )
+                }
             }
         )
         .buttonStyle(self.style, isEnabled: self.isEnabled)
@@ -31,7 +55,7 @@ extension KalugaButton {
 }
 
 extension View {
-    public func buttonStyle(_ buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle, isEnabled: Bool = true) -> some View {
+    public func buttonStyle(_ buttonStyle: KalugaButtonStyle, isEnabled: Bool = true) -> some View {
         ModifiedContent(
             content: self,
             modifier: ButtonStyleModifier(buttonStyle: buttonStyle, isEnabled: isEnabled)
@@ -68,11 +92,11 @@ private extension KalugaButton {
 
 // MARK: - CustomButtonStyle
 
-private struct CustomButtonStyle: SwiftUI.ButtonStyle {
-    private let buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle
+private struct CustomButtonStyle: ButtonStyle {
+    private let buttonStyle: KalugaButtonStyle
     private let isEnabled: Bool
 
-    init(buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle, isEnabled: Bool = true) {
+    init(buttonStyle: KalugaButtonStyle, isEnabled: Bool = true) {
         self.buttonStyle = buttonStyle
         self.isEnabled = isEnabled
     }
@@ -97,7 +121,7 @@ private struct CustomButtonStyle: SwiftUI.ButtonStyle {
 
 private struct ButtonStyleModifier: ViewModifier {
 
-    let buttonStyle: {{ argument.sharedFrameworkName }}.ButtonStyle
+    let buttonStyle: KalugaButtonStyle
     let isEnabled: Bool
 
     func body(content: Content) -> some View {

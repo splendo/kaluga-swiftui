@@ -11,10 +11,14 @@ typealias IntObservable = MappedWithDefaultObservable<KotlinInt, Int, IntMapper>
 typealias FloatObservable = MappedWithDefaultObservable<KotlinFloat, Float, FloatMapper>
 typealias DoubleObservable = MappedWithDefaultObservable<KotlinDouble, Double, DoubleMapper>
 {% if argument.includeResources %}
-typealias UIColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.KalugaColor, UIColor, UIColorMapper>
-typealias ColorObservable = MappedWithDefaultObservable<{{ argument.sharedFrameworkName }}.KalugaColor, SwiftUI.Color, ColorMapper>
+typealias UIColorObservable = MappedWithDefaultObservable<KalugaColor, UIColor, UIColorMapper>
+typealias ColorObservable = MappedWithDefaultObservable<KalugaColor, SwiftUI.Color, ColorMapper>
 typealias UIImageObservable = MappedWithDefaultObservable<UIImage, UIImage, EmptyMapper<UIImage>>
 typealias ImageObservable = MappedWithDefaultObservable<UIImage, Image, ImageMapper>
+typealias BackgroundStyleObservable = MappedWithDefaultObservable<KalugaBackgroundStyle, KalugaBackgroundStyle, EmptyMapper<KalugaBackgroundStyle>>
+typealias LabelObservable = MappedWithDefaultObservable<KalugaLabel, KalugaLabel, EmptyMapper<KalugaLabel>>
+typealias ButtonObservable = MappedWithDefaultObservable<KalugaButton, KalugaButton, EmptyMapper<KalugaButton>>
+typealias ButtonStyleObservable = MappedWithDefaultObservable<KalugaButtonStyle, KalugaButtonStyle, EmptyMapper<KalugaButtonStyle>>
 {% endif %}
 typealias DateObservable = MappedWithDefaultObservable<KalugaDate, Foundation.Date, DateMapper>
 typealias ObjectSimpleObservable<T: KotlinObject> = MappedObservable<T, T, EmptyMapper<T>>
@@ -24,7 +28,7 @@ class Observable<Input: KotlinObject, Output: Any>: ObservableObject {
     @Published private(set) var value: Output
 
     private var input: Input?
-    private let disposeBag = DisposeBag(allowFreezing: false)
+    private let disposeBag = DisposeBag()
 
     init(
         _ observable: BaseInitializedObservable<Input>,
