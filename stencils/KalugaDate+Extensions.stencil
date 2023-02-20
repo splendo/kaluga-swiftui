@@ -22,7 +22,7 @@ extension KalugaDate {
     }
 
     static var today: KalugaDate {
-        DDefaultKalugaDate.companion.today(
+        DefaultKalugaDate.companion.today(
             timeZone: KalugaTimeZone.companion.current(),
             locale: KalugaLocale.companion.defaultLocale
         )
