@@ -70,9 +70,9 @@ extension KalugaBackgroundStyle: HasDefaultValue {
     }
 }
 
-extension TextStyle: HasDefaultValue {
+extension KalugaTextStyle: HasDefaultValue {
     static func `default`() -> Self {
-        return TextStyle(
+        return KalugaTextStyle(
             font: UIFont.systemFont(ofSize: UIFont.systemFontSize),
             color: KalugaColor(uiColor: UIColor.darkText),
             size: Float(UIFont.systemFontSize),
@@ -85,7 +85,7 @@ extension KalugaLabel: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaLabel.Plain(
             text: "",
-            style: TextStyle.default()
+            style: KalugaTextStyle.default()
         ) as! Self
     }
 }

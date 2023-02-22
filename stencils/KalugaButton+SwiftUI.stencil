@@ -67,8 +67,8 @@ extension View {
 
 private extension KalugaButton {
 
-    private var textStyle: TextStyle {
-        return TextStyle(
+    private var textStyle: KalugaTextStyle {
+        return KalugaTextStyle(
             font: style.font,
             color: style.defaultStyle.textColor,
             size: style.textSize,
