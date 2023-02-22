@@ -12,9 +12,10 @@ typealias FloatObservable = MappedWithDefaultObservable<KotlinFloat, Float, Floa
 typealias DoubleObservable = MappedWithDefaultObservable<KotlinDouble, Double, DoubleMapper>
 {% if argument.includeResources %}
 typealias UIColorObservable = MappedWithDefaultObservable<KalugaColor, UIColor, UIColorMapper>
-typealias ColorObservable = MappedWithDefaultObservable<KalugaColor, SwiftUI.Color, ColorMapper>
+typealias ColorObservable = MappedWithDefaultObservable<KalugaColor, Color, ColorMapper>
 typealias UIImageObservable = MappedWithDefaultObservable<UIImage, UIImage, EmptyMapper<UIImage>>
 typealias ImageObservable = MappedWithDefaultObservable<UIImage, Image, ImageMapper>
+typealias TintedImageObservable = MappedWithDefaultObservable<TintedImage, TintedImage, TintedImageMapper>
 typealias BackgroundStyleObservable = MappedWithDefaultObservable<KalugaBackgroundStyle, KalugaBackgroundStyle, EmptyMapper<KalugaBackgroundStyle>>
 typealias LabelObservable = MappedWithDefaultObservable<KalugaLabel, KalugaLabel, EmptyMapper<KalugaLabel>>
 typealias ButtonObservable = MappedWithDefaultObservable<KalugaButton, KalugaButton, EmptyMapper<KalugaButton>>

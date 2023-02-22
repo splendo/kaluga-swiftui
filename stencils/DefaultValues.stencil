@@ -34,8 +34,8 @@ extension UIColor: HasDefaultValue {
     static func `default`() -> Self { UIColor.clear as! Self }
 }
 
-extension SwiftUI.Color: HasDefaultValue {
-    static func `default`() -> Self { SwiftUI.Color.clear }
+extension Color: HasDefaultValue {
+    static func `default`() -> Self { Color.clear }
 }
 
 extension UIImage: HasDefaultValue {
@@ -57,6 +57,12 @@ extension Image: HasDefaultValue {
 extension KalugaColor: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaColor(uiColor: UIColor.clear) as! Self
+    }
+}
+
+extension TintedImage: HasDefaultValue {
+    static func `default`() -> Self {
+        return TintedImage(image: UIImage(), tint: KalugaColor(uiColor: UIColor.clear)) as! Self
     }
 }
 

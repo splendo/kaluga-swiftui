@@ -1,0 +1,20 @@
+{% if argument.includeResources %}
+import SwiftUI
+import {{ argument.sharedFrameworkName }}
+
+extension TintedImage {
+
+    var swiftUI: some View {
+        return Image(uiImage: image)
+            .renderingMode(.template)
+            .foregroundColor(tint.swiftUI)
+    }
+
+    var resizableSwiftUI: some View {
+        return Image(uiImage: image)
+            .renderingMode(.template)
+            .resizable()
+            .foregroundColor(tint.swiftUI)
+    }
+}
+{% endif %}
