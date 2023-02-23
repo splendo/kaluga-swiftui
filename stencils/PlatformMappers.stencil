@@ -117,15 +117,19 @@ enum UIColorOptionalMapper: PlatformOptionalValueMapper {
 }
 
 enum ColorMapper: PlatformValueToMapper {
-    static func to(_ value: {{ argument.sharedFrameworkName }}.KalugaColor) -> SwiftUI.Color { value.swiftUI }
+    static func to(_ value: KalugaColor) -> Color { value.swiftUI }
 }
 
 enum ColorOptionalMapper: PlatformOptionalValueToMapper {
-    static func to(_ value: {{ argument.sharedFrameworkName }}.KalugaColor?) -> SwiftUI.Color? { value?.swiftUI }
+    static func to(_ value: KalugaColor?) -> Color? { value?.swiftUI }
 }
 
 enum ImageMapper: PlatformValueToMapper {
     static func to(_ value: UIImage) -> Image { Image(uiImage: value) }
+}
+
+enum TintedImageMapper: PlatformValueToMapper {
+    static func to(_ value: TintedImage) -> TintedImage { value }
 }
 
 enum ImageOptionalMapper: PlatformOptionalValueToMapper {

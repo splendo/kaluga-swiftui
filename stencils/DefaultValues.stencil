@@ -34,8 +34,8 @@ extension UIColor: HasDefaultValue {
     static func `default`() -> Self { UIColor.clear as! Self }
 }
 
-extension SwiftUI.Color: HasDefaultValue {
-    static func `default`() -> Self { SwiftUI.Color.clear }
+extension Color: HasDefaultValue {
+    static func `default`() -> Self { Color.clear }
 }
 
 extension UIImage: HasDefaultValue {
@@ -60,6 +60,12 @@ extension KalugaColor: HasDefaultValue {
     }
 }
 
+extension TintedImage: HasDefaultValue {
+    static func `default`() -> Self {
+        return TintedImage(image: UIImage(), tint: KalugaColor(uiColor: UIColor.clear)) as! Self
+    }
+}
+
 extension KalugaBackgroundStyle: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaBackgroundStyle(
@@ -70,9 +76,9 @@ extension KalugaBackgroundStyle: HasDefaultValue {
     }
 }
 
-extension TextStyle: HasDefaultValue {
+extension KalugaTextStyle: HasDefaultValue {
     static func `default`() -> Self {
-        return TextStyle(
+        return KalugaTextStyle(
             font: UIFont.systemFont(ofSize: UIFont.systemFontSize),
             color: KalugaColor(uiColor: UIColor.darkText),
             size: Float(UIFont.systemFontSize),
@@ -85,7 +91,7 @@ extension KalugaLabel: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaLabel.Plain(
             text: "",
-            style: TextStyle.default()
+            style: KalugaTextStyle.default()
         ) as! Self
     }
 }

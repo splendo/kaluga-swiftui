@@ -85,7 +85,7 @@ let wrapper = ViewModelWrapperView(container: container, viewModel: viewModel)
 
 ### Observables and Subjects
 This library provides functionality for using Kaluga `Observables` and `Subjects` in SwiftUI views.
-Observables can be mapped to a `Observable` or `UninitializedObservable`
+Observables can be mapped to an `Observable` or `UninitializedObservable`
 and Subjects to `Subject` or `UninitializedSubject` classes.
 These classes require a mapping, though convenience default mappings and typealiases are included in this library.
 
