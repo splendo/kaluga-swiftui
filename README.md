@@ -43,6 +43,7 @@ All features are enabled by default.
 - __includeAlerts__: Set to `true` when `Kaluga.alerts` is exported.
 - __includeHud__: Set to `true` when `Kaluga.hud` is exported.
 - __includeDatePicker__: Set to `true` when `Kaluga.date-picker` is exported.
+- __includeKeyboard__: Set to `true` when `Kaluga.keyboard` is exported.
 - __includePartialSheet__: Set to `true` when using [PartialSheet](https://github.com/AndreaMiotto/PartialSheet.git) navigation.
 
 ## Usage
