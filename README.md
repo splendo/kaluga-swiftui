@@ -43,7 +43,7 @@ All features are enabled by default.
 - __includeAlerts__: Set to `true` when `Kaluga.alerts` is exported.
 - __includeHud__: Set to `true` when `Kaluga.hud` is exported.
 - __includeDatePicker__: Set to `true` when `Kaluga.date-picker` is exported.
-- __includeKeyboard__: Set to `true` when `Kaluga.keyboard` is exported.
+- __includeKeyboard__: Set to `true` when `Kaluga.keyboard` is exported. If your Minimum target version is lower than 15 you won't be able to use the SwiftUI extension. In case your project targets a version < 15, use the UIKit implementation instead.
 - __includePartialSheet__: Set to `true` when using [PartialSheet](https://github.com/AndreaMiotto/PartialSheet.git) navigation.
 
 ## Usage
