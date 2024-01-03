@@ -14,3 +14,4 @@ args:
   includeDatePicker: true
   includeKeyboard: true
   includePartialSheet: false
+  navigationAnimationEnabled: true

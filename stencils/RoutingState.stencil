@@ -5,10 +5,10 @@ class RoutingState: ObservableObject {
 
     @Published var isPresented = false
 
-    func show(animated: Bool = false, force: Bool = false) {
+    func show(animated: Bool = {{ argument.navigationAnimationEnabled == true }}, force: Bool = false) {
         setPresented(true, animated: animated, force: force)
     }
-    func close(animated: Bool = false, force: Bool = false) {
+    func close(animated: Bool = {{ argument.navigationAnimationEnabled == true }}, force: Bool = false) {
         setPresented(false, animated: animated, force: force)
     }
 
@@ -36,7 +36,7 @@ class ObservableRoutingState: RoutingState {
 
     private var cancellable = Set<AnyCancellable>()
 
-    init(_ observable: BoolObservable, animated: Bool = false) {
+    init(_ observable: BoolObservable, animated: Bool = {{ argument.navigationAnimationEnabled == true }}) {
         super.init()
         observable.$value
             .sink { [weak self] value in
@@ -54,7 +54,7 @@ class ObjectRoutingState<T: Equatable>: RoutingState {
 
     private(set) var object: T?
 
-    func show(_ object: T, animated: Bool = false) {
+    func show(_ object: T, animated: Bool = {{ argument.navigationAnimationEnabled == true }}) {
         let force: Bool
         if self.object != object {
             self.object = object
@@ -65,17 +65,17 @@ class ObjectRoutingState<T: Equatable>: RoutingState {
         super.show(animated: animated, force: force)
     }
 
-    override func close(animated: Bool = false, force: Bool = false) {
+    override func close(animated: Bool = {{ argument.navigationAnimationEnabled == true }}, force: Bool = false) {
         object = nil
         super.close(animated: animated, force: force)
     }
 }
 
 class IdentifiableRoutingState<ID: Identifiable>: RoutingState, Identifiable {
-    
+
     private(set) var id: ID.ID?
 
-    func show(_ id: ID, animated: Bool = false) {
+    func show(_ id: ID, animated: Bool = {{ argument.navigationAnimationEnabled == true }}) {
         let force: Bool
         if self.id != id.id {
             self.id = id.id
@@ -86,21 +86,21 @@ class IdentifiableRoutingState<ID: Identifiable>: RoutingState, Identifiable {
         super.show(animated: animated, force: force)
     }
 
-    override func close(animated: Bool = false, force: Bool = false) {
+    override func close(animated: Bool = {{ argument.navigationAnimationEnabled == true }}, force: Bool = false) {
         id = nil
         super.close(animated: animated, force: force)
     }
 }
 
 class IdentifiableObjectRoutingState<T>: IdentifiableRoutingState<T> where T: Equatable, T: Identifiable {
-    
+
     private(set) var object: T?
 
     override var id: T.ID? {
         return object?.id
     }
 
-    override func show(_ object: T, animated: Bool = false) {
+    override func show(_ object: T, animated: Bool = {{ argument.navigationAnimationEnabled == true }}) {
         let force: Bool
         if self.object != object {
             self.object = object
@@ -111,7 +111,7 @@ class IdentifiableObjectRoutingState<T>: IdentifiableRoutingState<T> where T: Eq
         super.show(animated: animated, force: force)
     }
 
-    override func close(animated: Bool = false, force: Bool = false) {
+    override func close(animated: Bool = {{ argument.navigationAnimationEnabled == true }}, force: Bool = false) {
         object = nil
         super.close(animated: animated, force: force)
     }
