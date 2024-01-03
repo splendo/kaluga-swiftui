@@ -5,10 +5,21 @@ class RoutingState: ObservableObject {
 
     @Published var isPresented = false
 
+    {% if !argument.navigationAnimationEnabled %}
     func show(animated: Bool = false, force: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    func show(animated: Bool = true, force: Bool = false) {
+    {% endif %}
         setPresented(true, animated: animated, force: force)
     }
+
+    {% if !argument.navigationAnimationEnabled %}
     func close(animated: Bool = false, force: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    func close(animated: Bool = true, force: Bool = false) {
+    {% endif %}
         setPresented(false, animated: animated, force: force)
     }
 
@@ -36,7 +47,12 @@ class ObservableRoutingState: RoutingState {
 
     private var cancellable = Set<AnyCancellable>()
 
+    {% if !argument.navigationAnimationEnabled %}
     init(_ observable: BoolObservable, animated: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    init(_ observable: BoolObservable, animated: Bool = true) {
+    {% endif %}
         super.init()
         observable.$value
             .sink { [weak self] value in
@@ -54,7 +70,12 @@ class ObjectRoutingState<T: Equatable>: RoutingState {
 
     private(set) var object: T?
 
+    {% if !argument.navigationAnimationEnabled %}
     func show(_ object: T, animated: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    func show(_ object: T, animated: Bool = true) {
+    {% endif %}
         let force: Bool
         if self.object != object {
             self.object = object
@@ -65,17 +86,27 @@ class ObjectRoutingState<T: Equatable>: RoutingState {
         super.show(animated: animated, force: force)
     }
 
+    {% if !argument.navigationAnimationEnabled %}
     override func close(animated: Bool = false, force: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    override func close(animated: Bool = true, force: Bool = false) {
+    {% endif %}
         object = nil
         super.close(animated: animated, force: force)
     }
 }
 
 class IdentifiableRoutingState<ID: Identifiable>: RoutingState, Identifiable {
-    
+
     private(set) var id: ID.ID?
 
+    {% if !argument.navigationAnimationEnabled %}
     func show(_ id: ID, animated: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    func show(_ id: ID, animated: Bool = true) {
+    {% endif %}
         let force: Bool
         if self.id != id.id {
             self.id = id.id
@@ -86,21 +117,31 @@ class IdentifiableRoutingState<ID: Identifiable>: RoutingState, Identifiable {
         super.show(animated: animated, force: force)
     }
 
+    {% if !argument.navigationAnimationEnabled %}
     override func close(animated: Bool = false, force: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    override func close(animated: Bool = true, force: Bool = false) {
+    {% endif %}
         id = nil
         super.close(animated: animated, force: force)
     }
 }
 
 class IdentifiableObjectRoutingState<T>: IdentifiableRoutingState<T> where T: Equatable, T: Identifiable {
-    
+
     private(set) var object: T?
 
     override var id: T.ID? {
         return object?.id
     }
 
+    {% if !argument.navigationAnimationEnabled %}
     override func show(_ object: T, animated: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    override func show(_ object: T, animated: Bool = true) {
+    {% endif %}
         let force: Bool
         if self.object != object {
             self.object = object
@@ -111,7 +152,12 @@ class IdentifiableObjectRoutingState<T>: IdentifiableRoutingState<T> where T: Eq
         super.show(animated: animated, force: force)
     }
 
+    {% if !argument.navigationAnimationEnabled %}
     override func close(animated: Bool = false, force: Bool = false) {
+    {% endif %}
+    {% if argument.navigationAnimationEnabled %}
+    override func close(animated: Bool = true, force: Bool = false) {
+    {% endif %}
         object = nil
         super.close(animated: animated, force: force)
     }
