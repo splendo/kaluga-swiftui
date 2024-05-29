@@ -53,6 +53,7 @@ extension Image: HasDefaultValue {
     }
 }
 
+{% if argument.includeResources %}
 extension KalugaColor: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaColor(uiColor: UIColor.clear) as! Self
@@ -153,6 +154,7 @@ extension KalugaButton: HasDefaultValue {
     }
 }
 
+{% endif %}
 extension Date: HasDefaultValue {
     static func `default`() -> Date { Date() }
 }
