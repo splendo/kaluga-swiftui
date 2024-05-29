@@ -19,7 +19,7 @@ typealias TintedImageObservable = MappedWithDefaultObservable<TintedImage, Tinte
 typealias BackgroundStyleObservable = MappedWithDefaultObservable<KalugaBackgroundStyle, KalugaBackgroundStyle, EmptyMapper<KalugaBackgroundStyle>>
 typealias LabelObservable = MappedWithDefaultObservable<KalugaLabel, KalugaLabel, EmptyMapper<KalugaLabel>>
 typealias ButtonObservable = MappedWithDefaultObservable<KalugaButton, KalugaButton, EmptyMapper<KalugaButton>>
-typealias ButtonStyleObservable = MappedWithDefaultObservable<KalugaButtonStyle, KalugaButtonStyle, EmptyMapper<KalugaButtonStyle>>
+typealias ButtonStyleObservable = MappedWithDefaultObservable<KalugaButtonStyleTextOnly, KalugaButtonStyleTextOnly, EmptyMapper<KalugaButtonStyleTextOnly>>
 {% endif %}
 typealias DateObservable = MappedWithDefaultObservable<KalugaDate, Foundation.Date, DateMapper>
 typealias ObjectSimpleObservable<T: KotlinObject> = MappedObservable<T, T, EmptyMapper<T>>

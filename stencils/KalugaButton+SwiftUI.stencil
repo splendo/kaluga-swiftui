@@ -6,7 +6,7 @@ import {{ argument.sharedFrameworkName }}
 
 enum ButtonFrame {
     case wrapped
-    case absoluteFrame(width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment = .center)
+    case absoluteFrame(width: CGFloat? = nil, height: CGFloat? = nil, alignment: VerticalAlignment = .center)
     case frame(
         minWidth: CGFloat? = nil,
         idealWidth: CGFloat? = nil,
@@ -14,120 +14,305 @@ enum ButtonFrame {
         minHeight: CGFloat? = nil,
         idealHeight: CGFloat? = nil,
         maxHeight: CGFloat? = nil,
-        alignment: Alignment = .center
+        alignment: VerticalAlignment = .center
     )
 }
 
 extension KalugaButton {
     func toButton(buttonFrame: ButtonFrame = .wrapped) -> some View {
-        let buttonView: AnyView
-        switch self {
-        case let button as KalugaButton.Plain:
-            buttonView = makePlainButton(button: button)
-        case let button as KalugaButton.Styled:
-            buttonView = makeStyledButton(button: button)
-        default:
-            preconditionFailure("Unknown kaluga button type!")
-        }
         return Button(
             action: {
                 self.action()
             },
             label: {
-                switch buttonFrame {
-                case .wrapped: buttonView
-                case let .absoluteFrame(width, height, alignment): buttonView.frame(width: width, height: height, alignment: alignment)
-                case let .frame(minWidth, idealWidth, maxWidth, minHeight, idealHeight, maxHeight, alignment):
-                    buttonView.frame(
-                        minWidth: minWidth,
-                        idealWidth: idealWidth,
-                        maxWidth: maxWidth,
-                        minHeight: minHeight,
-                        idealHeight: idealHeight,
-                        maxHeight: maxHeight,
-                        alignment: alignment
-                    )
-                }
+                EmptyView()
             }
         )
-        .buttonStyle(self.style, isEnabled: self.isEnabled)
+        .buttonStyle(self, buttonFrame: buttonFrame, isEnabled: self.isEnabled)
     }
 }
 
 extension View {
-    public func buttonStyle(_ buttonStyle: KalugaButtonStyle, isEnabled: Bool = true) -> some View {
+    func buttonStyle(
+        _ button: KalugaButton,
+        buttonFrame: ButtonFrame = .wrapped,
+        isEnabled: Bool = true
+    ) -> some View {
         ModifiedContent(
             content: self,
-            modifier: ButtonStyleModifier(buttonStyle: buttonStyle, isEnabled: isEnabled)
+            modifier: ButtonStyleModifier(button: button, buttonFrame: buttonFrame, isEnabled: isEnabled)
         )
     }
 }
 
 // MARK: - Private methods
 
-private extension KalugaButton {
-
-    private var textStyle: KalugaTextStyle {
-        return KalugaTextStyle(
-            font: style.font,
-            color: style.defaultStyle.textColor,
-            size: style.textSize,
-            alignment: style.textAlignment
-        )
-    }
-
-    private func makePlainButton(button: KalugaButton.Plain) -> AnyView {
-        // assemble the button
-        return AnyView(
-            Text(button.text)
-                    .textStyle(textStyle)
-        )
-    }
-    private func makeStyledButton(button: KalugaButton.Styled) -> AnyView {
-        return AnyView(
-            KalugaLabel.Styled(text: button.text, style: textStyle).toAttributedText()
-        )
+private extension KalugaButton.WithText {
+    @ViewBuilder func makeLabel(textStyle: KalugaTextStyle) -> some View {
+        switch self {
+        case let plain as KalugaButton.Plain: Text(plain.text)
+                .textStyle(textStyle)
+        case let styled as KalugaButton.Styled: KalugaLabel.Styled(text: styled.text, style: textStyle).toAttributedText()
+        default: fatalError("Unknown KalugaButton.WithText \(self)")
+        }
     }
 }
 
 // MARK: - CustomButtonStyle
 
 private struct CustomButtonStyle: ButtonStyle {
-    private let buttonStyle: KalugaButtonStyle
+    private let button: KalugaButton
+    private let buttonFrame: ButtonFrame
     private let isEnabled: Bool
-
-    init(buttonStyle: KalugaButtonStyle, isEnabled: Bool = true) {
-        self.buttonStyle = buttonStyle
+    
+    init(button: KalugaButton, buttonFrame: ButtonFrame, isEnabled: Bool) {
+        self.button = button
+        self.buttonFrame = buttonFrame
         self.isEnabled = isEnabled
     }
+    
     func makeBody(configuration: Self.Configuration) -> some View {
-        let stateStyle = stateStyle(isPressed: configuration.isPressed)
-        return configuration.label
-            .padding()
-            .foregroundColor(stateStyle.textColor.swiftUI)
+        let buttonStyle = button.style
+        let stateStyle = buttonStyle.getStateStyle(isEnabled: isEnabled, isPressed: configuration.isPressed)
+        return KalugaButtonView(button: button, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: configuration.isPressed)
+            .padding(
+                EdgeInsets(
+                    top: CGFloat(buttonStyle.padding.top),
+                    leading: CGFloat(buttonStyle.padding.start),
+                    bottom: CGFloat(buttonStyle.padding.bottom),
+                    trailing: CGFloat(buttonStyle.padding.end)
+                )
+            )
             .background(stateStyle.backgroundStyle)
     }
+}
 
-    private func stateStyle(isPressed: Bool) -> ButtonStateStyle {
-        if !isEnabled {
-            return buttonStyle.disabledStyle
-        } else if isPressed {
-            return buttonStyle.pressedStyle
-        } else {
-            return buttonStyle.defaultStyle
+private struct KalugaButtonView: View {
+    let button: KalugaButton
+    let buttonFrame: ButtonFrame
+    let isEnabled: Bool
+    let isPressed: Bool
+    
+    
+    var body: some View {
+        switch button {
+        case let withText as KalugaButton.WithText:
+            switch withText.style {
+            case let withImageAndText as KalugaButtonStyleWithImageAndText: KalugaButtonStyleWithImageAndTextView(button: withText, style: withImageAndText, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: isPressed)
+            case is KalugaButtonStyleTextOnly: KalugaButtonStyleTextOnlyView(button: withText, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: isPressed)
+            default: fatalError("Unknown KalugaButtonStyle.WithText \(withText.style)")
+            }
+        case let withoutText as KalugaButton.WithoutText:
+            switch withoutText.style {
+            case let imageOnly as KalugaButtonStyleImageOnly: KalugaButtonStyleImageOnlyView(style: imageOnly, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: isPressed)
+            case let withoutContent as KalugaButtonStyleWithoutContent: KalugaButtonStyleWithoutContentView(style: withoutContent, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: isPressed)
+            default: fatalError("Unknown KalugaButtonStyle.WithoutText \(withoutText.style)")
+            }
+        default: fatalError("Unknown KalugaButton \(button)")
+        }
+    }
+}
+
+private struct KalugaButtonStyleWithImageAndTextView: View {
+    
+    let button: KalugaButton.WithText
+    let style: KalugaButtonStyleWithImageAndText
+    let buttonFrame: ButtonFrame
+    let isEnabled: Bool
+    let isPressed: Bool
+    
+    var body: some View {
+        content().modifier(ButtonFrameModifier(buttonFrame: buttonFrame, horizontalAlignment: style.textAlignment.horizontalAlignment()))
+    }
+    
+    @ViewBuilder private func content() -> some View {
+        let isLeftToRight = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight
+        switch style.imageGravity {
+        case .start: HStack(alignment: .center, spacing: CGFloat(style.spacing)) {
+            if isLeftToRight {
+                imageView()
+            }
+            textView()
+            if !isLeftToRight {
+                imageView()
+            }
+        }
+        case .left: HStack(alignment: .center, spacing: CGFloat(style.spacing)) {
+            imageView()
+            textView()
+        }
+        case .end: HStack(alignment: .center, spacing: CGFloat(style.spacing)) {
+            if !isLeftToRight {
+                imageView()
+            }
+            textView()
+            if isLeftToRight {
+                imageView()
+            }
+        }
+        case .right: HStack(alignment: .center, spacing: CGFloat(style.spacing)) {
+            textView()
+            imageView()
+        }
+        case.top: VStack(alignment: .center, spacing: CGFloat(style.spacing)) {
+            imageView()
+            textView()
+        }
+        case.bottom: VStack(alignment: .center, spacing: CGFloat(style.spacing)) {
+            textView()
+            imageView()
+        }
+        default: fatalError("Unknown ImageGravity \(style.imageGravity)")
+        }
+    }
+    
+    @ViewBuilder private func textView() -> some View {
+        KalugaButtonStyleWithTextView(
+            button: button,
+            buttonFrame: .wrapped,
+            horizontalAlignment: style.textAlignment.horizontalAlignment(),
+            isEnabled: isEnabled,
+            isPressed: isPressed
+        )
+    }
+    
+    @ViewBuilder private func imageView() -> some View {
+        style.buildImageView(isEnabled: isEnabled, isPressed: isPressed)
+    }
+}
+
+private struct KalugaButtonStyleTextOnlyView: View {
+    
+    let button: KalugaButton.WithText
+    let buttonFrame: ButtonFrame
+    let isEnabled: Bool
+    let isPressed: Bool
+    
+    var body: some View {
+        KalugaButtonStyleWithTextView(
+            button: button,
+            buttonFrame: buttonFrame,
+            horizontalAlignment: button.style.textAlignment.horizontalAlignment(),
+            isEnabled: isEnabled,
+            isPressed: isPressed
+        )
+    }
+}
+
+private struct KalugaButtonStyleImageOnlyView: View {
+    
+    let style: KalugaButtonStyleImageOnly
+    let buttonFrame: ButtonFrame
+    let isEnabled: Bool
+    let isPressed: Bool
+    
+    var body: some View {
+        style.buildImageView(isEnabled: isEnabled, isPressed: isPressed).modifier(ButtonFrameModifier(buttonFrame: buttonFrame, horizontalAlignment: .center))
+    }
+}
+
+private struct KalugaButtonStyleWithoutContentView: View {
+    
+    let style: KalugaButtonStyleWithoutContent
+    let buttonFrame: ButtonFrame
+    let isEnabled: Bool
+    let isPressed: Bool
+    
+    var body: some View {
+        Spacer().modifier(ButtonFrameModifier(buttonFrame: buttonFrame, horizontalAlignment: .center))
+    }
+}
+
+private struct KalugaButtonStyleWithTextView: View {
+    let button: KalugaButton.WithText
+    let buttonFrame: ButtonFrame
+    let horizontalAlignment: HorizontalAlignment
+    let isEnabled: Bool
+    let isPressed: Bool
+    
+    var body: some View {
+        button.makeLabel(textStyle: button.style.getStateTextStyle(isEnabled: isEnabled, isPressed: isPressed))
+            .modifier(ButtonFrameModifier(buttonFrame: buttonFrame, horizontalAlignment: horizontalAlignment))
+    }
+}
+
+private extension KalugaTextAlignment {
+    func horizontalAlignment() -> HorizontalAlignment {
+        let isLeftToRight = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight
+        switch self {
+        case .start: return HorizontalAlignment.leading
+        case .left: return isLeftToRight ? HorizontalAlignment.leading : HorizontalAlignment.trailing
+        case .end: return HorizontalAlignment.trailing
+        case .right: return isLeftToRight ? HorizontalAlignment.trailing : HorizontalAlignment.leading
+        case .center: return HorizontalAlignment.center
+        default: fatalError("Unknown TextAlignment \(self)")
+        }
+    }
+}
+
+private extension KalugaButtonStyleWithImage {
+    
+    @ViewBuilder func buildImageView(isEnabled: Bool, isPressed: Bool) -> some View {
+        let image = getStateImage(isEnabled: isEnabled, isPressed: isPressed)
+        switch image {
+        case is ButtonImageHidden: 
+            switch imageSize {
+            case let size as ImageSizeSized: Spacer().frame(width: CGFloat(size.width), height: CGFloat(size.height))
+            case is ImageSizeIntrinsic: EmptyView()
+            default: fatalError("Unknown ImageSize \(imageSize)")
+            }
+        case let uiImage as ButtonImageImage:
+            let image = Image(uiImage: uiImage.image)
+            switch imageSize {
+            case let size as ImageSizeSized: image.frame(width: CGFloat(size.width), height: CGFloat(size.height))
+            case is ImageSizeIntrinsic: image
+            default: fatalError("Unknown ImageSize \(imageSize)")
+            }
+        case let tinted as ButtonImageTinted: 
+            switch imageSize {
+            case let size as ImageSizeSized: tinted.image.resizableSwiftUI .frame(width: CGFloat(size.width), height: CGFloat(size.height))
+            case is ImageSizeIntrinsic: tinted.image.swiftUI
+            default: fatalError("Unknown ImageSize \(imageSize)")
+            }
+        default: fatalError("Unknown ButtonImage \(image)")
         }
     }
 }
 
 private struct ButtonStyleModifier: ViewModifier {
-
-    let buttonStyle: KalugaButtonStyle
+    
+    let button: KalugaButton
+    let buttonFrame: ButtonFrame
     let isEnabled: Bool
-
+    
     func body(content: Content) -> some View {
         content
-            .buttonStyle(CustomButtonStyle(buttonStyle: buttonStyle, isEnabled: isEnabled))
+            .buttonStyle(CustomButtonStyle(button: button, buttonFrame: buttonFrame, isEnabled: isEnabled))
             .disabled(!isEnabled)
+    }
+}
+
+private struct ButtonFrameModifier: ViewModifier {
+    
+    let buttonFrame: ButtonFrame
+    let horizontalAlignment: HorizontalAlignment
+    
+    func body(content: Content) -> some View {
+        switch buttonFrame {
+        case .wrapped: content
+        case let .absoluteFrame(width, height, verticalAlignment): 
+            content.frame(width: width, height: height, alignment: Alignment(horizontal: horizontalAlignment, vertical: verticalAlignment))
+        case let .frame(minWidth, idealWidth, maxWidth, minHeight, idealHeight, maxHeight, verticalAlignment):
+            content.frame(
+                minWidth: minWidth,
+                idealWidth: idealWidth,
+                maxWidth: maxWidth,
+                minHeight: minHeight,
+                idealHeight: idealHeight,
+                maxHeight: maxHeight,
+                alignment: Alignment(horizontal: horizontalAlignment, vertical: verticalAlignment)
+            )
+        }
     }
 }
 {% endif %}

@@ -96,25 +96,51 @@ extension KalugaLabel: HasDefaultValue {
     }
 }
 
-extension ButtonStateStyle: HasDefaultValue {
+extension ButtonStateStyleTextOnly: HasDefaultValue {
     static func `default`() -> Self {
-        return ButtonStateStyle(
-            textColor: KalugaColor(uiColor: UIColor.darkText),
-            backgroundStyle: KalugaBackgroundStyle.default()
-        ) as! Self
+        return ButtonStateStyleCompanion().textOnly { dsl in } as! Self
     }
 }
 
-extension KalugaButtonStyle: HasDefaultValue {
+extension ButtonStateStyleImageOnly: HasDefaultValue {
     static func `default`() -> Self {
-        return KalugaButtonStyle(
-            font: UIFont.systemFont(ofSize: UIFont.systemFontSize),
-            textSize: Float(UIFont.systemFontSize),
-            textAlignment: .center,
-            defaultStyle: ButtonStateStyle.default(),
-            pressedStyle: ButtonStateStyle.default(),
-            disabledStyle: ButtonStateStyle.default()
-        ) as! Self
+        return ButtonStateStyleCompanion().imageOnly { dsl in } as! Self
+    }
+}
+
+extension ButtonStateStyleWithoutContent: HasDefaultValue {
+    static func `default`() -> Self {
+        return ButtonStateStyleCompanion().withoutContent { dsl in } as! Self
+    }
+}
+
+extension ButtonStateStyleWithImageAndText: HasDefaultValue {
+    static func `default`() -> Self {
+        return ButtonStateStyleCompanion().withImageAndText { dsl in } as! Self
+    }
+}
+
+extension KalugaButtonStyleTextOnly: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaButtonStyleCompanion().textOnly { dsl in } as! Self
+    }
+}
+
+extension KalugaButtonStyleImageOnly: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaButtonStyleCompanion().imageOnly { dsl in } as! Self
+    }
+}
+
+extension KalugaButtonStyleWithoutContent: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaButtonStyleCompanion().withoutContent { dsl in } as! Self
+    }
+}
+
+extension KalugaButtonStyleWithImageAndText: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaButtonStyleCompanion().withImageAndText { dsl in } as! Self
     }
 }
 
@@ -122,7 +148,7 @@ extension KalugaButton: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaButton.Plain(
             text: "",
-            style: KalugaButtonStyle.default(),
+            style: KalugaButtonStyleTextOnly.default(),
             isEnabled: true
         ) {} as! Self
     }
