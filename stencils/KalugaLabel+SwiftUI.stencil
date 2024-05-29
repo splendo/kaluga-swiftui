@@ -5,7 +5,6 @@ import {{ argument.sharedFrameworkName }}
 // MARK: - KalugaLabel
 
 extension KalugaLabel {
-    
     func toText() -> some View {
         switch self {
         case let label as KalugaLabel.Plain:
@@ -28,17 +27,13 @@ extension View {
 }
 
 extension KalugaTextAlignment {
-    
     var textAlignment: TextAlignment {
         switch self {
         case KalugaTextAlignment.left:
-            return .leading
+            return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .leading : .trailing
         case KalugaTextAlignment.right:
-            return .trailing
-        case KalugaTextAlignment.end:
-            return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ?
-                .trailing :
-                .leading
+            return UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .trailing : .leading
+        case KalugaTextAlignment.end: return .trailing
         case KalugaTextAlignment.start:
             return .leading
         case KalugaTextAlignment.center:
@@ -52,7 +47,6 @@ extension KalugaTextAlignment {
 // MARK: - Private methods
 
 private extension KalugaLabel {
-    
     private func makePlainLabel(label: KalugaLabel.Plain) -> AnyView {
         // assemble the button
         return AnyView(
@@ -73,7 +67,7 @@ private struct TextStyleModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(Font(textStyle.font.withSize(CGFloat(textStyle.size))))
-            .foregroundColor(Color(textStyle.color.uiColor))
+            .foregroundColor(textStyle.color.swiftUI)
             .multilineTextAlignment(textStyle.alignment.textAlignment)
     }
 }
