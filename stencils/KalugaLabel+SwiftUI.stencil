@@ -56,7 +56,8 @@ private extension KalugaLabel {
     }
     private func makeStyledLabel(label: KalugaLabel.Styled) -> AnyView {
         return AnyView(
-            label.toAttributedText()
+            Text(label.text.toAttributedString())
+                .textStyle(style)
         )
     }
 }
