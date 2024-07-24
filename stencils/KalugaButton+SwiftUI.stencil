@@ -52,7 +52,8 @@ private extension KalugaButton.WithText {
         switch self {
         case let plain as KalugaButton.Plain: Text(plain.text)
                 .textStyle(textStyle)
-        case let styled as KalugaButton.Styled: KalugaLabel.Styled(text: styled.text, style: textStyle).toAttributedText()
+        case let styled as KalugaButton.Styled: Text(styled.text.toAttributedString())
+                .textStyle(textStyle)
         default: fatalError("Unknown KalugaButton.WithText \(self)")
         }
     }
@@ -92,20 +93,40 @@ private struct KalugaButtonView: View {
     let buttonFrame: ButtonFrame
     let isEnabled: Bool
     let isPressed: Bool
-    
-    
+
     var body: some View {
         switch button {
         case let withText as KalugaButton.WithText:
             switch withText.style {
-            case let withImageAndText as KalugaButtonStyleWithImageAndText: KalugaButtonStyleWithImageAndTextView(button: withText, style: withImageAndText, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: isPressed)
-            case is KalugaButtonStyleTextOnly: KalugaButtonStyleTextOnlyView(button: withText, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: isPressed)
+            case let withImageAndText as KalugaButtonStyleWithImageAndText: KalugaButtonStyleWithImageAndTextView(
+                button: withText,
+                style: withImageAndText,
+                buttonFrame: buttonFrame,
+                isEnabled: isEnabled,
+                isPressed: isPressed
+            )
+            case is KalugaButtonStyleTextOnly: KalugaButtonStyleTextOnlyView(
+                button: withText,
+                buttonFrame: buttonFrame,
+                isEnabled: isEnabled,
+                isPressed: isPressed
+            )
             default: fatalError("Unknown KalugaButtonStyle.WithText \(withText.style)")
             }
         case let withoutText as KalugaButton.WithoutText:
             switch withoutText.style {
-            case let imageOnly as KalugaButtonStyleImageOnly: KalugaButtonStyleImageOnlyView(style: imageOnly, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: isPressed)
-            case let withoutContent as KalugaButtonStyleWithoutContent: KalugaButtonStyleWithoutContentView(style: withoutContent, buttonFrame: buttonFrame, isEnabled: isEnabled, isPressed: isPressed)
+            case let imageOnly as KalugaButtonStyleImageOnly: KalugaButtonStyleImageOnlyView(
+                style: imageOnly,
+                buttonFrame: buttonFrame,
+                isEnabled: isEnabled,
+                isPressed: isPressed
+            )
+            case let withoutContent as KalugaButtonStyleWithoutContent: KalugaButtonStyleWithoutContentView(
+                style: withoutContent,
+                buttonFrame: buttonFrame,
+                isEnabled: isEnabled,
+                isPressed: isPressed
+            )
             default: fatalError("Unknown KalugaButtonStyle.WithoutText \(withoutText.style)")
             }
         default: fatalError("Unknown KalugaButton \(button)")

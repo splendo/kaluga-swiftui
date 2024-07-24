@@ -1,49 +1,33 @@
 {% if argument.includeResources %}
 import SwiftUI
-import class {{ argument.sharedFrameworkName }}.KalugaLabel
+import class {{ argument.sharedFrameworkName }}.StyledString
 import class {{ argument.sharedFrameworkName }}.TextStyleKt
 
 // MARK: - StyledString
 
-extension KalugaLabel.Styled {
-    func toAttributedText() -> some View {
-        AttributedText(styledLabel: self)
-    }
-}
+extension StyledString {
+    func toAttributedString() -> AttributedString {
+            var attributedString = AttributedString(attributeString)
 
-// MARK: - AttributedText
-
-private struct AttributedText: View {
-
-    var styledLabel: KalugaLabel.Styled
-
-    @SwiftUI.State private var height: CGFloat = .zero
-
-    var body: some View {
-        InternalAttributedText(styledLabel: styledLabel, dynamicHeight: $height)
-            .frame(minHeight: height)
-    }
-
-    struct InternalAttributedText: UIViewRepresentable {
-        var styledLabel: KalugaLabel.Styled
-        @Binding var dynamicHeight: CGFloat
-
-        func makeUIView(context: Context) -> UILabel {
-            let label = UILabel()
-            label.lineBreakMode = .byClipping
-            label.numberOfLines = 0
-            label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            label.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-            return label
-        }
-
-        func updateUIView(_ uiView: UILabel, context: Context) {
-            TextStyleKt.bindLabel(uiView, label: styledLabel)
-
-            DispatchQueue.main.async {
-                dynamicHeight = uiView.sizeThatFits(CGSize(width: uiView.bounds.width, height: CGFloat.greatestFiniteMagnitude)).height
+            let ranges: [Range<AttributedString.Index>] = attributedString.runs.compactMap { run in
+                if run.attributes.link != nil {
+                    run.range
+                } else {
+                    nil
+                }
             }
-        }
+            ranges.forEach { range in
+                var container = AttributeContainer()
+                if let linkStyle = linkStyle {
+                    container = container.foregroundColor(linkStyle.color.swiftUI)
+                    if linkStyle.isUnderlined {
+                        container = container.underlineStyle(.single)
+                    }
+                }
+
+                attributedString[range].mergeAttributes(container)
+            }
+            return attributedString
     }
 }
 {% endif %}
