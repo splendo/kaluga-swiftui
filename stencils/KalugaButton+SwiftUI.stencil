@@ -247,7 +247,7 @@ private struct KalugaButtonStyleWithoutContentView: View {
 private struct KalugaButtonStyleWithTextView: View {
     let button: KalugaButton.WithText
     let buttonFrame: ButtonFrame
-    let horizontalAlignment: HorizontalAlignment
+    let horizontalAlignment: SwiftUI.HorizontalAlignment
     let isEnabled: Bool
     let isPressed: Bool
     
@@ -258,14 +258,14 @@ private struct KalugaButtonStyleWithTextView: View {
 }
 
 private extension KalugaTextAlignment {
-    func horizontalAlignment() -> HorizontalAlignment {
+    func horizontalAlignment() -> SwiftUI.HorizontalAlignment {
         let isLeftToRight = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight
         switch self {
-        case .start: return HorizontalAlignment.leading
-        case .left: return isLeftToRight ? HorizontalAlignment.leading : HorizontalAlignment.trailing
-        case .end: return HorizontalAlignment.trailing
-        case .right: return isLeftToRight ? HorizontalAlignment.trailing : HorizontalAlignment.leading
-        case .center: return HorizontalAlignment.center
+        case .start: return SwiftUI.HorizontalAlignment.leading
+        case .left: return isLeftToRight ? SwiftUI.HorizontalAlignment.leading : SwiftUI.HorizontalAlignment.trailing
+        case .end: return SwiftUI.HorizontalAlignment.trailing
+        case .right: return isLeftToRight ? SwiftUI.HorizontalAlignment.trailing : SwiftUI.HorizontalAlignment.leading
+        case .center: return SwiftUI.HorizontalAlignment.center
         default: fatalError("Unknown TextAlignment \(self)")
         }
     }
@@ -316,7 +316,7 @@ private struct ButtonStyleModifier: ViewModifier {
 private struct ButtonFrameModifier: ViewModifier {
     
     let buttonFrame: ButtonFrame
-    let horizontalAlignment: HorizontalAlignment
+    let horizontalAlignment: SwiftUI.HorizontalAlignment
     
     func body(content: Content) -> some View {
         switch buttonFrame {
