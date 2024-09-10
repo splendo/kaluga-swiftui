@@ -21,7 +21,7 @@ struct Navigation<RS: RoutingState, NavigationContent: View>: ViewModifier {
     private let type: NavigationType
     private let navigationContent: (RS) -> NavigationContent
 
-    init(state: RoutingState, type: NavigationType, @ViewBuilder navigationContent: @escaping (RS) -> NavigationContent) {
+    init(state: RS, type: NavigationType, @ViewBuilder navigationContent: @escaping (RS) -> NavigationContent) {
         self.state = state
         self.type = type
         self.navigationContent = navigationContent
