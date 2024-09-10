@@ -14,14 +14,14 @@ enum NavigationType {
 {% endif %}
 }
 
-struct Navigation<NavigationContent: View>: ViewModifier {
+struct Navigation<RS: RoutingState, NavigationContent: View>: ViewModifier {
 
-    @ObservedObject var state: RoutingState
+    @ObservedObject var state: RS
 
     private let type: NavigationType
-    private let navigationContent: () -> NavigationContent
+    private let navigationContent: (RS) -> NavigationContent
 
-    init(state: RoutingState, type: NavigationType, @ViewBuilder navigationContent: @escaping () -> NavigationContent) {
+    init(state: RoutingState, type: NavigationType, @ViewBuilder navigationContent: @escaping (RS) -> NavigationContent) {
         self.state = state
         self.type = type
         self.navigationContent = navigationContent
@@ -33,7 +33,7 @@ struct Navigation<NavigationContent: View>: ViewModifier {
         case .push:
             VStack {
                 NavigationLink(
-                    destination: LazyView(navigationContent()),
+                    destination: LazyView(navigationContent(state)),
                     isActive: $state.isPresented
                 ) {
                     EmptyView()
@@ -47,7 +47,7 @@ struct Navigation<NavigationContent: View>: ViewModifier {
                      .opacity(state.isPresented ? opacity : 1.0)
                      .disabled(state.isPresented)
                  if state.isPresented {
-                     LazyView(navigationContent())
+                     LazyView(navigationContent(state))
                  }
              }
         case .fullscreen:
@@ -55,10 +55,10 @@ struct Navigation<NavigationContent: View>: ViewModifier {
             // so we use the workaround found on this thread.
             // https://stackoverflow.com/a/64403206/2242854
             if #available(iOS 15, *) {
-                content.fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+                content.fullScreenCover(isPresented: $state.isPresented) { LazyView(navigationContent(state)) }
             } else {
                 Group {
-                    EmptyView().modifier(FullScreenModifier(isPresented: $state.isPresented, builder: { LazyView(navigationContent()) }))
+                    EmptyView().modifier(FullScreenModifier(isPresented: $state.isPresented, builder: { LazyView(navigationContent(state)) }))
                     content
                 }
             }
@@ -67,16 +67,16 @@ struct Navigation<NavigationContent: View>: ViewModifier {
             // so we use the workaround found on this thread.
             // https://stackoverflow.com/a/64403206/2242854
             if #available(iOS 15, *) {
-                content.sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+                content.sheet(isPresented: $state.isPresented) { LazyView(navigationContent(state)) }
             } else {
                 Group {
-                    EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent()) }
+                    EmptyView().sheet(isPresented: $state.isPresented) { LazyView(navigationContent(state)) }
                     content
                 }
             }
         case .replace:
             if state.isPresented {
-                LazyView(navigationContent())
+                LazyView(navigationContent(state))
             } else {
                 content
             }
@@ -84,35 +84,35 @@ struct Navigation<NavigationContent: View>: ViewModifier {
             Group {
                 content
                 if state.isPresented {
-                    LazyView(navigationContent())
+                    LazyView(navigationContent(state))
                 }
             }
         {% if argument.includePartialSheet %}
         case .partialSheet(let style):
             content
                 .partialSheet(isPresented: $state.isPresented, iPhoneStyle: style) {
-                    LazyView(navigationContent())
+                    LazyView(navigationContent(state))
                 }
         {% endif %}
         }
     }
 }
 
-struct ItemNavigation<ID: Identifiable, NavigationContent: View>: ViewModifier {
+struct ItemNavigation<ID: Identifiable, RS : IdentifiableRoutingState<ID>, NavigationContent: View>: ViewModifier {
 
-    @ObservedObject var state: IdentifiableRoutingState<ID>
+    @ObservedObject var state: RS
 
     private let id: ID.ID
     private let type: NavigationType
-    private let navigationContent: () -> NavigationContent
+    private let navigationContent: (RS) -> NavigationContent
     private let didSelect: () -> Void
 
     init(
-        state: IdentifiableRoutingState<ID>,
+        state: RS,
         id: ID.ID,
         type: NavigationType,
         didSelect: @escaping () -> Void,
-        @ViewBuilder navigationContent: @escaping () -> NavigationContent
+        @ViewBuilder navigationContent: @escaping (RS) -> NavigationContent
     ) {
         self.id = id
         self.state = state
@@ -136,7 +136,7 @@ struct ItemNavigation<ID: Identifiable, NavigationContent: View>: ViewModifier {
         case .push:
             VStack {
                 NavigationLink(
-                    destination: LazyView(navigationContent()),
+                    destination: LazyView(navigationContent(state)),
                     isActive: isActive
                 ) {
                     content
@@ -149,16 +149,16 @@ struct ItemNavigation<ID: Identifiable, NavigationContent: View>: ViewModifier {
                     .opacity(isActive.wrappedValue ? opacity : 1.0)
                     .disabled(isActive.wrappedValue)
                 if isActive.wrappedValue {
-                    LazyView(navigationContent())
+                    LazyView(navigationContent(state))
                 }
             }
         case .fullscreen:
-            content.modifier(FullScreenModifier(isPresented: isActive, builder: { LazyView(navigationContent()) }))
+            content.modifier(FullScreenModifier(isPresented: isActive, builder: { LazyView(navigationContent(state)) }))
         case .sheet:
-            content.sheet(isPresented: isActive) { LazyView(navigationContent()) }
+            content.sheet(isPresented: isActive) { LazyView(navigationContent(state)) }
         case .replace:
             if isActive.wrappedValue {
-                LazyView(navigationContent())
+                LazyView(navigationContent(state))
             } else {
                 content
             }
@@ -166,14 +166,14 @@ struct ItemNavigation<ID: Identifiable, NavigationContent: View>: ViewModifier {
             Group {
                 content
                 if isActive.wrappedValue {
-                    LazyView(navigationContent())
+                    LazyView(navigationContent(state))
                 }
             }
         {% if argument.includePartialSheet %}
         case .partialSheet(let style):
             content
                 .partialSheet(isPresented: isActive, iPhoneStyle: style) {
-                    LazyView(navigationContent())
+                    LazyView(navigationContent(state))
                 }
         {% endif %}
         }
@@ -196,10 +196,10 @@ struct FullScreenModifier<V: View>: ViewModifier {
 }
 
 extension View {
-    func navigation<NavigationContent: View>(
-        state: RoutingState,
+    func navigation<RS : RoutingState, NavigationContent: View>(
+        state: RS,
         type: NavigationType,
-        @ViewBuilder content: @escaping () -> NavigationContent
+        @ViewBuilder content: @escaping (RS) -> NavigationContent
     ) -> some View {
         ModifiedContent(
             content: self,
@@ -211,12 +211,12 @@ extension View {
         )
     }
 
-    func navigation<ID: Identifiable, NavigationContent: View>(
-        state: IdentifiableRoutingState<ID>,
+    func navigation<ID: Identifiable, RS: IdentifiableRoutingState<ID>, NavigationContent: View>(
+        state: RS,
         id: ID.ID,
         type: NavigationType,
         didSelect: @escaping () -> Void,
-        @ViewBuilder content: @escaping () -> NavigationContent
+        @ViewBuilder content: @escaping (RS) -> NavigationContent
     ) -> some View {
         ModifiedContent(
             content: self,
