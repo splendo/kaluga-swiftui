@@ -109,4 +109,11 @@ extension Observable {
             set: setMethod
         )
     }
+
+    func asBinding<T>(mapper: @escaping (Output) -> T, setMethod: @escaping (T) -> Void) -> Binding<T> {
+        return Binding(
+            get: { [unowned self] in mapper(self.value) },
+            set: setMethod
+        )
+    }
 }
