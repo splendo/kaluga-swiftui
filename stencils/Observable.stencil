@@ -101,3 +101,19 @@ class MappedWithDefaultObservable<
         super.init(observable, defaultValue: defaultValue, animated: animated)
     }
 }
+
+extension Observable {
+    func asBinding(setMethod: @escaping (Output) -> Void) -> Binding<Output> {
+        return Binding(
+            get: { [unowned self] in self.value },
+            set: setMethod
+        )
+    }
+
+    func asBinding<T>(mapper: @escaping (Output) -> T, setMethod: @escaping (T) -> Void) -> Binding<T> {
+        return Binding(
+            get: { [unowned self] in mapper(self.value) },
+            set: setMethod
+        )
+    }
+}
