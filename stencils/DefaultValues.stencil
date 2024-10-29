@@ -56,13 +56,13 @@ extension Image: HasDefaultValue {
 {% if argument.includeResources %}
 extension KalugaColor: HasDefaultValue {
     static func `default`() -> Self {
-        return KalugaColor(uiColor: UIColor.clear) as! Self
+        return KalugaColor.RGBColor(uiColor: UIColor.clear) as! Self
     }
 }
 
 extension TintedImage: HasDefaultValue {
     static func `default`() -> Self {
-        return TintedImage(image: UIImage(), tint: KalugaColor(uiColor: UIColor.clear)) as! Self
+        return TintedImage(image: UIImage(), tint: KalugaColor.RGBColor(uiColor: UIColor.clear)) as! Self
     }
 }
 
@@ -80,7 +80,7 @@ extension KalugaTextStyle: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaTextStyle(
             font: UIFont.systemFont(ofSize: UIFont.systemFontSize),
-            color: KalugaColor(uiColor: UIColor.darkText),
+            color: KalugaColor.RGBColor(uiColor: UIColor.darkText),
             size: Float(UIFont.systemFontSize),
             alignment: KalugaTextAlignment.start
         ) as! Self

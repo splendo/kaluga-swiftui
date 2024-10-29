@@ -102,14 +102,14 @@ enum DateOptionalMapper: PlatformOptionalValueMapper {
 {% if argument.includeResources %}
 enum UIColorMapper: PlatformValueMapper {
     static func to(_ value: {{ argument.sharedFrameworkName }}.KalugaColor) -> UIColor { value.uiColor }
-    static func from(_ value: UIColor) -> {{ argument.sharedFrameworkName }}.KalugaColor { {{ argument.sharedFrameworkName }}.KalugaColor(uiColor: value) }
+    static func from(_ value: UIColor) -> {{ argument.sharedFrameworkName }}.KalugaColor { {{ argument.sharedFrameworkName }}.KalugaColor.DarkLightColor(uiColor: value) }
 }
 
 enum UIColorOptionalMapper: PlatformOptionalValueMapper {
     static func to(_ value: {{ argument.sharedFrameworkName }}.KalugaColor?) -> UIColor? { value?.uiColor }
     static func from(_ value: UIColor?) -> {{ argument.sharedFrameworkName }}.KalugaColor? {
         if let value = value {
-            return {{ argument.sharedFrameworkName }}.KalugaColor(uiColor: value)
+            return {{ argument.sharedFrameworkName }}.KalugaColor.DarkLightColor(uiColor: value)
         } else {
             return nil
         }

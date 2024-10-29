@@ -70,7 +70,7 @@ extension KalugaBackgroundStyle {
         case is KalugaBackgroundStyle.StrokeStyleNone:
             finalStoke = KalugaBackgroundStyle.StrokeStyleStroke(
                 width: 0.0,
-                color: KalugaColor(uiColor: .clear)
+                color: KalugaColor.RGBColor(uiColor: .clear)
             )
         default:
             preconditionFailure("Unknown stroke style type!")
