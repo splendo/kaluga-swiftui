@@ -6,8 +6,18 @@ extension KalugaColor {
     var swiftUI: Color {
         if #available(iOS 15.0, *) {
             return Color(uiColor: self.uiColor)
+        } else if let rgbColor = self as? KalugaColor.RGBColor {
+            return Color(red: rgbColor.red, green: rgbColor.green, blue: rgbColor.blue, opacity: rgbColor.alpha)
+        } else if let darkLightColor = self as? KalugaColor.DarkLightColor {
+            let isInDarkMode = UITraitCollection.current.userInterfaceStyle == .dark
+            return Color(
+                red: darkLightColor.red(forDarkMode: isInDarkMode),
+                green: darkLightColor.green(forDarkMode: isInDarkMode),
+                blue: darkLightColor.blue(forDarkMode: isInDarkMode),
+                opacity: darkLightColor.alpha(forDarkMode: isInDarkMode)
+            )
         } else {
-            return Color(red: self.red, green: self.green, blue: self.blue, opacity: self.alpha)
+            return Color.clear
         }
     }
 }
