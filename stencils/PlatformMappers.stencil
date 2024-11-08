@@ -142,30 +142,6 @@ enum ImageOptionalMapper: PlatformOptionalValueToMapper {
     }
 }
 
-enum KalugaLabelMapper<T : KalugaLabel> : PlatformValueToMapper {
-    static func to(_ value: T) -> KalugaLabel { value }
-}
-
-enum KalugaLabelOptionalMapper<T : KalugaLabel> : PlatformOptionalValueToMapper {
-    static func to(_ value: T?) -> KalugaLabel? { value }
-}
-
-enum KalugaButtonMapper<T : KalugaButton> : PlatformValueToMapper {
-    static func to(_ value: T) -> KalugaButton { value }
-}
-
-enum KalugaButtonOptionalMapper<T : KalugaButton> : PlatformOptionalValueToMapper {
-    static func to(_ value: T?) -> KalugaButton? { value }
-}
-
-enum KalugaButtonWithTextMapper<T : KalugaButton.WithText> : PlatformValueToMapper {
-    static func to(_ value: T) -> KalugaButton.WithText { value }
-}
-
-enum KalugaButtonWithTextOptionalMapper<T : KalugaButton.WithText> : PlatformOptionalValueToMapper {
-    static func to(_ value: T?) -> KalugaButton.WithText? { value }
-}
-
 {% endif %}
 enum EmptyMapper<T>: PlatformValueMapper {
     static func to(_ value: T) -> T { value }
