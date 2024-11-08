@@ -13,6 +13,17 @@ typealias UIColorUninitializedObservable = MappedUninitializedObservable<{{ argu
 typealias ColorUninitializedObservable = MappedUninitializedObservable<{{ argument.sharedFrameworkName }}.KalugaColor, SwiftUI.Color, ColorOptionalMapper>
 typealias UIImageUninitializedObservable = MappedUninitializedObservable<UIImage, UIImage, EmptyOptionalMapper<UIImage>>
 typealias ImageUninitializedObservable = MappedUninitializedObservable<UIImage, Image, ImageOptionalMapper>
+typealias TintedImageUninitializedObservable = MappedUninitializedObservable<TintedImage, TintedImage, EmptyOptionalMapper<TintedImage>>
+typealias BackgroundStyleUninitializedObservable = MappedUninitializedObservable<KalugaBackgroundStyle, KalugaBackgroundStyle, EmptyOptionalMapper<KalugaBackgroundStyle>>
+typealias LabelUninitializedObservable<Input : KalugaLabel> = MappedUninitializedObservable<Input, KalugaLabel, KalugaLabelOptionalMapper<Input>>
+typealias PlainLabelUninitializedObservable = MappedUninitializedObservable<KalugaLabel.Plain, KalugaLabel.Plain, EmptyOptionalMapper<KalugaLabel.Plain>>
+typealias StyledLabelUninitializedObservable = MappedUninitializedObservable<KalugaLabel.Styled, KalugaLabel.Styled, EmptyOptionalMapper<KalugaLabel.Styled>>
+typealias ButtonUninitializedObservable<Input : KalugaButton> = MappedUninitializedObservable<Input, KalugaButton, KalugaButtonOptionalMapper<Input>>
+typealias PlainButtonUninitializedObservable = MappedUninitializedObservable<KalugaButton.Plain, KalugaButton.Plain, EmptyOptionalMapper<KalugaButton.Plain>>
+typealias StyledButtonUninitializedObservable = MappedUninitializedObservable<KalugaButton.Styled, KalugaButton.Styled, EmptyOptionalMapper<KalugaButton.Styled>>
+typealias ButtonWithTextUninitializedObservable<Input : KalugaButton.WithText> = MappedUninitializedObservable<Input, KalugaButton.WithText, KalugaButtonWithTextOptionalMapper<Input>>
+typealias ButtonWithoutTextUninitializedObservable = MappedUninitializedObservable<KalugaButton.WithoutText, KalugaButton.WithoutText, EmptyOptionalMapper<KalugaButton.WithoutText>>
+typealias ButtonStyleUninitializedObservable = MappedUninitializedObservable<KalugaButtonStyleTextOnly, KalugaButtonStyleTextOnly, EmptyOptionalMapper<KalugaButtonStyleTextOnly>>
 {% endif %}
 typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateOptionalMapper>
 

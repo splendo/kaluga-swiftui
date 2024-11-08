@@ -17,8 +17,38 @@ typealias UIImageObservable = MappedWithDefaultObservable<UIImage, UIImage, Empt
 typealias ImageObservable = MappedWithDefaultObservable<UIImage, Image, ImageMapper>
 typealias TintedImageObservable = MappedWithDefaultObservable<TintedImage, TintedImage, TintedImageMapper>
 typealias BackgroundStyleObservable = MappedWithDefaultObservable<KalugaBackgroundStyle, KalugaBackgroundStyle, EmptyMapper<KalugaBackgroundStyle>>
-typealias LabelObservable = MappedWithDefaultObservable<KalugaLabel, KalugaLabel, EmptyMapper<KalugaLabel>>
-typealias ButtonObservable = MappedWithDefaultObservable<KalugaButton, KalugaButton, EmptyMapper<KalugaButton>>
+class LabelObservable<Input : KalugaLabel> : MappedObservable<Input, KalugaLabel, KalugaLabelMapper<Input>> {
+    override init(
+        _ observable: BaseInitializedObservable<Input>,
+        defaultValue: KalugaLabel = KalugaLabel.Plain.default(),
+        animated: Bool = false
+    ) {
+        super.init(observable, defaultValue: defaultValue, animated: animated)
+    }
+}
+typealias PlainLabelObservable = MappedWithDefaultObservable<KalugaLabel.Plain, KalugaLabel.Plain, EmptyMapper<KalugaLabel.Plain>>
+typealias StyledLabelObservable = MappedWithDefaultObservable<KalugaLabel.Styled, KalugaLabel.Styled, EmptyMapper<KalugaLabel.Styled>>
+class ButtonObservable<Input : KalugaButton> : MappedObservable<Input, KalugaButton, KalugaButtonMapper<Input>> {
+    override init(
+        _ observable: BaseInitializedObservable<Input>,
+        defaultValue: KalugaButton = KalugaButton.Plain.default(),
+        animated: Bool = false
+    ) {
+        super.init(observable, defaultValue: defaultValue, animated: animated)
+    }
+}
+typealias PlainButtonObservable = MappedWithDefaultObservable<KalugaButton.Plain, KalugaButton.Plain, EmptyMapper<KalugaButton.Plain>>
+typealias StyledButtonObservable = MappedWithDefaultObservable<KalugaButton.Styled, KalugaButton.Styled, EmptyMapper<KalugaButton.Styled>>
+class ButtonWithTextObservable<Input : KalugaButton.WithText> : MappedObservable<Input, KalugaButton.WithText, KalugaButtonWithTextMapper<Input>> {
+    override init(
+        _ observable: BaseInitializedObservable<Input>,
+        defaultValue: KalugaButton.WithText = KalugaButton.Plain.default(),
+        animated: Bool = false
+    ) {
+        super.init(observable, defaultValue: defaultValue, animated: animated)
+    }
+}
+typealias ButtonWithoutTextObservable = MappedWithDefaultObservable<KalugaButton.WithoutText, KalugaButton.WithoutText, EmptyMapper<KalugaButton.WithoutText>>
 typealias ButtonStyleObservable = MappedWithDefaultObservable<KalugaButtonStyleTextOnly, KalugaButtonStyleTextOnly, EmptyMapper<KalugaButtonStyleTextOnly>>
 {% endif %}
 typealias DateObservable = MappedWithDefaultObservable<KalugaDate, Foundation.Date, DateMapper>
