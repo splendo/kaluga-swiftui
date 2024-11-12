@@ -5,186 +5,93 @@ import {{ argument.sharedFrameworkName }}
 
 // MARK: - BackgroundStyle
 
-extension KalugaBackgroundStyle {
-
-    func toView() -> some View {
-        let shape: AnyShape
-        
-        // make the shape
-        switch self.shape {
-        case let rectangle as KalugaBackgroundStyle.ShapeRectangle:
-            shape = AnyShape(
-                RoundedShape(
-                    cornerRadii: .init(
-                        width: CGFloat(rectangle.cornerRadiusX),
-                        height: CGFloat(rectangle.cornerRadiusY)
-                    ),
-                    corners: {
-                        var corners: UIRectCorner = []
-                        if rectangle.roundedCorners.contains(.topLeft) { corners.insert(.topLeft) }
-                        if rectangle.roundedCorners.contains(.topRight) { corners.insert(.topRight) }
-                        if rectangle.roundedCorners.contains(.bottomLeft) { corners.insert(.bottomLeft) }
-                        if rectangle.roundedCorners.contains(.bottomRight) { corners.insert(.bottomRight) }
-                        return corners
-                    }()
-                )
-            )
-        case is KalugaBackgroundStyle.ShapeOval:
-            shape = AnyShape(
-                Capsule(style: .circular)
-            )
-        default:
-            preconditionFailure("Unknown shape type!")
-        }
-        
-        // apply stoke to shape if needed
-        //
-        // Due to is not possible to create the AnyShapeStyle as we did with AnyShape
-        // and the fact that it was only introduced from iOS 15, we need to fall back to multiple
-        // switches in order to create the anyView!
-        // https://developer.apple.com/documentation/swiftui/anyshapestyle
-        // https://developer.apple.com/documentation/swiftui/shapestyle
-        /*
-        switch buttonStateStyle.backgroundStyle.strokeStyle {
-        case let stroke as KalugaBackgroundStyle.StrokeStyleStroke:
-            anyView = AnyView(
-                shape
-                    .style(
-                        fillStyle: fillStyle(buttonStateStyle: buttonStateStyle),
-                        strokeStyle: Color(stroke.color.uiColor),
-                        lineWidth: CGFloat(stroke.width)
-                    )
-        default:
-            anyView = AnyView(
-                shape
-                    .fill(shapeStyle(buttonStateStyle: buttonStateStyle))
-            )
-        }
-        */
-        
-        let finalStoke: KalugaBackgroundStyle.StrokeStyleStroke
-        
-        switch strokeStyle {
-        case let stroke as KalugaBackgroundStyle.StrokeStyleStroke:
-            finalStoke = stroke
-        case is KalugaBackgroundStyle.StrokeStyleNone:
-            finalStoke = KalugaBackgroundStyle.StrokeStyleStroke(
-                width: 0.0,
-                color: KalugaColor.RGBColor(uiColor: .clear)
-            )
-        default:
-            preconditionFailure("Unknown stroke style type!")
-        }
-                
-        // return the view
-        return makeView(
-            shape: shape,
-            stroke: finalStoke
-        )
+struct KalugaBackgroundView<S : SwiftUI.Shape> : View {
+    
+    let style: KalugaBackgroundStyle
+    
+    private let shape: S
+    private let stroke: KalugaBackgroundStyle.StrokeStyleStroke
+    
+    init(style: KalugaBackgroundStyle, shape: S) {
+        self.style = style
+        self.shape = shape
+        self.stroke = KalugaBackgroundView.strokeStyle(style: style)
     }
-}
-
-extension View {
-    public func background(_ backgroundStyle: KalugaBackgroundStyle) -> some View {
-        ModifiedContent(
-            content: self,
-            modifier: BackgroundStyleModifier(backgroundStyle: backgroundStyle)
-        )
-    }
-}
-
-// MARK: - Private methods
-
-private extension KalugaBackgroundStyle {
-
-    func makeView(
-        shape: AnyShape,
-        stroke: KalugaBackgroundStyle.StrokeStyleStroke
-    ) -> AnyView {
-        switch fillStyle {
+    
+    var body: some View {
+        switch style.fillStyle {
         case let solid as KalugaBackgroundStyle.FillStyleSolid:
-            return AnyView(
-                shape
-                    .style(
-                        fill: Color(solid.color.uiColor),
-                        stroke: Color(stroke.color.uiColor),
-                        lineWidth: CGFloat(stroke.width)
-                    )
+            ShapeView(
+                shape: shape,
+                fill: Color(solid.color.uiColor),
+                stroke: Color(stroke.color.uiColor),
+                lineWidth: CGFloat(stroke.width)
             )
         case let gradient as KalugaBackgroundStyle.FillStyleGradient:
-            return makeGradientView(shape: shape, stroke: stroke, gradient: gradient)
+            makeGradientView(gradient: gradient)
         default:
             preconditionFailure("Unknown fill style type!")
         }
     }
     
+    @ViewBuilder
     func makeGradientView(
-        shape: AnyShape,
-        stroke: KalugaBackgroundStyle.StrokeStyleStroke,
         gradient: KalugaBackgroundStyle.FillStyleGradient
-    ) -> AnyView {
+    ) -> some View {
         switch gradient.gradientStyle {
         case let linear as GradientStyle.Linear:
             let gradient = self.makeGradientColor(colorPoints: linear.colorPoints)
             let linearPoints = makeLinearPoints(orientation: linear.orientation)
-            return AnyView(
-                shape
-                    .style(
-                        fill: LinearGradient(
-                            gradient: gradient,
-                            startPoint: linearPoints.startPoint,
-                            endPoint: linearPoints.endPoint
-                        ),
-                        stroke: Color(stroke.color.uiColor),
-                        lineWidth: CGFloat(stroke.width)
-                    )
+            ShapeView(
+                shape: shape,
+                fill: LinearGradient(
+                    gradient: gradient,
+                    startPoint: linearPoints.startPoint,
+                    endPoint: linearPoints.endPoint
+                ),
+                stroke: Color(stroke.color.uiColor),
+                lineWidth: CGFloat(stroke.width)
             )
         case let radial as GradientStyle.Radial:
             let gradient = self.makeGradientColor(colorPoints: radial.colorPoints)
-            return AnyView(
-                shape
-                    .style(
-                        fill:
-                            RadialGradient(
-                                gradient: gradient,
-                                center: .center,
-                                startRadius: 0,
-                                endRadius: CGFloat(radial.radius)
-                            ),
-                        stroke: Color(stroke.color.uiColor),
-                        lineWidth: CGFloat(stroke.width)
-                    )
+            ShapeView(
+                shape: shape,
+                fill:
+                    RadialGradient(
+                        gradient: gradient,
+                        center: .center,
+                        startRadius: 0,
+                        endRadius: CGFloat(radial.radius)
+                    ),
+                stroke: Color(stroke.color.uiColor),
+                lineWidth: CGFloat(stroke.width)
             )
         case let angular as GradientStyle.Angular:
             let gradient = self.makeGradientColor(colorPoints: angular.colorPoints)
-            return AnyView(
-                shape
-                    .style(
-                        fill:
-                            AngularGradient(
-                                gradient: gradient,
-                                center: .center
-                            ),
-                        stroke: Color(stroke.color.uiColor),
-                        lineWidth: CGFloat(stroke.width)
-                    )
+            ShapeView(
+                shape: shape,
+                fill:
+                    AngularGradient(
+                        gradient: gradient,
+                        center: .center
+                    ),
+                stroke: Color(stroke.color.uiColor),
+                lineWidth: CGFloat(stroke.width)
             )
         default:
             preconditionFailure("Unknown gradient style type!")
         }
     }
-    
     func makeGradientColor(colorPoints: [GradientStyle.ColorPoint]) -> Gradient {
         Gradient(stops: colorPoints
-                    .map {
-                        Gradient.Stop(
-                            color: Color($0.color.uiColor),
-                            location: CGFloat($0.offset)
-                        )
-                    }
+            .map {
+                Gradient.Stop(
+                    color: Color($0.color.uiColor),
+                    location: CGFloat($0.offset)
+                )
+            }
         )
     }
-    
     func makeLinearPoints(orientation: GradientStyle.LinearOrientation) -> (startPoint: UnitPoint, endPoint: UnitPoint) {
         switch orientation {
         case .leftRight:
@@ -208,36 +115,68 @@ private extension KalugaBackgroundStyle {
         }
     }
     
-    // Due to is not possible to create the AnyShapeStyle as we did with AnyShape
-    // and the fact that it was only introduced from iOS 15, we need to fall back to multiple
-    // switches in order to create the anyView!
-    // https://developer.apple.com/documentation/swiftui/anyshapestyle
-    // https://developer.apple.com/documentation/swiftui/shapestyle
-    /*
-    func shapeStyle(buttonStateStyle: ButtonStateStyle) -> some ShapeStyle {
-        switch buttonStateStyle.backgroundStyle.fillStyle {
-        case let solid as KalugaBackgroundStyle.FillStyleSolid:
-            return Color(solid.color.uiColor)
-        case let gradient as KalugaBackgroundStyle.FillStyleGradient:
-            //preconditionFailure("To do!")
-            return LinearGradient(
-                gradient: Gradient(colors: [.blue, .black]),
-                startPoint: .top,
-                endPoint: .bottom
+    
+    private static func strokeStyle(style: KalugaBackgroundStyle) -> KalugaBackgroundStyle.StrokeStyleStroke {
+        switch style.strokeStyle {
+        case let stroke as KalugaBackgroundStyle.StrokeStyleStroke:
+            return stroke
+        case is KalugaBackgroundStyle.StrokeStyleNone:
+            return KalugaBackgroundStyle.StrokeStyleStroke(
+                width: 0.0,
+                color: KalugaColor.RGBColor(uiColor: .clear)
             )
         default:
-            preconditionFailure("Unknown fill style type!")
+            preconditionFailure("Unknown stroke style type!")
         }
     }
-    */
+}
+
+extension KalugaBackgroundStyle {
+    
+    @ViewBuilder
+    func toView() -> some View {
+        switch shape {
+        case let rectangle as KalugaBackgroundStyle.ShapeRectangle:
+            KalugaBackgroundView(
+                style: self,
+                shape: RoundedShape(
+                    cornerRadii: .init(
+                        width: CGFloat(rectangle.cornerRadiusX),
+                        height: CGFloat(rectangle.cornerRadiusY)
+                    ),
+                    corners: {
+                        var corners: UIRectCorner = []
+                        if rectangle.roundedCorners.contains(.topLeft) { corners.insert(.topLeft) }
+                        if rectangle.roundedCorners.contains(.topRight) { corners.insert(.topRight) }
+                        if rectangle.roundedCorners.contains(.bottomLeft) { corners.insert(.bottomLeft) }
+                        if rectangle.roundedCorners.contains(.bottomRight) { corners.insert(.bottomRight) }
+                        return corners
+                    }()
+                )
+            )
+        case is KalugaBackgroundStyle.ShapeOval:
+            KalugaBackgroundView(style: self, shape: Capsule(style: .circular))
+        default: fatalError("Shape \(shape) is not a valid Shape")
+        }
+    }
+}
+
+extension View {
+    public func background(_ backgroundStyle: KalugaBackgroundStyle, edgesIgnoringSafeArea: Edge.Set? = nil) -> some View {
+        ModifiedContent(
+            content: self,
+            modifier: BackgroundStyleModifier(backgroundStyle: backgroundStyle, edgesIgnoringSafeArea: edgesIgnoringSafeArea ?? [])
+        )
+    }
 }
 
 private struct BackgroundStyleModifier: ViewModifier {
     let backgroundStyle: KalugaBackgroundStyle
-
+    let edgesIgnoringSafeArea: Edge.Set
+    
     func body(content: Content) -> some View {
         content
-            .background(backgroundStyle.toView())
+            .background(backgroundStyle.toView().ignoresSafeArea(edges: edgesIgnoringSafeArea))
     }
 }
 
@@ -246,7 +185,7 @@ private struct BackgroundStyleModifier: ViewModifier {
 private struct RoundedShape: Shape {
     var cornerRadii: CGSize = .zero
     var corners: UIRectCorner = .allCorners
-
+    
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(
             roundedRect: rect,
