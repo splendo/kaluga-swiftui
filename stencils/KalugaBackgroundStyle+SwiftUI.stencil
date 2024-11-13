@@ -185,14 +185,78 @@ private struct BackgroundStyleModifier: ViewModifier {
 private struct RoundedShape: Shape {
     var cornerRadii: CGSize = .zero
     var corners: UIRectCorner = .allCorners
-    
     func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
+        let path = UIBezierPath.roundedRect(
+            rect: rect,
+            corners: corners,
             cornerRadii: cornerRadii
         )
         return Path(path.cgPath)
+    }
+}
+
+private extension CGRect {
+    var topRight: CGPoint { CGPoint(x: maxX, y: minY) }
+    var topLeft: CGPoint { CGPoint(x: minX, y: minY) }
+    var bottomRight: CGPoint { CGPoint(x: maxX, y: maxY) }
+    var bottomLeft: CGPoint { CGPoint(x: minX, y: maxY) }
+    func rightXOffset(cornerRadii: CGSize) -> CGFloat {
+        return max(maxX - cornerRadii.width, midX)
+    }
+    func leftXOffset(cornerRadii: CGSize) -> CGFloat {
+        return min(minX + cornerRadii.width, midX)
+    }
+    func topYOffset(cornerRadii: CGSize) -> CGFloat {
+        return min(minY + cornerRadii.height, midY)
+    }
+    func bottomYOffset(cornerRadii: CGSize) -> CGFloat {
+        return max(maxY - cornerRadii.height, midY)
+    }
+}
+
+private extension UIBezierPath {
+    static func roundedRect(
+        rect: CGRect,
+        corners: UIRectCorner = .allCorners,
+        cornerRadii: CGSize
+    ) -> UIBezierPath {
+        let path = CGMutablePath()
+        let start = CGPoint(x: rect.midX, y: rect.minY)
+        path.move(to: start)
+        if corners.contains(.topRight) {
+            let topRightStart = CGPoint(x: rect.rightXOffset(cornerRadii: cornerRadii), y: rect.minY)
+            path.addLine(to: topRightStart)
+            let topRightEnd = CGPoint(x: rect.maxX, y: rect.topYOffset(cornerRadii: cornerRadii))
+            path.addQuadCurve(to: topRightEnd, control: rect.topRight)
+        } else {
+            path.addLine(to: rect.topRight)
+        }
+        if corners.contains(.bottomRight) {
+            let bottomRightStart = CGPoint(x: rect.maxX, y: rect.bottomYOffset(cornerRadii: cornerRadii))
+            path.addLine(to: bottomRightStart)
+            let bottomRightEnd = CGPoint(x: rect.rightXOffset(cornerRadii: cornerRadii), y: rect.maxY)
+            path.addQuadCurve(to: bottomRightEnd, control: rect.bottomRight)
+        } else {
+            path.addLine(to: rect.bottomRight)
+        }
+        if corners.contains(.bottomLeft) {
+            let bottomLeftStart = CGPoint(x: rect.leftXOffset(cornerRadii: cornerRadii), y: rect.maxY)
+            path.addLine(to: bottomLeftStart)
+            let bottomLeftEnd = CGPoint(x: rect.minX, y: rect.bottomYOffset(cornerRadii: cornerRadii))
+            path.addQuadCurve(to: bottomLeftEnd, control: rect.bottomLeft)
+        } else {
+            path.addLine(to: rect.bottomLeft)
+        }
+        if corners.contains(.topLeft) {
+            let topLeftStart = CGPoint(x: rect.minX, y: rect.topYOffset(cornerRadii: cornerRadii))
+            path.addLine(to: topLeftStart)
+            let topLeftEnd = CGPoint(x: rect.leftXOffset(cornerRadii: cornerRadii), y: rect.minY)
+            path.addQuadCurve(to: topLeftEnd, control: rect.topLeft)
+        } else {
+            path.addLine(to: rect.topLeft)
+        }
+        path.addLine(to: start)
+        return UIBezierPath(cgPath: path)
     }
 }
 {% endif %}
