@@ -5,12 +5,13 @@ import {{ argument.sharedFrameworkName }}
 // MARK: - KalugaLabel
 
 extension KalugaLabel {
+    @ViewBuilder
     func toText() -> some View {
         switch self {
         case let label as KalugaLabel.Plain:
-            return makePlainLabel(label: label)
+            makePlainLabel(label: label)
         case let label as KalugaLabel.Styled:
-            return makeStyledLabel(label: label)
+            makeStyledLabel(label: label)
         default:
             preconditionFailure("Unknown kaluga button type!")
         }
@@ -47,18 +48,17 @@ extension KalugaTextAlignment {
 // MARK: - Private methods
 
 private extension KalugaLabel {
-    private func makePlainLabel(label: KalugaLabel.Plain) -> AnyView {
+    @ViewBuilder
+    private func makePlainLabel(label: KalugaLabel.Plain) -> some View {
         // assemble the button
-        return AnyView(
-            Text(label.text)
+        Text(label.text)
                 .textStyle(style)
-        )
     }
-    private func makeStyledLabel(label: KalugaLabel.Styled) -> AnyView {
-        return AnyView(
-            Text(label.text.toAttributedString())
+    
+    @ViewBuilder
+    private func makeStyledLabel(label: KalugaLabel.Styled) -> some View {
+        Text(label.text.toAttributedString())
                 .textStyle(style)
-        )
     }
 }
 

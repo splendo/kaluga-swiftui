@@ -87,10 +87,19 @@ extension KalugaTextStyle: HasDefaultValue {
     }
 }
 
-extension KalugaLabel: HasDefaultValue {
+extension KalugaLabel.Plain: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaLabel.Plain(
             text: "",
+            style: KalugaTextStyle.default()
+        ) as! Self
+    }
+}
+
+extension KalugaLabel.Styled: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaLabel.Styled(
+            text: StyledString(attributeString: NSAttributedString(string: ""), defaultTextStyle: KalugaTextStyle.default(), linkStyle: nil),
             style: KalugaTextStyle.default()
         ) as! Self
     }
@@ -144,11 +153,30 @@ extension KalugaButtonStyleWithImageAndText: HasDefaultValue {
     }
 }
 
-extension KalugaButton: HasDefaultValue {
+extension KalugaButton.Plain: HasDefaultValue {
     static func `default`() -> Self {
         return KalugaButton.Plain(
             text: "",
             style: KalugaButtonStyleTextOnly.default(),
+            isEnabled: true
+        ) {} as! Self
+    }
+}
+
+extension KalugaButton.Styled: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaButton.Styled(
+            text: StyledString(attributeString: NSAttributedString(string: ""), defaultTextStyle: KalugaTextStyle.default(), linkStyle: nil),
+            style: KalugaButtonStyleTextOnly.default(),
+            isEnabled: true
+        ) {} as! Self
+    }
+}
+
+extension KalugaButton.WithoutText: HasDefaultValue {
+    static func `default`() -> Self {
+        return KalugaButton.WithoutText(
+            style: KalugaButtonStyleWithoutContent.default(),
             isEnabled: true
         ) {} as! Self
     }

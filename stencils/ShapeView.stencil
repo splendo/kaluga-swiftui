@@ -1,0 +1,57 @@
+{% if argument.includeResources %}
+import SwiftUI
+
+// needed in order to have shape + stroke
+struct ShapeView<S : SwiftUI.Shape, Fill: ShapeStyle, Stroke: ShapeStyle> : View {
+    
+    let shape: S
+    let fill: Fill
+    let stroke: Stroke
+    let lineWidth: CGFloat
+    
+    init(
+        shape: S,
+        fill: Fill,
+        stroke: Stroke,
+        lineWidth: CGFloat = 1
+    ) {
+        self.shape = shape
+        self.fill = fill
+        self.stroke = stroke
+        self.lineWidth = lineWidth
+    }
+    
+    var body: some View {
+        shape
+            .stroke(stroke, lineWidth: lineWidth)
+            .background(shape.fill(fill))
+    }
+}
+
+// needed in order to have shape + stroke
+struct InsettableShapeView<S : InsettableShape, Fill: ShapeStyle, Stroke: ShapeStyle> : View {
+    
+    let shape: S
+    let fill: Fill
+    let stroke: Stroke
+    let lineWidth: CGFloat
+    
+    init(
+        shape: S,
+        fill: Fill,
+        stroke: Stroke,
+        lineWidth: CGFloat = 1
+    ) {
+        self.shape = shape
+        self.fill = fill
+        self.stroke = stroke
+        self.lineWidth = lineWidth
+    }
+    
+    var body: some View {
+        shape
+            .strokeBorder(stroke, lineWidth: lineWidth)
+            .background(shape.fill(fill))
+    }
+}
+{% endif %}
