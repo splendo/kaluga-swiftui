@@ -1,0 +1,17 @@
+import SwiftUI
+
+extension View {
+    @ViewBuilder func modifyIf<Content: View>(_ condition: Bool, modifier: (Self) -> Content) -> some View {
+        if condition {
+            modifier(self)
+        } else {
+            self
+        }
+    }
+    
+    @ViewBuilder func modifyIf<Content: View, Modifier : ViewModifier>(_ condition: Bool, modifier: Modifier) -> some View where Modifier.Body == Content {
+        modifyIf(condition) {
+            ModifiedContent(content: $0, modifier: modifier)
+        }
+    }
+}
