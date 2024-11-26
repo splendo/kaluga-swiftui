@@ -5,24 +5,18 @@ import {{ argument.sharedFrameworkName }}
 
 // MARK: - BackgroundStyle
 
-struct KalugaBackgroundView<S : SwiftUI.Shape> : View {
-    
+struct KalugaBackgroundView : View {
     let style: KalugaBackgroundStyle
-    
-    private let shape: S
     private let stroke: KalugaBackgroundStyle.StrokeStyleStroke
-    
-    init(style: KalugaBackgroundStyle, shape: S) {
+    init(style: KalugaBackgroundStyle) {
         self.style = style
-        self.shape = shape
         self.stroke = KalugaBackgroundView.strokeStyle(style: style)
     }
-    
     var body: some View {
         switch style.fillStyle {
         case let solid as KalugaBackgroundStyle.FillStyleSolid:
             ShapeView(
-                shape: shape,
+                shape: style.shape.toShape(),
                 fill: Color(solid.color.uiColor),
                 stroke: Color(stroke.color.uiColor),
                 lineWidth: CGFloat(stroke.width)
@@ -33,7 +27,6 @@ struct KalugaBackgroundView<S : SwiftUI.Shape> : View {
             preconditionFailure("Unknown fill style type!")
         }
     }
-    
     @ViewBuilder
     func makeGradientView(
         gradient: KalugaBackgroundStyle.FillStyleGradient
@@ -43,7 +36,7 @@ struct KalugaBackgroundView<S : SwiftUI.Shape> : View {
             let gradient = self.makeGradientColor(colorPoints: linear.colorPoints)
             let linearPoints = makeLinearPoints(orientation: linear.orientation)
             ShapeView(
-                shape: shape,
+                shape: style.shape.toShape(),
                 fill: LinearGradient(
                     gradient: gradient,
                     startPoint: linearPoints.startPoint,
@@ -55,7 +48,7 @@ struct KalugaBackgroundView<S : SwiftUI.Shape> : View {
         case let radial as GradientStyle.Radial:
             let gradient = self.makeGradientColor(colorPoints: radial.colorPoints)
             ShapeView(
-                shape: shape,
+                shape: style.shape.toShape(),
                 fill:
                     RadialGradient(
                         gradient: gradient,
@@ -69,7 +62,7 @@ struct KalugaBackgroundView<S : SwiftUI.Shape> : View {
         case let angular as GradientStyle.Angular:
             let gradient = self.makeGradientColor(colorPoints: angular.colorPoints)
             ShapeView(
-                shape: shape,
+                shape: style.shape.toShape(),
                 fill:
                     AngularGradient(
                         gradient: gradient,
@@ -114,8 +107,6 @@ struct KalugaBackgroundView<S : SwiftUI.Shape> : View {
             preconditionFailure("Unknown linear orientation type!")
         }
     }
-    
-    
     private static func strokeStyle(style: KalugaBackgroundStyle) -> KalugaBackgroundStyle.StrokeStyleStroke {
         switch style.strokeStyle {
         case let stroke as KalugaBackgroundStyle.StrokeStyleStroke:
@@ -131,132 +122,39 @@ struct KalugaBackgroundView<S : SwiftUI.Shape> : View {
     }
 }
 
-extension KalugaBackgroundStyle {
-    
-    @ViewBuilder
-    func toView() -> some View {
-        switch shape {
-        case let rectangle as KalugaBackgroundStyle.ShapeRectangle:
-            KalugaBackgroundView(
-                style: self,
-                shape: RoundedShape(
-                    cornerRadii: .init(
-                        width: CGFloat(rectangle.cornerRadiusX),
-                        height: CGFloat(rectangle.cornerRadiusY)
-                    ),
-                    corners: {
-                        var corners: UIRectCorner = []
-                        if rectangle.roundedCorners.contains(.topLeft) { corners.insert(.topLeft) }
-                        if rectangle.roundedCorners.contains(.topRight) { corners.insert(.topRight) }
-                        if rectangle.roundedCorners.contains(.bottomLeft) { corners.insert(.bottomLeft) }
-                        if rectangle.roundedCorners.contains(.bottomRight) { corners.insert(.bottomRight) }
-                        return corners
-                    }()
-                )
-            )
-        case is KalugaBackgroundStyle.ShapeOval:
-            KalugaBackgroundView(style: self, shape: Capsule(style: .circular))
-        default: fatalError("Shape \(shape) is not a valid Shape")
-        }
-    }
-}
+// MARK: - Modifiers
 
 extension View {
-    public func background(_ backgroundStyle: KalugaBackgroundStyle, edgesIgnoringSafeArea: Edge.Set? = nil) -> some View {
+    public func background(
+        _ backgroundStyle: KalugaBackgroundStyle,
+        addContentShape: Bool = true,
+        clipShape: Bool = true,
+        edgesIgnoringSafeArea: Edge.Set? = nil
+    ) -> some View {
         ModifiedContent(
             content: self,
-            modifier: BackgroundStyleModifier(backgroundStyle: backgroundStyle, edgesIgnoringSafeArea: edgesIgnoringSafeArea ?? [])
+            modifier: BackgroundStyleModifier(
+                backgroundStyle: backgroundStyle,
+                addContentShape: addContentShape,
+                clipShape: clipShape,
+                edgesIgnoringSafeArea: edgesIgnoringSafeArea ?? []
+            )
         )
     }
 }
 
-private struct BackgroundStyleModifier: ViewModifier {
+struct BackgroundStyleModifier: ViewModifier {
     let backgroundStyle: KalugaBackgroundStyle
+    let addContentShape: Bool
+    let clipShape: Bool
     let edgesIgnoringSafeArea: Edge.Set
-    
     func body(content: Content) -> some View {
         content
-            .background(backgroundStyle.toView().ignoresSafeArea(edges: edgesIgnoringSafeArea))
-    }
-}
-
-// MARK: - RoundedShape
-
-private struct RoundedShape: Shape {
-    var cornerRadii: CGSize = .zero
-    var corners: UIRectCorner = .allCorners
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath.roundedRect(
-            rect: rect,
-            corners: corners,
-            cornerRadii: cornerRadii
-        )
-        return Path(path.cgPath)
-    }
-}
-
-private extension CGRect {
-    var topRight: CGPoint { CGPoint(x: maxX, y: minY) }
-    var topLeft: CGPoint { CGPoint(x: minX, y: minY) }
-    var bottomRight: CGPoint { CGPoint(x: maxX, y: maxY) }
-    var bottomLeft: CGPoint { CGPoint(x: minX, y: maxY) }
-    func rightXOffset(cornerRadii: CGSize) -> CGFloat {
-        return max(maxX - cornerRadii.width, midX)
-    }
-    func leftXOffset(cornerRadii: CGSize) -> CGFloat {
-        return min(minX + cornerRadii.width, midX)
-    }
-    func topYOffset(cornerRadii: CGSize) -> CGFloat {
-        return min(minY + cornerRadii.height, midY)
-    }
-    func bottomYOffset(cornerRadii: CGSize) -> CGFloat {
-        return max(maxY - cornerRadii.height, midY)
-    }
-}
-
-private extension UIBezierPath {
-    static func roundedRect(
-        rect: CGRect,
-        corners: UIRectCorner = .allCorners,
-        cornerRadii: CGSize
-    ) -> UIBezierPath {
-        let path = CGMutablePath()
-        let start = CGPoint(x: rect.midX, y: rect.minY)
-        path.move(to: start)
-        if corners.contains(.topRight) {
-            let topRightStart = CGPoint(x: rect.rightXOffset(cornerRadii: cornerRadii), y: rect.minY)
-            path.addLine(to: topRightStart)
-            let topRightEnd = CGPoint(x: rect.maxX, y: rect.topYOffset(cornerRadii: cornerRadii))
-            path.addQuadCurve(to: topRightEnd, control: rect.topRight)
-        } else {
-            path.addLine(to: rect.topRight)
-        }
-        if corners.contains(.bottomRight) {
-            let bottomRightStart = CGPoint(x: rect.maxX, y: rect.bottomYOffset(cornerRadii: cornerRadii))
-            path.addLine(to: bottomRightStart)
-            let bottomRightEnd = CGPoint(x: rect.rightXOffset(cornerRadii: cornerRadii), y: rect.maxY)
-            path.addQuadCurve(to: bottomRightEnd, control: rect.bottomRight)
-        } else {
-            path.addLine(to: rect.bottomRight)
-        }
-        if corners.contains(.bottomLeft) {
-            let bottomLeftStart = CGPoint(x: rect.leftXOffset(cornerRadii: cornerRadii), y: rect.maxY)
-            path.addLine(to: bottomLeftStart)
-            let bottomLeftEnd = CGPoint(x: rect.minX, y: rect.bottomYOffset(cornerRadii: cornerRadii))
-            path.addQuadCurve(to: bottomLeftEnd, control: rect.bottomLeft)
-        } else {
-            path.addLine(to: rect.bottomLeft)
-        }
-        if corners.contains(.topLeft) {
-            let topLeftStart = CGPoint(x: rect.minX, y: rect.topYOffset(cornerRadii: cornerRadii))
-            path.addLine(to: topLeftStart)
-            let topLeftEnd = CGPoint(x: rect.leftXOffset(cornerRadii: cornerRadii), y: rect.minY)
-            path.addQuadCurve(to: topLeftEnd, control: rect.topLeft)
-        } else {
-            path.addLine(to: rect.topLeft)
-        }
-        path.addLine(to: start)
-        return UIBezierPath(cgPath: path)
+            .background(
+                backgroundStyle.toView().ignoresSafeArea(edges: edgesIgnoringSafeArea)
+            )
+            .modifyIf(addContentShape, modifier: BackgroundShapeContentModifier(shape: backgroundStyle.shape))
+            .modifyIf(clipShape, modifier: BackgroundShapeClipModifier(shape: backgroundStyle.shape))
     }
 }
 {% endif %}
