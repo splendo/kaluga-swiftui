@@ -7,7 +7,9 @@ typealias BoolUninitializedSubject = MappedUninitializedSubject<KotlinBoolean, B
 typealias IntUninitializedSubject = MappedUninitializedSubject<KotlinInt, Int, IntOptionalMapper>
 typealias FloatUninitializedSubject = MappedUninitializedSubject<KotlinFloat, Float, FloatOptionalMapper>
 typealias DoubleUninitializedSubject = MappedUninitializedSubject<KotlinDouble, Double, DoubleOptionalMapper>
+{% if argument.includeDateTime %}
 typealias DateUninitializedSubject = MappedUninitializedSubject<KalugaDate, Foundation.Date, DateOptionalMapper>
+{% endif %}
 
 class UninitializedSubject<Input: KotlinObject, Output: Any>: ObservableObject {
 

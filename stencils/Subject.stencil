@@ -8,7 +8,9 @@ typealias BoolSubject = MappedSubject<KotlinBoolean, Bool, BoolMapper>
 typealias IntSubject = MappedSubject<KotlinInt, Int, IntMapper>
 typealias FloatSubject = MappedSubject<KotlinFloat, Float, FloatMapper>
 typealias DoubleSubject = MappedSubject<KotlinDouble, Double, DoubleMapper>
+{% if argument.includeDateTime %}
 typealias DateSubject = MappedSubject<KalugaDate, Foundation.Date, DateMapper>
+{% endif %}
 typealias ObjectSimpleSubject<T: KotlinObject> = MappedSimpleSubject<T, T, EmptyMapper<T>>
 
 class Subject<Input: KotlinObject, Output: Any>: ObservableObject {

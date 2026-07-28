@@ -32,7 +32,9 @@ typealias ButtonStyleWithoutTextUninitializedObservable = MappedUninitializedObs
 typealias ButtonStyleImageOnlyUninitializedObservable = MappedUninitializedObservable<KalugaButtonStyleImageOnly, KalugaButtonStyleImageOnly, EmptyOptionalMapper<KalugaButtonStyleImageOnly>>
 typealias ButtonStyleWithoutContentUninitializedObservable = MappedUninitializedObservable<KalugaButtonStyleWithoutContent, KalugaButtonStyleWithoutContent, EmptyOptionalMapper<KalugaButtonStyleWithoutContent>>
 {% endif %}
+{% if argument.includeDateTime %}
 typealias DateUninitializedObservable = MappedUninitializedObservable<KalugaDate, Foundation.Date, DateOptionalMapper>
+{% endif %}
 
 class UninitializedObservable<Input: KotlinObject, Output: Any>: ObservableObject {
 

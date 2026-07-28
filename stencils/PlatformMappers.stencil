@@ -89,6 +89,7 @@ enum DoubleOptionalMapper: PlatformOptionalValueMapper {
     }
 }
 
+{% if argument.includeDateTime %}
 enum DateMapper: PlatformValueMapper {
     static func to(_ value: KalugaDate) -> Foundation.Date { value.toSwiftDate() }
     static func from(_ value: Foundation.Date) -> KalugaDate { value.toKalugaDate() }
@@ -98,6 +99,7 @@ enum DateOptionalMapper: PlatformOptionalValueMapper {
     static func to(_ value: KalugaDate?) -> Foundation.Date? { value?.toSwiftDate() }
     static func from(_ value: Foundation.Date?) -> KalugaDate? { value?.toKalugaDate() }
 }
+{% endif %}
 
 {% if argument.includeResources %}
 enum UIColorMapper: PlatformValueMapper {

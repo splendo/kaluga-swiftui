@@ -1,17 +1,24 @@
 import Foundation
 import {{ argument.sharedFrameworkName }}
+{% if argument.includeDateTime %}
 
-typealias KalugaDate = {{ argument.sharedFrameworkName }}.KalugaDate
-typealias DefaultKalugaDate = {{ argument.sharedFrameworkName }}.DefaultKalugaDate
+typealias KalugaDate = {{ argument.sharedFrameworkName }}.{{ argument.dateTimeModulePrefix }}KalugaDate
+typealias DefaultKalugaDate = {{ argument.sharedFrameworkName }}.{{ argument.dateTimeModulePrefix }}DefaultKalugaDate
+typealias KalugaTimeZone = {{ argument.sharedFrameworkName }}.{{ argument.dateTimeModulePrefix }}KalugaTimeZone
 
 extension Foundation.Date {
 
     func toKalugaDate() -> KalugaDate {
-        DefaultKalugaDate.companion.epoch(
-            offsetInMilliseconds: Int64(self.timeIntervalSince1970 * 1_000),
+        // A Duration argument arrives here as its raw encoding rather than a millisecond count, so
+        // start at the epoch — a zero Duration is the one raw value needing no encoding — and set
+        // the offset through millisecondSinceEpoch.
+        let date = DefaultKalugaDate.companion.epoch(
+            offset: 0,
             timeZone: KalugaTimeZone.companion.current(),
             locale: KalugaLocale.companion.defaultLocale
         )
+        date.millisecondSinceEpoch = Int64(self.timeIntervalSince1970 * 1_000)
+        return date
     }
 }
 
@@ -22,9 +29,18 @@ extension KalugaDate {
     }
 
     static var today: KalugaDate {
-        DefaultKalugaDate.companion.today(
+        // `today()` and `toStartOfDay()` are Kotlin extensions, which the ObjC exporter leaves out,
+        // so midnight is set through the exported field accessors.
+        let date = DefaultKalugaDate.companion.now(
+            offset: 0,
             timeZone: KalugaTimeZone.companion.current(),
             locale: KalugaLocale.companion.defaultLocale
         )
+        date.hour = 0
+        date.minute = 0
+        date.second = 0
+        date.millisecond = 0
+        return date
     }
 }
+{% endif %}

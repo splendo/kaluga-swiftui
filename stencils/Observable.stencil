@@ -90,7 +90,9 @@ class ButtonStyleWithoutTextObservable : MappedObservable<KalugaButtonStyleWitho
 typealias ButtonStyleImageOnlyObservable = MappedWithDefaultObservable<KalugaButtonStyleImageOnly, KalugaButtonStyleImageOnly, EmptyMapper<KalugaButtonStyleImageOnly>>
 typealias ButtonStyleWithoutContentObservable = MappedWithDefaultObservable<KalugaButtonStyleWithoutContent, KalugaButtonStyleWithoutContent, EmptyMapper<KalugaButtonStyleWithoutContent>>
 {% endif %}
+{% if argument.includeDateTime %}
 typealias DateObservable = MappedWithDefaultObservable<KalugaDate, Foundation.Date, DateMapper>
+{% endif %}
 typealias ObjectSimpleObservable<T: KotlinObject> = MappedObservable<T, T, EmptyMapper<T>>
 
 class Observable<Input: KotlinObject, Output: Any>: ObservableObject {
